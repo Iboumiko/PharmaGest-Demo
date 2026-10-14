@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="fr">
+<head><script src="assets/js/demo-guard.js"></script><style id="pg-boot-css">html.pg-boot body{opacity:0!important}</style><script>(function(){var h=document.documentElement;h.classList.add("pg-boot");window.__pgShow=function(){h.classList.remove("pg-boot")};setTimeout(window.__pgShow,800);window.addEventListener("load",function(){setTimeout(window.__pgShow,50)});})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Mon profil — PharmaGest</title>
+<link rel="stylesheet" href="assets/css/app.css">
+<link rel="stylesheet" href="assets/css/mobile-shell.css">
+<link rel="stylesheet" href="assets/css/theme.css">
+<script src="assets/js/theme.js"></script>
+<link rel="stylesheet" href="assets/css/modals.css">
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="logo">Pharma<span>Gest</span><small data-establishment-name>PharmaGest</small></div>
+    <nav>
+      <a class="nav-item" href="index.html">⌂ Tableau de bord</a>
+      <a class="nav-item" href="vente.html">🛒 Vente / Caisse</a>
+      <a class="nav-item" href="stocks.html">▣ Stocks</a>
+      <a class="nav-item active" href="profil.html">◉ Mon profil</a>
+    </nav>
+    <div class="side-bottom">
+      <div class="user-mini"><b id="sideName">—</b><div id="sideRole">Vendeur</div></div>
+      <button class="btn btn-light btn-block" id="logout" type="button">Déconnexion</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:10px">
+        <button class="btn btn-light mobile-menu" id="menuBtn" type="button">☰</button>
+        <div class="top-title">Mon profil</div>
+      </div>
+      <div class="user-chip" id="topUser">—</div>
+    </header>
+
+    <section class="content">
+      <div class="page-hero">
+        <h1 id="heroName">Mon profil</h1>
+        <p>Compte vendeur, état de connexion et synchronisation avec le téléphone maître.</p>
+      </div>
+
+      <div class="grid two">
+        <section class="card profile-card">
+          <div class="profile-avatar" id="avatar">V</div>
+          <h2 id="pname">—</h2>
+          <p class="muted" id="prole">Vendeur</p>
+          <div class="profile-list">
+            <div><span>Identifiant</span><strong id="puser">—</strong></div>
+            <div><span>Rôle</span><strong id="prole2">Vendeur</strong></div>
+            <div><span>État du compte</span><strong class="badge ok">Actif</strong></div>
+          </div>
+        </section>
+
+        <section class="card seller-network">
+          <div class="section-head"><h2>Connexion au maître</h2><span id="syncBadge" class="badge warn">Recherche</span></div>
+          <div id="net" class="network-box">Recherche automatique du serveur maître…</div>
+          <div class="grid two" style="margin-top:12px">
+            <button class="btn btn-primary" id="refresh" type="button">Rechercher le maître</button>
+            <button class="btn btn-light" id="wifi" type="button">Ouvrir le Wi‑Fi</button>
+          </div>
+          <p class="small muted" style="margin-top:12px">Le stock affiché sur le téléphone vendeur est synchronisé depuis le catalogue central du maître. En cas de coupure, la dernière synchronisation locale reste disponible.</p>
+        </section>
+      </div>
+
+      <section class="card gap-top">
+        <div class="section-head"><h2>État des données locales</h2><button class="btn btn-light" id="syncNow" type="button">Synchroniser maintenant</button></div>
+        <div class="grid three">
+          <div><div class="kpi-label">Produits en catalogue</div><div class="kpi-value" id="productCount">0</div></div>
+          <div><div class="kpi-label">Stock disponible</div><div class="kpi-value" id="stockCount">0</div></div>
+          <div><div class="kpi-label">Dernière synchro</div><div class="kpi-value" id="lastSync" style="font-size:18px">—</div></div>
+        </div>
+      </section>
+    </section>
+  </main>
+</div>
+<script src="assets/js/local-api.js"></script>
+<script src="assets/js/branding.js"></script>
+<script src="assets/js/mobile-role.js"></script><script src="assets/js/mobile-shell.js"></script><script src="assets/js/modals.js"></script>
+<script>
+(() => {
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const user = (() => { try { return JSON.parse(localStorage.getItem('dpa_user') || '{}'); } catch { return {}; } })();
+  const role = String(user.role || '').toLowerCase();
+  const name = user.name || 'Vendeur';
+  document.getElementById('heroName').textContent = name;
+  document.getElementById('pname').textContent = name;
+  document.getElementById('puser').textContent = user.username || '—';
+  document.getElementById('prole').textContent = role === 'admin' ? 'Administrateur' : 'Vendeur';
+  document.getElementById('prole2').textContent = role === 'admin' ? 'Administrateur' : 'Vendeur';
+  document.getElementById('sideName').textContent = name;
+  document.getElementById('sideRole').textContent = role === 'admin' ? 'Administrateur' : 'Vendeur';
+  document.getElementById('topUser').textContent = name;
+  document.getElementById('avatar').textContent = String(name).trim().charAt(0).toUpperCase() || 'V';
+
+  document.getElementById('logout').onclick = () => {
+    localStorage.removeItem('dpa_token');
+    localStorage.removeItem('dpa_user');
+    localStorage.removeItem('dpa_local_user_id');
+    localStorage.removeItem('dpa_session_active');
+    location.href = 'login.html';
+  };
+  document.getElementById('menuBtn')?.addEventListener('click', () => document.querySelector('.sidebar')?.classList.toggle('open'));
+
+  async function getCatalogLocal() {
+    try {
+      const db = await new Promise((resolve,reject)=>{
+        const r=indexedDB.open('pharmagest_local_v4',3);
+        r.onsuccess=()=>resolve(r.result); r.onerror=()=>reject(r.error);
+      });
+      return await new Promise((resolve,reject)=>{
+        const q=db.transaction('app_meta','readonly').objectStore('app_meta').get('catalog_cache');
+        q.onsuccess=()=>resolve(q.result?.value||null); q.onerror=()=>reject(q.error);
+      });
+    } catch { return null; }
+  }
+
+  async function refreshData() {
+    let network={};
+    try { network=JSON.parse(window.PharmaGestNative?.getNetworkStatusJson?.() || '{}'); } catch {}
+    let base='';
+    try { base=window.PharmaGestNative?.getServerBase?.() || ''; } catch {}
+    const badge=document.getElementById('syncBadge');
+    const connected=!!base || network.status==='connected' || network.status==='active';
+    badge.className='badge '+(connected?'ok':'warn'); badge.textContent=connected?'Connecté':'Hors connexion';
+    document.getElementById('net').innerHTML =
+      '<div class="network-grid">'+
+      '<div><b>État</b><strong>'+ (connected?'CONNECTÉ':'RECHERCHE') +'</strong></div>'+
+      '<div><b>Réseau</b><strong>'+esc(network.ssid||'PharmaGest')+'</strong></div>'+
+      '<div><b>Adresse maître</b><strong style="overflow-wrap:anywhere">'+esc(base||network.address||'Détection automatique')+'</strong></div>'+
+      '</div>';
+    const c=await getCatalogLocal();
+    const products=Array.isArray(c?.products)?c.products:[];
+    const lots=Array.isArray(c?.lots)?c.lots:[];
+    const today=new Date().toISOString().slice(0,10);
+    document.getElementById('productCount').textContent=products.filter(p=>p.active!==false).length;
+    document.getElementById('stockCount').textContent=lots.filter(l=>String(l.expiry_date||'9999-12-31')>=today).reduce((n,l)=>n+Number(l.quantity||0),0);
+    let last='—';
+    try { const raw=localStorage.getItem('pharmagest_last_online'); if(raw) last=new Date(Number(raw)).toLocaleString('fr-FR'); } catch {}
+    document.getElementById('lastSync').textContent=last;
+  }
+
+  document.getElementById('refresh').onclick=()=>{ try{window.PharmaGestNative?.startNetworkFromWeb?.();}catch{}; setTimeout(refreshData,800); };
+  document.getElementById('wifi').onclick=()=>{ try{window.PharmaGestNative?.openWifiSettingsFromWeb?.();}catch{} };
+  document.getElementById('syncNow').onclick=async()=>{
+    const b=document.getElementById('syncNow'); b.disabled=true; b.textContent='Synchronisation…';
+    try { window.dispatchEvent(new Event('pharmagest:sync-now')); await new Promise(r=>setTimeout(r,1000)); }
+    finally { b.disabled=false; b.textContent='Synchroniser maintenant'; await refreshData(); }
+  };
+  refreshData();
+  setInterval(refreshData,3000);
+})();
+</script>
+</body>
+</html>

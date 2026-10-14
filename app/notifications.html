@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="fr">
+<head><script src="assets/js/demo-guard.js"></script><style id="pg-boot-css">html.pg-boot body{opacity:0!important}</style><script>(function(){var h=document.documentElement;h.classList.add("pg-boot");window.__pgShow=function(){h.classList.remove("pg-boot")};setTimeout(window.__pgShow,800);window.addEventListener("load",function(){setTimeout(window.__pgShow,50)});})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Notifications — PharmaGest</title>
+<link rel="stylesheet" href="assets/css/app.css">
+<style>
+  /* Menu latéral : liens sans soulignement, icône + texte alignés, sections comme sur les autres pages */
+  .sidebar nav{display:flex;flex-direction:column;gap:3px;max-height:calc(100dvh - 250px);overflow-y:auto;overscroll-behavior:contain;padding-bottom:8px}
+  .sidebar .nav-item{display:flex;align-items:center;gap:12px;text-decoration:none;color:#c5d4dc;padding:11px 12px;border-radius:12px;font-weight:700;font-size:15px}
+  .sidebar .nav-item:hover,.sidebar .nav-item:focus,.sidebar .nav-item:visited{text-decoration:none}
+  .sidebar .nav-item.active{color:#fff}
+  .sidebar .nav-icon{flex:0 0 22px;text-align:center;font-size:17px}
+  .sidebar .nav-section{margin:14px 12px 4px;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#7f96a6}
+  .sidebar .nav-section:first-child{margin-top:4px}
+  .notif-toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+  .notif-toolbar .btn{flex:1 1 180px}
+  .notif-day{margin:18px 0 8px;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted,#667085)}
+  .notif-item{display:flex;gap:12px;align-items:flex-start;padding:14px;border:1px solid #e5eaf0;border-radius:14px;background:#fff;margin-bottom:10px;min-width:0}
+  .notif-item.unread{border-color:#1e9e76;background:#f2fbf7}
+  .notif-ico{flex:0 0 40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:20px;background:#eef2f7}
+  .notif-ico.expiry{background:#fff4e0}.notif-ico.stock{background:#fdeceb}.notif-ico.sync{background:#e8f5ff}
+  .notif-body{min-width:0;flex:1}
+  .notif-title{font-weight:800;color:#0f2740;overflow-wrap:anywhere}
+  .notif-time{font-size:12px;color:#667085;margin-top:2px}
+  .notif-lines{margin:8px 0 0;padding:0;list-style:none;font-size:14px;color:#344054}
+  .notif-lines li{padding:3px 0;overflow-wrap:anywhere}
+  .notif-dot{width:9px;height:9px;border-radius:50%;background:#1e9e76;flex:0 0 9px;margin-top:6px}
+  .notif-empty{text-align:center;padding:36px 16px;color:#667085}
+  .pg-badge{display:inline-block;min-width:20px;padding:1px 6px;margin-left:8px;border-radius:999px;background:#d92d20;color:#fff;font-size:12px;font-weight:800;text-align:center}
+</style>
+<link rel="stylesheet" href="assets/css/mobile-shell.css">
+<link rel="stylesheet" href="assets/css/theme.css">
+<script src="assets/js/theme.js"></script>
+<link rel="stylesheet" href="assets/css/modals.css">
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="logo">Pharma<span>Gest</span><small data-establishment-name>PharmaGest</small></div>
+    <nav id="sideNav"></nav>
+    <div class="side-bottom">
+      <div class="user-mini"><b id="sideName">—</b><div id="sideRole">—</div></div>
+      <button class="btn btn-light btn-block" id="logout" type="button">Déconnexion</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:10px">
+        <button class="btn btn-light mobile-menu" id="menuBtn" type="button">☰</button>
+        <div class="top-title">Notifications</div>
+      </div>
+      <div class="user-chip" id="topUser">—</div>
+    </header>
+
+    <section class="content">
+      <div class="page-hero">
+        <h1>Historique des notifications</h1>
+        <p>Alertes d’expiration, stock au seuil d’alerte et synchronisations vendeurs.</p>
+      </div>
+
+      <div class="notif-toolbar">
+        <button class="btn btn-primary" id="markRead" type="button">Tout marquer comme lu</button>
+        <button class="btn btn-light" id="clearAll" type="button">Effacer l’historique</button>
+      </div>
+
+      <div id="list"></div>
+    </section>
+  </main>
+</div>
+<script src="assets/js/local-api.js"></script>
+<script src="assets/js/branding.js"></script>
+<script src="assets/js/mobile-role.js"></script><script src="assets/js/mobile-shell.js"></script><script src="assets/js/modals.js"></script>
+<script>
+(() => {
+  if (!localStorage.getItem('dpa_token')) { location.replace('index.html'); return; }
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const user = (() => { try { return JSON.parse(localStorage.getItem('dpa_user') || '{}'); } catch { return {}; } })();
+  const role = String(user.role || '').toLowerCase();
+  const isAdmin = role === 'admin' || role === 'super_admin';
+  const name = user.name || 'Utilisateur';
+  const native = window.PharmaGestNative;
+
+  // Menu selon le rôle, structuré par sections (comme le tableau de bord)
+  const MENU = isAdmin
+    ? [['Principal',[['index.html','⌂','Tableau de bord'],['vente.html','🛒','Ventes'],['scanner.html','📷','Scanner']]],
+       ['Gestion',[['produits.html','📦','Produits'],['stocks.html','▣','Stocks'],['lots.html','◫','Lots & péremptions'],['receptions.html','↓','Réceptions'],['fournisseurs.html','🚚','Fournisseurs']]],
+       ['Analyse',[['rapports.html','▥','Rapports'],['audit.html','◉','Journal d’audit'],['notifications.html','🔔','Notifications']]],
+       ['Administration',[['utilisateurs.html','♙','Utilisateurs'],['parametres.html','⚙','Paramètres']]]]
+    : [['Menu',[['index.html','⌂','Tableau de bord'],['vente.html','🛒','Vente / Caisse'],['scanner.html','📷','Scanner'],['stocks.html','▣','Stocks'],['notifications.html','🔔','Notifications'],['profil.html','◉','Mon profil']]]];
+  document.getElementById('sideNav').innerHTML = MENU.map(([title, items]) =>
+    '<div class="nav-section">'+title+'</div>' +
+    items.map(([h,i,t]) =>
+      '<a class="nav-item'+(h==='notifications.html'?' active':'')+'" href="'+h+'"><span class="nav-icon">'+i+'</span><span>'+t+'</span></a>'
+    ).join('')
+  ).join('');
+  // L'entrée « Notifications » (page active) doit être visible dès l'ouverture du menu
+  setTimeout(() => { try { document.querySelector('#sideNav .nav-item.active')?.scrollIntoView({block:'center'}); } catch {} }, 50);
+  document.getElementById('sideName').textContent = name;
+  document.getElementById('sideRole').textContent = isAdmin ? 'Administrateur' : 'Vendeur';
+  document.getElementById('topUser').textContent = name;
+  document.getElementById('logout').onclick = () => {
+    ['dpa_token','dpa_user','dpa_local_user_id','dpa_session_active'].forEach(k => localStorage.removeItem(k));
+    location.href = 'login.html';
+  };
+  document.getElementById('menuBtn')?.addEventListener('click', (e) => {
+    e.stopPropagation(); // sinon le clic remonte à .main et referme aussitôt le menu
+    document.querySelector('.sidebar')?.classList.toggle('open');
+  });
+  // Toucher en dehors du menu le referme
+  document.querySelector('.main')?.addEventListener('click', () => document.querySelector('.sidebar')?.classList.remove('open'));
+
+  const ICONS = { expiry:'⏰', stock:'📉', sync:'🔄' };
+  function dayLabel(ms) {
+    const d = new Date(ms), t = new Date();
+    const same = (a,b) => a.toDateString() === b.toDateString();
+    const y = new Date(); y.setDate(t.getDate() - 1);
+    if (same(d,t)) return 'Aujourd’hui';
+    if (same(d,y)) return 'Hier';
+    return d.toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+  }
+  function readHistory() {
+    try {
+      if (!native || typeof native.getNotificationHistory !== 'function') return null;
+      return JSON.parse(native.getNotificationHistory() || '{}');
+    } catch { return { read_at: 0, items: [] }; }
+  }
+
+  function render() {
+    const box = document.getElementById('list');
+    const data = readHistory();
+    if (!data) {
+      box.innerHTML = '<div class="notif-empty card">L’historique des notifications est disponible dans l’application Android PharmaGest.</div>';
+      return;
+    }
+    const items = Array.isArray(data.items) ? data.items : [];
+    const readAt = Number(data.read_at || 0);
+    if (!items.length) {
+      box.innerHTML = '<div class="notif-empty card">🔔<br>Aucune notification pour le moment.<br><small>Les alertes d’expiration, de stock bas et de synchronisation apparaîtront ici.</small></div>';
+      return;
+    }
+    let html = '', lastDay = '';
+    for (const n of items) {
+      const at = Number(n.at || 0);
+      const day = dayLabel(at);
+      if (day !== lastDay) { html += '<div class="notif-day">'+esc(day)+'</div>'; lastDay = day; }
+      const unread = at > readAt;
+      const lines = Array.isArray(n.lines) ? n.lines : [];
+      html += '<div class="notif-item'+(unread?' unread':'')+'">'
+        + '<div class="notif-ico '+esc(n.type)+'">'+(ICONS[n.type] || '🔔')+'</div>'
+        + '<div class="notif-body">'
+        +   '<div class="notif-title">'+esc(n.title)+'</div>'
+        +   '<div class="notif-time">'+esc(new Date(at).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}))+'</div>'
+        +   (lines.length ? '<ul class="notif-lines">'+lines.map(l => '<li>'+esc(l)+'</li>').join('')+'</ul>' : '')
+        + '</div>'
+        + (unread ? '<span class="notif-dot" title="Non lue"></span>' : '')
+        + '</div>';
+    }
+    box.innerHTML = html;
+  }
+
+  document.getElementById('markRead').onclick = () => { try { native?.markNotificationsRead?.(); } catch {} render(); };
+  document.getElementById('clearAll').onclick = () => {
+    if (!confirm('Effacer tout l’historique des notifications ?')) return;
+    try { native?.clearNotificationHistory?.(); } catch {}
+    render();
+  };
+
+  render();
+  // Ouvrir la page = avoir vu les notifications : on les marque comme lues après un court instant
+  // (le point vert reste visible le temps de la lecture).
+  setTimeout(() => { try { native?.markNotificationsRead?.(); } catch {} }, 4000);
+})();
+</script>
+</body>
+</html>

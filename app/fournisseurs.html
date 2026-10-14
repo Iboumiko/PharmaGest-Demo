@@ -1,0 +1,2860 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><script src="assets/js/demo-guard.js"></script><style id="pg-boot-css">html.pg-boot body{opacity:0!important}</style><script>(function(){var h=document.documentElement;h.classList.add("pg-boot");window.__pgShow=function(){h.classList.remove("pg-boot")};setTimeout(window.__pgShow,800);window.addEventListener("load",function(){setTimeout(window.__pgShow,50)});})();</script><link rel="stylesheet" href="assets/css/app.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>PharmaGest</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    background:#f4f7fb;
+    color:#172033;
+}
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    width:250px;
+    height:100vh;
+    background:#062b49;
+    color:white;
+    padding:20px 14px;
+    overflow-y:auto;
+    z-index:1000;
+}
+
+.logo{
+    padding:8px 10px 22px;
+    border-bottom:1px solid rgba(255,255,255,.12);
+    margin-bottom:15px;
+}
+
+.logo h2{
+    font-size:19px;
+    line-height:1.3;
+}
+
+.logo span{
+    color:#36d6c4;
+    font-size:12px;
+}
+
+.menu-title{
+    font-size:11px;
+    color:#7fa8c6;
+    margin:18px 10px 7px;
+    text-transform:uppercase;
+}
+
+.menu a{
+    display:block;
+    color:#d9e8f5;
+    text-decoration:none;
+    padding:12px 13px;
+    margin:4px 0;
+    border-radius:8px;
+    font-size:14px;
+}
+
+.menu a:hover,
+.menu a.active{
+    background:#0b426b;
+    color:white;
+}
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main{
+    margin-left:250px;
+    min-height:100vh;
+}
+
+.topbar{
+    height:68px;
+    background:white;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 28px;
+    border-bottom:1px solid #e5eaf0;
+    gap:15px;
+}
+
+.topbar h1{
+    font-size:21px;
+}
+
+.status{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:13px;
+    color:#536174;
+    margin-left:auto;
+}
+
+.dot{
+    width:9px;
+    height:9px;
+    background:#18b67a;
+    border-radius:50%;
+}
+
+.admin{
+    padding:9px 14px;
+    background:#eef5fa;
+    border-radius:8px;
+    font-size:13px;
+    color:#123b59;
+}
+
+.content{
+    padding:25px;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.page-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    margin-bottom:22px;
+}
+
+.page-header h2{
+    font-size:24px;
+}
+
+.page-header p{
+    color:#69778a;
+    font-size:14px;
+    margin-top:5px;
+}
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.btn{
+    border:none;
+    border-radius:8px;
+    padding:11px 16px;
+    cursor:pointer;
+    font-weight:bold;
+    font-size:13px;
+}
+
+.btn:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+}
+
+.btn-primary{
+    background:#087f8c;
+    color:white;
+}
+
+.btn-primary:hover{
+    background:#066b76;
+}
+
+.btn-light{
+    background:#eef3f7;
+    color:#234;
+}
+
+.btn-light:hover{
+    background:#e1e9ef;
+}
+
+.btn-danger{
+    background:#ffe8e8;
+    color:#b42323;
+}
+
+/* =========================================================
+   STATS
+========================================================= */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:16px;
+    margin-bottom:22px;
+}
+
+.stat-card{
+    background:white;
+    padding:19px;
+    border-radius:12px;
+    border:1px solid #e5eaf0;
+}
+
+.label{
+    color:#718096;
+    font-size:13px;
+    margin-bottom:8px;
+}
+
+.value{
+    font-size:25px;
+    font-weight:bold;
+}
+
+.stat-card small{
+    display:block;
+    margin-top:6px;
+    color:#7b8797;
+}
+
+/* =========================================================
+   TOOLBAR
+========================================================= */
+
+.toolbar{
+    background:white;
+    padding:15px;
+    border-radius:12px;
+    border:1px solid #e5eaf0;
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-bottom:18px;
+}
+
+.input,
+.select{
+    border:1px solid #d9e1e8;
+    border-radius:8px;
+    padding:11px 12px;
+    outline:none;
+    background:white;
+    font-size:13px;
+}
+
+.input:focus,
+.select:focus{
+    border-color:#087f8c;
+    box-shadow:0 0 0 3px rgba(8,127,140,.08);
+}
+
+.search{
+    flex:1;
+    min-width:240px;
+}
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.table-card{
+    background:white;
+    border:1px solid #e5eaf0;
+    border-radius:12px;
+    overflow:hidden;
+}
+
+.table-title{
+    padding:18px;
+    border-bottom:1px solid #edf0f3;
+    font-weight:bold;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.table-count{
+    font-size:12px;
+    color:#7a8796;
+    font-weight:normal;
+}
+
+.table-container{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:950px;
+}
+
+th,
+td{
+    padding:14px 16px;
+    text-align:left;
+    border-bottom:1px solid #edf0f3;
+    font-size:13px;
+}
+
+th{
+    background:#f8fafc;
+    color:#657386;
+    font-size:12px;
+    text-transform:uppercase;
+}
+
+tr:hover td{
+    background:#fafcfe;
+}
+
+.empty-row td{
+    text-align:center;
+    padding:40px 20px;
+    color:#788596;
+}
+
+/* =========================================================
+   BADGES
+========================================================= */
+
+.badge{
+    display:inline-block;
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:bold;
+}
+
+.badge-green{
+    background:#e6f7ef;
+    color:#087a50;
+}
+
+.badge-red{
+    background:#ffe8e8;
+    color:#b42323;
+}
+
+.badge-blue{
+    background:#e6f1ff;
+    color:#1261a0;
+}
+
+.supplier-name{
+    font-weight:bold;
+    color:#123b59;
+}
+
+.supplier-code{
+    font-size:11px;
+    color:#7a8796;
+    margin-top:4px;
+}
+
+.contact{
+    line-height:1.6;
+}
+
+.contact strong{
+    display:block;
+}
+
+.actions{
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+}
+
+/* =========================================================
+   BOTTOM GRID
+========================================================= */
+
+.bottom-grid{
+    display:grid;
+    grid-template-columns:1.4fr 1fr;
+    gap:18px;
+    margin-top:20px;
+}
+
+.info-card{
+    background:white;
+    border:1px solid #e5eaf0;
+    border-radius:12px;
+    padding:18px;
+}
+
+.info-card h3{
+    margin-bottom:15px;
+    font-size:16px;
+}
+
+.movement{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:12px 0;
+    border-bottom:1px solid #edf0f3;
+    gap:15px;
+}
+
+.movement:last-child{
+    border-bottom:none;
+}
+
+.movement strong{
+    font-size:13px;
+}
+
+.movement small{
+    color:#788596;
+}
+
+.amount{
+    font-weight:bold;
+    color:#087f8c;
+    white-space:nowrap;
+}
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(4,24,40,.58);
+    z-index:2000;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.modal.show{
+    display:flex;
+}
+
+.modal-box{
+    background:white;
+    width:100%;
+    max-width:760px;
+    max-height:90vh;
+    overflow-y:auto;
+    border-radius:14px;
+    padding:24px;
+    box-shadow:0 20px 60px rgba(0,0,0,.25);
+}
+
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.modal-header h2{
+    font-size:20px;
+}
+
+.close{
+    border:none;
+    background:#edf2f6;
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    cursor:pointer;
+    font-size:18px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+}
+
+.form-group label{
+    font-size:12px;
+    font-weight:bold;
+    color:#59687a;
+}
+
+.form-group.full{
+    grid-column:1/-1;
+}
+
+.modal-actions{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    margin-top:22px;
+}
+
+.details{
+    background:#f7fafc;
+    border:1px solid #e4eaf0;
+    padding:16px;
+    border-radius:10px;
+    margin-top:18px;
+}
+
+.details-row{
+    display:flex;
+    justify-content:space-between;
+    padding:8px 0;
+    border-bottom:1px solid #e6ebf0;
+    font-size:13px;
+}
+
+.details-row:last-child{
+    border-bottom:none;
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.toast{
+    position:fixed;
+    right:20px;
+    bottom:20px;
+    z-index:5000;
+    min-width:280px;
+    max-width:420px;
+    padding:14px 16px;
+    border-radius:10px;
+    color:white;
+    font-size:13px;
+    box-shadow:0 10px 30px rgba(0,0,0,.18);
+    transform:translateY(20px);
+    opacity:0;
+    pointer-events:none;
+    transition:.25s;
+}
+
+.toast.show{
+    transform:translateY(0);
+    opacity:1;
+}
+
+.toast.success{
+    background:#087f8c;
+}
+
+.toast.error{
+    background:#b42323;
+}
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.loading{
+    text-align:center;
+    padding:40px;
+    color:#718096;
+}
+
+.spinner{
+    display:inline-block;
+    width:22px;
+    height:22px;
+    border:3px solid #dce6eb;
+    border-top-color:#087f8c;
+    border-radius:50%;
+    animation:spin .7s linear infinite;
+    vertical-align:middle;
+    margin-right:8px;
+}
+
+@keyframes spin{
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+.mobile-menu{
+    display:none;
+    border:none;
+    background:#062b49;
+    color:white;
+    padding:9px 12px;
+    border-radius:7px;
+    cursor:pointer;
+}
+
+@media(max-width:1000px){
+
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .bottom-grid{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:750px){
+
+    .sidebar{
+        transform:translateX(-100%);
+        transition:.25s;
+        z-index:3000;
+    }
+
+    .sidebar.open{
+        transform:translateX(0);
+    }
+
+    .main{
+        margin-left:0;
+    }
+
+    .mobile-menu{
+        display:block;
+    }
+
+    .topbar{
+        padding:0 15px;
+    }
+
+    .topbar h1{
+        font-size:17px;
+    }
+
+    .status{
+        display:none;
+    }
+
+    .content{
+        padding:15px;
+    }
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .page-header{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .form-group.full{
+        grid-column:auto;
+    }
+
+    .modal-box{
+        padding:18px;
+    }
+}
+
+</style>
+<link rel="stylesheet" href="assets/css/mobile-shell.css">
+<link rel="stylesheet" href="assets/css/theme.css">
+<script src="assets/js/theme.js"></script>
+<link rel="stylesheet" href="assets/css/modals.css">
+</head>
+
+<body>
+
+<!-- =======================================================
+     SIDEBAR
+======================================================= -->
+
+<aside class="sidebar" id="sidebar">
+
+    <div class="logo">
+
+        <h2><span data-establishment-name>Nom de l’établissement</span></h2>
+
+        <span>
+            Gestion pharmaceutique professionnelle · Version 1.0
+        </span>
+
+    </div>
+
+    <div class="menu">
+
+        <div class="menu-title">
+            Principal
+        </div>
+
+        <a href="index.html">
+            📊 Tableau de bord
+        </a>
+
+        <a href="vente.html">
+            🛒 Vente / Caisse
+        </a>
+
+        <a href="produits.html">
+            💊 Produits
+        </a>
+
+        <a href="stocks.html">
+            📦 Stocks
+        </a>
+
+        <a href="receptions.html">
+            🚚 Réceptions
+        </a>
+
+        <div class="menu-title">
+            Gestion
+        </div>
+
+        <a href="fournisseurs.html" class="active">
+            🏢 Fournisseurs
+        </a>
+
+        <a href="lots.html">
+            🧾 Lots & péremptions
+        </a>
+
+        <a href="rapports.html">
+            📈 Rapports
+        </a>
+
+        <div class="menu-title">
+            Administration
+        </div>
+
+        <a href="utilisateurs.html">
+            👥 Utilisateurs
+        </a>
+
+        <a href="audit.html">
+            🔐 Journal d'audit
+        </a>
+
+        <a href="vente_partenaire.html"><span class="menu-icon">⇄</span>Vente partenaire</a>
+        <a href="parametres.html">
+            ⚙️ Paramètres
+        </a>
+
+    </div>
+
+</aside>
+
+
+<!-- =======================================================
+     MAIN
+======================================================= -->
+
+<main class="main">
+
+<header class="topbar">
+
+    <button
+        class="mobile-menu"
+        onclick="toggleMenu()"
+    >
+        ☰
+    </button>
+
+    <h1>
+        Fournisseurs
+    </h1>
+
+    <div class="status">
+
+        <span class="dot"></span>
+
+        Système opérationnel
+
+    </div>
+
+    <div class="admin" id="currentUser">
+        👤 Administrateur
+    </div>
+
+</header>
+
+
+<section class="content">
+
+    <div class="page-header">
+
+        <div>
+
+            <h2>
+                Gestion des fournisseurs
+            </h2>
+
+            <p>
+                Gérez vos fournisseurs et consultez leur historique de réceptions.
+            </p>
+
+        </div>
+
+        <button
+            class="btn btn-primary"
+            onclick="openModal()"
+        >
+            + Ajouter un fournisseur
+        </button>
+
+    </div>
+
+
+    <!-- ===================================================
+         STATISTIQUES
+    =================================================== -->
+
+    <div class="stats">
+
+        <div class="stat-card">
+
+            <div class="label">
+                Fournisseurs
+            </div>
+
+            <div
+                class="value"
+                id="statTotal"
+            >
+                0
+            </div>
+
+            <small>
+                Enregistrés dans le système
+            </small>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="label">
+                Fournisseurs actifs
+            </div>
+
+            <div
+                class="value"
+                id="statActive"
+            >
+                0
+            </div>
+
+            <small>
+                Utilisables pour les réceptions
+            </small>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="label">
+                Réceptions ce mois
+            </div>
+
+            <div
+                class="value"
+                id="statReceipts"
+            >
+                0
+            </div>
+
+            <small>
+                Réceptions enregistrées
+            </small>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="label">
+                Achats ce mois
+            </div>
+
+            <div
+                class="value"
+                id="statPurchases"
+            >
+                0 FCFA
+            </div>
+
+            <small>
+                Montant des réceptions
+            </small>
+
+        </div>
+
+    </div>
+
+
+    <!-- ===================================================
+         RECHERCHE
+    =================================================== -->
+
+    <div class="toolbar">
+
+        <input
+            type="text"
+            id="search"
+            class="input search"
+            placeholder="🔎 Rechercher un fournisseur, téléphone, email..."
+            oninput="filterSuppliers()"
+        >
+
+
+        <select
+            id="statusFilter"
+            class="select"
+            onchange="filterSuppliers()"
+        >
+
+            <option value="all">
+                Tous les statuts
+            </option>
+
+            <option value="active">
+                Actifs
+            </option>
+
+            <option value="inactive">
+                Inactifs
+            </option>
+
+        </select>
+
+
+        <button
+            class="btn btn-light"
+            onclick="loadData()"
+        >
+            ↻ Actualiser
+        </button>
+
+    </div>
+
+
+    <!-- ===================================================
+         TABLE
+    =================================================== -->
+
+    <div class="table-card">
+
+        <div class="table-title">
+
+            <span>
+                Liste des fournisseurs
+            </span>
+
+            <span
+                class="table-count"
+                id="tableCount"
+            >
+                0 fournisseur
+            </span>
+
+        </div>
+
+
+        <div class="table-container">
+
+            <table id="supplierTable">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Fournisseur
+                        </th>
+
+                        <th>
+                            Contact
+                        </th>
+
+                        <th>
+                            Localisation
+                        </th>
+
+                        <th>
+                            Réceptions
+                        </th>
+
+                        <th>
+                            Total achats
+                        </th>
+
+                        <th>
+                            Statut
+                        </th>
+
+                        <th>
+                            Actions
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="supplierBody">
+
+                    <tr>
+
+                        <td
+                            colspan="7"
+                            class="loading"
+                        >
+
+                            <span class="spinner"></span>
+
+                            Chargement des fournisseurs...
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- ===================================================
+         INFORMATIONS
+    =================================================== -->
+
+    <div class="bottom-grid">
+
+        <div class="info-card">
+
+            <h3>
+                Dernières réceptions
+            </h3>
+
+            <div id="recentReceipts">
+
+                <div class="loading">
+                    Chargement...
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="info-card">
+
+            <h3>
+                Informations fournisseur
+            </h3>
+
+            <div class="movement">
+
+                <div>
+
+                    <strong>
+                        🏢 Identification
+                    </strong>
+
+                    <br>
+
+                    <small>
+                        Nom et référence fournisseur
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="movement">
+
+                <div>
+
+                    <strong>
+                        📞 Contact
+                    </strong>
+
+                    <br>
+
+                    <small>
+                        Téléphone et adresse email
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="movement">
+
+                <div>
+
+                    <strong>
+                        📦 Réceptions
+                    </strong>
+
+                    <br>
+
+                    <small>
+                        Historique des marchandises reçues
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="movement">
+
+                <div>
+
+                    <strong>
+                        📊 Achats
+                    </strong>
+
+                    <br>
+
+                    <small>
+                        Montant cumulé des réceptions
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<!-- =======================================================
+     MODAL AJOUT FOURNISSEUR
+======================================================= -->
+
+<div
+    class="modal"
+    id="supplierModal"
+>
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <h2>
+                Ajouter un fournisseur
+            </h2>
+
+            <button
+                class="close"
+                onclick="closeModal()"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="form-grid">
+
+            <div class="form-group">
+
+                <label>
+                    Nom du fournisseur *
+                </label>
+
+                <input
+                    id="supplierName"
+                    class="input"
+                    placeholder="Ex : Pharma Niger"
+                    autocomplete="organization"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Code / référence
+                </label>
+
+                <input
+                    id="supplierCode"
+                    class="input"
+                    readonly
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Téléphone
+                </label>
+
+                <input
+                    id="phone"
+                    class="input"
+                    placeholder="+227 ..."
+                    autocomplete="tel"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Email
+                </label>
+
+                <input
+                    id="email"
+                    type="email"
+                    class="input"
+                    placeholder="contact@fournisseur.com"
+                    autocomplete="email"
+                >
+
+            </div>
+
+
+            <div class="form-group full">
+
+                <label>
+                    Adresse
+                </label>
+
+                <input
+                    id="address"
+                    class="input"
+                    placeholder="Adresse du fournisseur"
+                    autocomplete="street-address"
+                >
+
+            </div>
+
+
+            <div class="form-group full">
+
+                <label>
+                    Notes
+                </label>
+
+                <input
+                    id="notes"
+                    class="input"
+                    placeholder="Informations complémentaires..."
+                >
+
+            </div>
+
+        </div>
+
+
+        <div class="details">
+
+            <div class="details-row">
+
+                <span>
+                    Réceptions
+                </span>
+
+                <strong>
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="details-row">
+
+                <span>
+                    Total achats
+                </span>
+
+                <strong>
+                    0 FCFA
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="modal-actions">
+
+            <button
+                class="btn btn-light"
+                onclick="closeModal()"
+            >
+                Annuler
+            </button>
+
+            <button
+                class="btn btn-primary"
+                id="saveButton"
+                onclick="saveSupplier()"
+            >
+                ✓ Enregistrer
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =======================================================
+     MODAL DÉTAIL FOURNISSEUR
+======================================================= -->
+
+<div
+    class="modal"
+    id="detailModal"
+>
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <h2>
+                Fiche fournisseur
+            </h2>
+
+            <button
+                class="close"
+                onclick="closeDetailModal()"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div id="supplierDetails">
+
+            <div class="loading">
+                Chargement...
+            </div>
+
+        </div>
+
+
+        <div class="modal-actions">
+
+            <button
+                class="btn btn-light"
+                onclick="closeDetailModal()"
+            >
+                Fermer
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- TOAST -->
+
+<div
+    id="toast"
+    class="toast"
+></div>
+
+
+<script src="assets/js/local-api.js"></script>
+<script src="assets/js/branding.js"></script>
+<script src="assets/js/mobile-role.js"></script><script src="assets/js/mobile-shell.js"></script><script src="assets/js/modals.js"></script>
+<script>
+
+/* =========================================================
+   CONFIGURATION
+========================================================= */
+
+const API_BASE = "/api";
+const TOKEN_KEY = "dpa_token";
+
+let suppliers = [];
+let receipts = [];
+
+
+/* =========================================================
+   UTILITAIRES
+========================================================= */
+
+function getToken(){
+
+    return localStorage.getItem(TOKEN_KEY);
+
+}
+
+
+function money(value){
+
+    return Number(value || 0)
+        .toLocaleString("fr-FR")
+        + " FCFA";
+
+}
+
+
+function escapeHtml(value){
+
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+function formatDate(value){
+
+    if(!value){
+        return "—";
+    }
+
+    const date = new Date(value);
+
+    if(Number.isNaN(date.getTime())){
+        return "—";
+    }
+
+    return date.toLocaleDateString(
+        "fr-FR",
+        {
+            day:"2-digit",
+            month:"2-digit",
+            year:"numeric"
+        }
+    );
+
+}
+
+
+function isCurrentMonth(value){
+
+    if(!value){
+        return false;
+    }
+
+    const date = new Date(value);
+
+    if(Number.isNaN(date.getTime())){
+        return false;
+    }
+
+    const now = new Date();
+
+    return (
+        date.getFullYear() === now.getFullYear() &&
+        date.getMonth() === now.getMonth()
+    );
+
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+let toastTimer = null;
+
+function showToast(message, type = "success"){
+
+    const toast =
+        document.getElementById("toast");
+
+    toast.textContent = message;
+
+    toast.className =
+        "toast " + type + " show";
+
+    clearTimeout(toastTimer);
+
+    toastTimer = setTimeout(() => {
+
+        toast.classList.remove("show");
+
+    }, 3500);
+
+}
+
+
+/* =========================================================
+   API
+========================================================= */
+
+async function apiFetch(url, options = {}){
+
+    const token = getToken();
+
+    if(!token){
+
+        window.location.href = "index.html";
+
+        throw new Error(
+            "Authentification requise"
+        );
+
+    }
+
+    const headers = {
+
+        ...(options.headers || {}),
+
+        "Authorization":
+            `Bearer ${token}`
+
+    };
+
+    if(
+        options.body &&
+        !headers["Content-Type"]
+    ){
+
+        headers["Content-Type"] =
+            "application/json";
+
+    }
+
+    const response =
+        await fetch(
+            API_BASE + url,
+            {
+                ...options,
+                headers
+            }
+        );
+
+    if(response.status === 401){
+
+        localStorage.removeItem(TOKEN_KEY);
+
+        window.location.href =
+            "index.html";
+
+        throw new Error(
+            "Session expirée"
+        );
+
+    }
+
+    let data = null;
+
+    try{
+
+        data = await response.json();
+
+    }catch{
+
+        data = null;
+
+    }
+
+    if(!response.ok){
+
+        throw new Error(
+            data?.error ||
+            "Erreur serveur"
+        );
+
+    }
+
+    return data;
+
+}
+
+
+/* =========================================================
+   INITIALISATION
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    async () => {
+
+        if(!getToken()){
+
+            window.location.href =
+                "index.html";
+
+            return;
+
+        }
+
+        await loadCurrentUser();
+
+        await loadData();
+
+    }
+);
+
+
+/* =========================================================
+   UTILISATEUR COURANT
+========================================================= */
+
+async function loadCurrentUser(){
+
+    try{
+
+        const user =
+            await apiFetch("/me");
+
+        const element =
+            document.getElementById(
+                "currentUser"
+            );
+
+        if(user){
+
+            element.textContent =
+                "👤 " +
+                (
+                    user.name ||
+                    user.full_name ||
+                    "Utilisateur"
+                );
+
+        }
+
+    }catch(error){
+
+        console.error(
+            "ME ERROR:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   CHARGEMENT GLOBAL
+========================================================= */
+
+async function loadData(){
+
+    try{
+
+        const [
+            supplierData,
+            receiptData
+        ] = await Promise.all([
+
+            apiFetch("/suppliers"),
+
+            apiFetch("/receipts")
+
+        ]);
+
+        suppliers =
+            Array.isArray(supplierData)
+                ? supplierData
+                : [];
+
+        receipts =
+            Array.isArray(receiptData)
+                ? receiptData
+                : (
+                    Array.isArray(
+                        receiptData?.receipts
+                    )
+                    ? receiptData.receipts
+                    : []
+                );
+
+        renderStats();
+
+        renderSuppliers();
+
+        renderRecentReceipts();
+
+    }catch(error){
+
+        console.error(
+            "SUPPLIERS LOAD ERROR:",
+            error
+        );
+
+        document.getElementById(
+            "supplierBody"
+        ).innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="7"
+                    class="empty-row"
+                >
+
+                    ❌ Impossible de récupérer
+                    les fournisseurs.
+
+                    <br><br>
+
+                    <button
+                        class="btn btn-light"
+                        onclick="loadData()"
+                    >
+                        ↻ Réessayer
+                    </button>
+
+                </td>
+
+            </tr>
+
+        `;
+
+        showToast(
+            error.message ||
+            "Erreur de chargement",
+            "error"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   STATISTIQUES
+========================================================= */
+
+function renderStats(){
+
+    const total =
+        suppliers.length;
+
+    const active =
+        suppliers.filter(
+            supplier =>
+                supplier.active !== false
+        ).length;
+
+    const monthlyReceipts =
+        receipts.filter(
+            receipt =>
+                isCurrentMonth(
+                    receipt.received_at ||
+                    receipt.created_at
+                )
+        );
+
+    const monthlyValue =
+        monthlyReceipts.reduce(
+            (sum, receipt) =>
+                sum +
+                Number(
+                    receipt.total_value ||
+                    receipt.total ||
+                    receipt.amount ||
+                    0
+                ),
+            0
+        );
+
+    document.getElementById(
+        "statTotal"
+    ).textContent = total;
+
+    document.getElementById(
+        "statActive"
+    ).textContent = active;
+
+    document.getElementById(
+        "statReceipts"
+    ).textContent =
+        monthlyReceipts.length;
+
+    document.getElementById(
+        "statPurchases"
+    ).textContent =
+        money(monthlyValue);
+
+}
+
+
+/* =========================================================
+   STATISTIQUES PAR FOURNISSEUR
+========================================================= */
+
+function getSupplierStats(supplier){
+
+    const supplierId =
+        String(supplier.id);
+
+    const supplierReceipts =
+        receipts.filter(
+            receipt =>
+                String(
+                    receipt.supplier_id ||
+                    receipt.supplierId ||
+                    ""
+                ) === supplierId
+        );
+
+    const count =
+        supplierReceipts.length;
+
+    const total =
+        supplierReceipts.reduce(
+            (sum, receipt) =>
+                sum +
+                Number(
+                    receipt.total_value ||
+                    receipt.total ||
+                    receipt.amount ||
+                    0
+                ),
+            0
+        );
+
+    return {
+        count,
+        total,
+        receipts:
+            supplierReceipts
+    };
+
+}
+
+
+/* =========================================================
+   RENDU TABLE
+========================================================= */
+
+function renderSuppliers(){
+
+    const body =
+        document.getElementById(
+            "supplierBody"
+        );
+
+    const search =
+        document.getElementById(
+            "search"
+        )
+        .value
+        .trim()
+        .toLowerCase();
+
+    const status =
+        document.getElementById(
+            "statusFilter"
+        ).value;
+
+
+    const filtered =
+        suppliers.filter(
+            supplier => {
+
+                const text = [
+
+                    supplier.name,
+
+                    supplier.reference,
+
+                    supplier.phone,
+
+                    supplier.email,
+
+                    supplier.address,
+
+                    supplier.notes
+
+                ]
+                .filter(Boolean)
+                .join(" ")
+                .toLowerCase();
+
+
+                const searchOK =
+                    !search ||
+                    text.includes(search);
+
+
+                const supplierStatus =
+                    supplier.active === false
+                        ? "inactive"
+                        : "active";
+
+
+                const statusOK =
+                    status === "all" ||
+                    status === supplierStatus;
+
+
+                return (
+                    searchOK &&
+                    statusOK
+                );
+
+            }
+        );
+
+
+    document.getElementById(
+        "tableCount"
+    ).textContent =
+        filtered.length +
+        (
+            filtered.length > 1
+                ? " fournisseurs"
+                : " fournisseur"
+        );
+
+
+    if(!filtered.length){
+
+        body.innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="7"
+                    class="empty-row"
+                >
+
+                    Aucun fournisseur trouvé.
+
+                </td>
+
+            </tr>
+
+        `;
+
+        return;
+
+    }
+
+
+    body.innerHTML =
+        filtered.map(
+            supplier => {
+
+                const stats =
+                    getSupplierStats(
+                        supplier
+                    );
+
+                const active =
+                    supplier.active !== false;
+
+                const statusBadge =
+                    active
+                        ? `
+                            <span class="badge badge-green">
+                                Actif
+                            </span>
+                        `
+                        : `
+                            <span class="badge badge-red">
+                                Inactif
+                            </span>
+                        `;
+
+
+                return `
+
+                    <tr>
+
+                        <td>
+
+                            <div class="supplier-name">
+
+                                ${escapeHtml(
+                                    supplier.name ||
+                                    "Fournisseur sans nom"
+                                )}
+
+                            </div>
+
+                            <div class="supplier-code">
+
+                                ${
+                                    escapeHtml(
+                                        supplier.reference ||
+                                        "Sans référence"
+                                    )
+                                }
+
+                            </div>
+
+                        </td>
+
+
+                        <td class="contact">
+
+                            ${
+                                supplier.phone
+                                    ? `
+                                        <strong>
+                                            ${escapeHtml(
+                                                supplier.phone
+                                            )}
+                                        </strong>
+                                    `
+                                    : `
+                                        <strong>
+                                            —
+                                        </strong>
+                                    `
+                            }
+
+                            ${
+                                supplier.email
+                                    ? escapeHtml(
+                                        supplier.email
+                                    )
+                                    : "Aucun email"
+                            }
+
+                        </td>
+
+
+                        <td>
+
+                            ${
+                                supplier.address
+                                    ? escapeHtml(
+                                        supplier.address
+                                    )
+                                    : "—"
+                            }
+
+                        </td>
+
+
+                        <td>
+
+                            ${stats.count}
+
+                        </td>
+
+
+                        <td>
+
+                            <strong>
+                                ${money(
+                                    stats.total
+                                )}
+                            </strong>
+
+                        </td>
+
+
+                        <td>
+
+                            ${statusBadge}
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="actions">
+
+                                <button
+                                    class="btn btn-light"
+                                    onclick="viewSupplier('${supplier.id}')"
+                                >
+                                    Voir
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                `;
+
+            }
+        ).join("");
+
+}
+
+
+/* =========================================================
+   FILTRE
+========================================================= */
+
+function filterSuppliers(){
+
+    renderSuppliers();
+
+}
+
+
+/* =========================================================
+   DERNIÈRES RÉCEPTIONS
+========================================================= */
+
+function renderRecentReceipts(){
+
+    const container =
+        document.getElementById(
+            "recentReceipts"
+        );
+
+    const sorted =
+        [...receipts]
+        .sort(
+            (a,b) =>
+                new Date(
+                    b.received_at ||
+                    b.created_at ||
+                    0
+                ) -
+                new Date(
+                    a.received_at ||
+                    a.created_at ||
+                    0
+                )
+        )
+        .slice(0,5);
+
+
+    if(!sorted.length){
+
+        container.innerHTML = `
+
+            <div class="loading">
+
+                Aucune réception enregistrée.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        sorted.map(
+            receipt => {
+
+                const supplierName =
+                    receipt.supplier_name ||
+                    "Fournisseur non précisé";
+
+                const number =
+                    receipt.receipt_number ||
+                    "Réception";
+
+                const date =
+                    formatDate(
+                        receipt.received_at ||
+                        receipt.created_at
+                    );
+
+                const amount =
+                    Number(
+                        receipt.total_value ||
+                        receipt.total ||
+                        receipt.amount ||
+                        0
+                    );
+
+
+                return `
+
+                    <div class="movement">
+
+                        <div>
+
+                            <strong>
+                                ${escapeHtml(
+                                    supplierName
+                                )}
+                            </strong>
+
+                            <br>
+
+                            <small>
+
+                                ${escapeHtml(
+                                    number
+                                )}
+
+                                • ${date}
+
+                            </small>
+
+                        </div>
+
+                        <div class="amount">
+
+                            ${money(amount)}
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            }
+        ).join("");
+
+}
+
+
+/* =========================================================
+   MODAL AJOUT
+========================================================= */
+
+function openModal(){
+
+    resetSupplierForm();
+
+    document
+        .getElementById(
+            "supplierModal"
+        )
+        .classList.add("show");
+
+    document
+        .getElementById(
+            "supplierName"
+        )
+        .focus();
+
+}
+
+
+function closeModal(){
+
+    document
+        .getElementById(
+            "supplierModal"
+        )
+        .classList.remove("show");
+
+}
+
+
+function resetSupplierForm(){
+
+    document.getElementById(
+        "supplierName"
+    ).value = "";
+
+    document.getElementById(
+        "supplierCode"
+    ).value =
+        generateSupplierCode();
+
+    document.getElementById(
+        "phone"
+    ).value = "";
+
+    document.getElementById(
+        "email"
+    ).value = "";
+
+    document.getElementById(
+        "address"
+    ).value = "";
+
+    document.getElementById(
+        "notes"
+    ).value = "";
+
+}
+
+
+/* =========================================================
+   CODE FOURNISSEUR
+========================================================= */
+
+function generateSupplierCode(){
+
+    let max = 0;
+
+    suppliers.forEach(
+        supplier => {
+
+            const reference =
+                String(
+                    supplier.reference || ""
+                );
+
+            const match =
+                reference.match(
+                    /FRN-(\d+)/i
+                );
+
+            if(match){
+
+                max =
+                    Math.max(
+                        max,
+                        Number(match[1])
+                    );
+
+            }
+
+        }
+    );
+
+    return (
+        "FRN-" +
+        String(max + 1)
+            .padStart(4,"0")
+    );
+
+}
+
+
+/* =========================================================
+   ENREGISTRER FOURNISSEUR
+========================================================= */
+
+async function saveSupplier(){
+
+    const name =
+        document
+            .getElementById(
+                "supplierName"
+            )
+            .value
+            .trim();
+
+    const reference =
+        document
+            .getElementById(
+                "supplierCode"
+            )
+            .value
+            .trim();
+
+    const phone =
+        document
+            .getElementById(
+                "phone"
+            )
+            .value
+            .trim();
+
+    const email =
+        document
+            .getElementById(
+                "email"
+            )
+            .value
+            .trim();
+
+    const address =
+        document
+            .getElementById(
+                "address"
+            )
+            .value
+            .trim();
+
+    const notes =
+        document
+            .getElementById(
+                "notes"
+            )
+            .value
+            .trim();
+
+
+    if(!name){
+
+        showToast(
+            "Veuillez saisir le nom du fournisseur.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const button =
+        document.getElementById(
+            "saveButton"
+        );
+
+    button.disabled = true;
+
+    button.textContent =
+        "Enregistrement...";
+
+
+    try{
+
+        const supplier =
+            await apiFetch(
+                "/suppliers",
+                {
+                    method:"POST",
+
+                    body:JSON.stringify({
+
+                        name,
+
+                        phone:
+                            phone || null,
+
+                        email:
+                            email || null,
+
+                        address:
+                            address || null,
+
+                        reference:
+                            reference || null,
+
+                        notes:
+                            notes || null
+
+                    })
+                }
+            );
+
+
+        suppliers.push(
+            supplier
+        );
+
+
+        closeModal();
+
+        renderStats();
+
+        renderSuppliers();
+
+        showToast(
+            "Fournisseur enregistré avec succès."
+        );
+
+
+        /*
+         * Recharge aussi les données afin de garder
+         * les statistiques parfaitement synchronisées.
+         */
+
+        await loadData();
+
+    }catch(error){
+
+        console.error(
+            "SAVE SUPPLIER ERROR:",
+            error
+        );
+
+        showToast(
+            error.message ||
+            "Impossible d'enregistrer le fournisseur.",
+            "error"
+        );
+
+    }finally{
+
+        button.disabled = false;
+
+        button.textContent =
+            "✓ Enregistrer";
+
+    }
+
+}
+
+
+/* =========================================================
+   FICHE FOURNISSEUR
+========================================================= */
+
+function viewSupplier(id){
+
+    const supplier =
+        suppliers.find(
+            item =>
+                String(item.id) ===
+                String(id)
+        );
+
+
+    if(!supplier){
+
+        showToast(
+            "Fournisseur introuvable.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const stats =
+        getSupplierStats(
+            supplier
+        );
+
+
+    const detail =
+        document.getElementById(
+            "supplierDetails"
+        );
+
+
+    const recent =
+        stats.receipts
+            .slice()
+            .sort(
+                (a,b) =>
+                    new Date(
+                        b.received_at ||
+                        b.created_at ||
+                        0
+                    ) -
+                    new Date(
+                        a.received_at ||
+                        a.created_at ||
+                        0
+                    )
+            )
+            .slice(0,8);
+
+
+    detail.innerHTML = `
+
+        <div class="details">
+
+            <div class="details-row">
+
+                <span>
+                    Fournisseur
+                </span>
+
+                <strong>
+                    ${escapeHtml(
+                        supplier.name ||
+                        "—"
+                    )}
+                </strong>
+
+            </div>
+
+
+            <div class="details-row">
+
+                <span>
+                    Référence
+                </span>
+
+                <strong>
+                    ${escapeHtml(
+                        supplier.reference ||
+                        "—"
+                    )}
+                </strong>
+
+            </div>
+
+
+            <div class="details-row">
+
+                <span>
+                    Téléphone
+                </span>
+
+                <strong>
+                    ${escapeHtml(
+                        supplier.phone ||
+                        "—"
+                    )}
+                </strong>
+
+            </div>
+
+
+            <div class="details-row">
+
+                <span>
+                    Email
+                </span>
+
+                <strong>
+                    ${escapeHtml(
+                        supplier.email ||
+                        "—"
+                    )}
+                </strong>
+
+            </div>
+
+
+            <div class="details-row">
+
+                <span>
+                    Adresse
+                </span>
+
+                <strong>
+                    ${escapeHtml(
+                        supplier.address ||
+                        "—"
+                    )}
+                </strong>
+
+            </div>
+
+
+            <div class="details-row">
+
+                <span>
+                    Statut
+                </span>
+
+                <strong>
+
+                    ${
+                        supplier.active !== false
+                            ? "Actif"
+                            : "Inactif"
+                    }
+
+                </strong>
+
+            </div>
+
+
+            <div class="details-row">
+
+                <span>
+                    Nombre de réceptions
+                </span>
+
+                <strong>
+                    ${stats.count}
+                </strong>
+
+            </div>
+
+
+            <div class="details-row">
+
+                <span>
+                    Total achats
+                </span>
+
+                <strong>
+                    ${money(stats.total)}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div style="margin-top:20px;">
+
+            <h3 style="margin-bottom:12px;">
+
+                Dernières réceptions
+
+            </h3>
+
+
+            ${
+                recent.length
+                    ? recent.map(
+                        receipt => `
+
+                            <div class="movement">
+
+                                <div>
+
+                                    <strong>
+
+                                        ${escapeHtml(
+                                            receipt.receipt_number ||
+                                            "Réception"
+                                        )}
+
+                                    </strong>
+
+                                    <br>
+
+                                    <small>
+
+                                        ${formatDate(
+                                            receipt.received_at ||
+                                            receipt.created_at
+                                        )}
+
+                                    </small>
+
+                                </div>
+
+
+                                <div class="amount">
+
+                                    ${money(
+                                        Number(
+                                            receipt.total_value ||
+                                            receipt.total ||
+                                            receipt.amount ||
+                                            0
+                                        )
+                                    )}
+
+                                </div>
+
+                            </div>
+
+                        `
+                    ).join("")
+                    : `
+                        <div class="loading">
+
+                            Aucune réception pour ce fournisseur.
+
+                        </div>
+                    `
+            }
+
+        </div>
+
+    `;
+
+
+    document
+        .getElementById(
+            "detailModal"
+        )
+        .classList.add("show");
+
+}
+
+
+function closeDetailModal(){
+
+    document
+        .getElementById(
+            "detailModal"
+        )
+        .classList.remove("show");
+
+}
+
+
+/* =========================================================
+   MENU MOBILE
+========================================================= */
+
+function toggleMenu(){
+
+    document
+        .getElementById(
+            "sidebar"
+        )
+        .classList.toggle("open");
+
+}
+
+
+/* =========================================================
+   FERMETURE MODALES
+========================================================= */
+
+document
+    .getElementById(
+        "supplierModal"
+    )
+    .addEventListener(
+        "click",
+        function(event){
+
+            if(event.target === this){
+
+                closeModal();
+
+            }
+
+        }
+    );
+
+
+document
+    .getElementById(
+        "detailModal"
+    )
+    .addEventListener(
+        "click",
+        function(event){
+
+            if(event.target === this){
+
+                closeDetailModal();
+
+            }
+
+        }
+    );
+
+
+document.addEventListener(
+    "keydown",
+    function(event){
+
+        if(event.key === "Escape"){
+
+            closeModal();
+
+            closeDetailModal();
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>

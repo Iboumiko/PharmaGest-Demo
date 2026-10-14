@@ -1,0 +1,81 @@
+/* PharmaGest V51 — habillage mobile commun (maquette : en-tête, carte utilisateur, tuiles, barre du bas).
+   Actif uniquement sur écran étroit (≤ 720 px) ; au-delà, les pages gardent leur menu latéral d'origine. */
+:root{--pg-blue:#1d5fd6;--pg-navy:#0f2740;--pg-green:#1b9a6b;--pg-orange:#f59a1b;--pg-purple:#6d35b8;--pg-bg:#f2f5fa;--pg-line:#e6ebf2;--pg-muted:#6b7a90}
+#pgAppBar,#pgTabBar,#pgDrawer,#pgDrawerShade{display:none}
+
+@media (max-width:720px){
+  body.pg-mobile{background:var(--pg-bg)!important;padding-top:calc(58px + env(safe-area-inset-top,0px))!important;padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))!important}
+
+  /* ---- ancien habillage masqué (le contenu des pages reste intact) ---- */
+  body.pg-mobile aside.sidebar,body.pg-mobile .overlay,body.pg-mobile #overlay{display:none!important}
+  body.pg-mobile .main,body.pg-mobile main.main{margin-left:0!important;width:100%!important;max-width:100%!important;box-sizing:border-box}
+  body.pg-mobile .topbar{position:static!important;height:auto!important;min-height:0!important;padding:10px 16px 0!important;background:transparent!important;border:0!important;box-shadow:none!important;backdrop-filter:none!important}
+  body.pg-mobile .topbar .user-box,body.pg-mobile .topbar .admin-user,body.pg-mobile .topbar .user-chip,
+  body.pg-mobile .menu-button,body.pg-mobile .menu-toggle,body.pg-mobile .mobile-menu,body.pg-mobile #menuBtn,body.pg-mobile #menuButton,body.pg-mobile #mobileMenu{display:none!important}
+  body.pg-mobile .topbar .page-title,body.pg-mobile .topbar .top-title{font-size:20px!important;font-weight:800!important;color:var(--pg-navy)!important}
+
+  /* ---- barre du haut ---- */
+  #pgAppBar{display:flex;position:fixed;top:0;left:0;right:0;z-index:900;align-items:center;justify-content:space-between;
+    padding:calc(8px + env(safe-area-inset-top,0px)) 16px 8px;background:#fff;border-bottom:1px solid var(--pg-line);box-sizing:border-box}
+  #pgAppBar .pg-brand-row{display:flex;align-items:center;gap:10px;min-width:0;text-decoration:none}
+  #pgAppBar .pg-logo{flex:0 0 34px;width:34px;height:34px}
+  #pgAppBar .pg-wordmark{font-size:22px;font-weight:800;color:var(--pg-navy);line-height:1.1;letter-spacing:-.2px}
+  #pgAppBar .pg-wordmark b{color:#17a2b8;font-weight:800}
+  #pgAppBar .pg-estab{display:block;font-size:11px;font-weight:600;color:var(--pg-muted);line-height:1.2;max-width:62vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #pgAppBar .pg-burger{border:0;background:transparent;width:44px;height:44px;border-radius:12px;display:grid;place-items:center;color:var(--pg-navy);cursor:pointer}
+  #pgAppBar .pg-burger svg{width:26px;height:26px}
+  #pgAppBar .pg-bar-actions{display:flex;align-items:center;gap:2px}
+  #pgDrawer .pg-d-theme{display:flex;align-items:center;gap:12px;width:100%;border:1px solid var(--pg-line);background:#fff;border-radius:14px;padding:12px 10px;margin:0 0 4px;color:var(--pg-navy);font:700 15px system-ui,Arial,sans-serif;cursor:pointer;text-align:left}
+
+  /* ---- barre du bas ---- */
+  #pgTabBar{display:grid;grid-template-columns:repeat(4,1fr);position:fixed;left:0;right:0;bottom:0;z-index:900;background:#fff;border-top:1px solid var(--pg-line);
+    padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px));box-shadow:0 -6px 20px rgba(15,39,64,.06)}
+  #pgTabBar a,#pgTabBar button{border:0;background:transparent;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;color:#7a889c;font:600 12px/1.1 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;text-decoration:none;position:relative;cursor:pointer}
+  #pgTabBar svg{width:25px;height:25px}
+  #pgTabBar .active{color:var(--pg-blue)}
+  #pgTabBar .pg-tab-badge{position:absolute;top:0;left:calc(50% + 6px);min-width:17px;padding:1px 5px;border-radius:999px;background:#d92d20;color:#fff;font-size:11px;font-weight:800;text-align:center;line-height:1.3}
+
+  /* ---- tiroir (menu ☰ / Plus) ---- */
+  #pgDrawerShade{display:block;position:fixed;inset:0;background:rgba(7,18,34,.55);z-index:1100;opacity:0;pointer-events:none;transition:opacity .2s}
+  #pgDrawer{display:flex;flex-direction:column;position:fixed;top:0;right:0;bottom:0;width:min(86vw,340px);z-index:1110;background:#fff;transform:translateX(105%);transition:transform .22s ease;
+    padding:calc(14px + env(safe-area-inset-top,0px)) 14px calc(14px + env(safe-area-inset-bottom,0px));box-sizing:border-box;box-shadow:none;visibility:hidden;transition:transform .22s ease,visibility 0s linear .22s}
+  body.pg-drawer-open #pgDrawer{transform:none;visibility:visible;box-shadow:-12px 0 40px rgba(0,0,0,.2);transition:transform .22s ease}
+  body.pg-drawer-open #pgDrawerShade{opacity:1;pointer-events:auto}
+  #pgDrawer .pg-d-user{display:flex;align-items:center;gap:12px;padding:12px;border-radius:16px;background:var(--pg-bg);margin-bottom:8px}
+  #pgDrawer .pg-d-menu{flex:1;overflow-y:auto;overscroll-behavior:contain;margin:0 -4px;padding:0 4px}
+  #pgDrawer .pg-d-section{margin:14px 10px 4px;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#8a97ab}
+  #pgDrawer .pg-d-link{display:flex;align-items:center;gap:12px;padding:12px 10px;border-radius:12px;color:var(--pg-navy);font:700 15px/1.2 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;text-decoration:none}
+  #pgDrawer .pg-d-link.active{background:#e9f0fd;color:var(--pg-blue)}
+  #pgDrawer .pg-d-ico{flex:0 0 24px;text-align:center;font-size:18px}
+  #pgDrawer .pg-d-badge{margin-left:auto;min-width:20px;padding:1px 7px;border-radius:999px;background:#d92d20;color:#fff;font-size:12px;font-weight:800;text-align:center}
+  #pgDrawer .pg-d-logout{margin-top:8px;border:0;border-radius:14px;padding:13px;background:#fdeceb;color:#b42318;font:800 15px system-ui,Arial,sans-serif;cursor:pointer}
+
+  /* ---- avatar commun ---- */
+  .pg-avatar{flex:0 0 52px;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#1d5fd6,#17a2b8);color:#fff;font:800 20px system-ui,Arial,sans-serif}
+
+  /* ---- accueil (index.html) ---- */
+  #pgHome{padding:4px 0 6px;display:block}
+  #pgHome .pg-profile{display:flex;align-items:center;gap:14px;padding:14px;border-radius:20px;background:#fff;box-shadow:0 6px 22px rgba(15,39,64,.07);text-decoration:none;color:inherit;margin-bottom:16px}
+  #pgHome .pg-profile .pg-name{font-size:21px;font-weight:800;color:var(--pg-navy);line-height:1.2}
+  #pgHome .pg-profile .pg-state{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:var(--pg-green);margin-top:2px}
+  #pgHome .pg-profile .pg-state i{width:9px;height:9px;border-radius:50%;background:currentColor;display:inline-block}
+  #pgHome .pg-profile .pg-state.off{color:#c2570c}
+  #pgHome .pg-profile .pg-chev{margin-left:auto;font-size:26px;color:#8a97ab}
+  #pgHome .pg-tiles{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+  #pgHome .pg-tile{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;min-height:128px;padding:16px 8px;border-radius:20px;color:#fff;text-decoration:none;
+    font:800 19px/1.15 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;box-shadow:0 8px 20px rgba(15,39,64,.14);-webkit-tap-highlight-color:transparent}
+  #pgHome .pg-tile:active{transform:scale(.98)}
+  #pgHome .pg-tile svg{width:46px;height:46px}
+  #pgHome .pg-tile.green{background:var(--pg-green)}#pgHome .pg-tile.blue{background:var(--pg-blue)}
+  #pgHome .pg-tile.orange{background:var(--pg-orange)}#pgHome .pg-tile.purple{background:var(--pg-purple)}
+  #pgHome .pg-tile .pg-tile-badge{position:absolute;top:10px;right:12px;min-width:22px;padding:1px 7px;border-radius:999px;background:#fff;color:#d92d20;font-size:13px;font-weight:800;text-align:center}
+  #pgHome .pg-recent{padding:16px;border-radius:20px;background:#fff;box-shadow:0 6px 22px rgba(15,39,64,.07)}
+  #pgHome .pg-recent h2{margin:0 0 8px;font-size:20px;font-weight:800;color:var(--pg-navy)}
+  #pgHome .pg-sale{display:grid;grid-template-columns:minmax(0,1.5fr) auto auto;gap:10px;align-items:center;padding:11px 0;border-top:1px solid var(--pg-line);font-size:14px;color:var(--pg-navy)}
+  #pgHome .pg-sale:first-of-type{border-top:0}
+  #pgHome .pg-sale .n{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #pgHome .pg-sale .a{font-weight:800;white-space:nowrap}
+  #pgHome .pg-sale .t{color:var(--pg-muted);white-space:nowrap}
+  #pgHome .pg-empty{padding:14px 4px;color:var(--pg-muted);font-size:14px}
+  body.pg-home .welcome,body.pg-home .topbar{display:none!important}
+}

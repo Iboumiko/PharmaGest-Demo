@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b2a4a">
+<title>PharmaGest — Démonstration</title>
+<link rel="manifest" href="app/manifest.webmanifest">
+<link rel="icon" href="app/icons/icon-192.png">
+<style>
+  :root{--navy:#0b2a4a;--teal:#14b8a6;--bg:#f2f6fa;--ink:#18243a;--muted:#5d6b82}
+  *{box-sizing:border-box}
+  html,body{margin:0;min-height:100%;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink)}
+  body{background:linear-gradient(180deg,var(--navy) 0,#12406b 46%,var(--bg) 46%);min-height:100vh;padding:calc(28px + env(safe-area-inset-top,0px)) 18px calc(28px + env(safe-area-inset-bottom,0px))}
+  .wrap{max-width:440px;margin:0 auto}
+  .brand{display:flex;align-items:center;gap:12px;color:#fff;margin-bottom:22px}
+  .brand img{width:52px;height:52px;border-radius:14px;background:#fff;padding:4px}
+  .brand h1{font-size:22px;margin:0;line-height:1.1}
+  .brand span{display:block;font-size:13px;opacity:.8;margin-top:3px}
+  .card{background:#fff;border-radius:20px;padding:20px;box-shadow:0 10px 30px rgba(11,42,74,.18)}
+  .card h2{margin:0 0 6px;font-size:18px}
+  .card p{margin:0 0 16px;color:var(--muted);font-size:14px;line-height:1.45}
+  .role{display:flex;align-items:center;gap:14px;width:100%;text-align:left;border:1.5px solid #dbe6f1;background:#f8fbfe;border-radius:16px;padding:16px;margin-bottom:12px;font:inherit;color:inherit;cursor:pointer}
+  .role:active{transform:scale(.99)}
+  .role .ico{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:22px;background:#e3f2ff;flex:none}
+  .role.seller .ico{background:#e1f8f3}
+  .role b{display:block;font-size:16px}
+  .role small{display:block;color:var(--muted);font-size:13px;margin-top:2px;line-height:1.35}
+  .role[disabled]{opacity:.55;pointer-events:none}
+  #status{min-height:20px;margin:6px 2px 0;font-size:13px;color:var(--muted);text-align:center}
+  #status.err{color:#b3262d}
+  .note{margin-top:16px;font-size:12.5px;color:var(--muted);line-height:1.5}
+  .note code{background:#eef3f8;border-radius:6px;padding:1px 6px;font-size:12px}
+  .reset{display:block;margin:14px auto 0;background:none;border:0;color:var(--muted);font:inherit;font-size:13px;text-decoration:underline;cursor:pointer}
+  .foot{margin-top:18px;text-align:center;font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">
+    <img src="app/icons/icon-192.png" alt="">
+    <div><h1>PharmaGest</h1><span>Démonstration · données fictives</span></div>
+  </div>
+
+  <div class="card">
+    <h2>Choisissez votre rôle</h2>
+    <p>Essayez l’application comme dans une vraie pharmacie : produits, stocks, lots, ventes, alertes et rapports.</p>
+
+    <button class="role" id="goAdmin" type="button" disabled>
+      <span class="ico">🩺</span>
+      <span><b>Administrateur</b><small>Produits, réceptions, lots, utilisateurs, rapports et paramètres.</small></span>
+    </button>
+    <button class="role seller" id="goSeller" type="button" disabled>
+      <span class="ico">🛒</span>
+      <span><b>Vendeur</b><small>Ventes, scanner de codes-barres et consultation des stocks.</small></span>
+    </button>
+
+    <div id="status">Préparation de la démonstration…</div>
+
+    <div class="note">
+      Comptes de la démo : <code>admin</code> / <code>vendeur</code> — mot de passe <code>demo1234</code>.<br>
+      Les données restent <b>sur cet appareil</b> uniquement. Rien n’est envoyé sur Internet.
+    </div>
+    <button class="reset" id="reset" type="button">Réinitialiser la démonstration</button>
+  </div>
+  <div class="foot">Sur iPhone : Partager → « Sur l’écran d’accueil » · Sur Android : menu ⋮ → « Installer l’application ».</div>
+</div>
+
+<script src="app/assets/js/local-api.js"></script>
+<script>
+(function(){
+  'use strict';
+  var PASSWORD='demo1234', SEED_FLAG='pg_demo_seeded_v1', DB_NAME='pharmagest_local_v4';
+  var $=function(id){return document.getElementById(id)};
+  var statusEl=$('status'), adminBtn=$('goAdmin'), sellerBtn=$('goSeller');
+  function say(t,err){ statusEl.textContent=t; statusEl.className=err?'err':''; }
+
+  /* ---------- appels à l'API locale de l'application ---------- */
+  async function api(method,path,body){
+    var r=await fetch(location.origin+'/api'+path,{method:method,headers:{'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});
+    var j=await r.json().catch(function(){return {}});
+    if(!r.ok) throw new Error((j&&j.error)||('Erreur '+r.status+' '+path));
+    return j;
+  }
+  function openDb(){ return new Promise(function(res,rej){ var q=indexedDB.open(DB_NAME); q.onsuccess=function(){res(q.result)}; q.onerror=function(){rej(q.error)}; }); }
+  async function allUsers(){
+    var d=await openDb();
+    return new Promise(function(res,rej){ var q=d.transaction('users','readonly').objectStore('users').getAll(); q.onsuccess=function(){d.close();res(q.result||[])}; q.onerror=function(){d.close();rej(q.error)}; });
+  }
+  function forgeToken(u){ return 'local.'+btoa(JSON.stringify({id:u.id,name:u.name,role:u.role,session:'persistent-local'}))+'.android'; }
+  function setSession(token,user){
+    localStorage.setItem('dpa_token',token); localStorage.setItem('dpa_user',JSON.stringify(user));
+    localStorage.setItem('dpa_local_user_id',user.id); localStorage.setItem('dpa_session_active','1');
+  }
+  function clearSession(){ ['dpa_token','dpa_user','dpa_local_user_id','dpa_session_active'].forEach(function(k){localStorage.removeItem(k)}); }
+  async function login(username){
+    var d=await api('POST','/auth/login',{username:username,password:PASSWORD});
+    setSession(d.token,d.user); return d;
+  }
+
+  /* ---------- données fictives ---------- */
+  function iso(days){ var d=new Date(Date.now()+days*86400000); return d.toISOString().slice(0,10); }
+  // [code, nom, principe actif, dosage, forme, catégorie, laboratoire, code-barres, prix achat, prix vente, seuil, unité, unités/carton, stock, jours avant péremption]
+  var PRODUCTS=[
+    ['PAR500','Paracétamol 500 mg','Paracétamol','500 mg','Comprimé','Antalgique','Laboratoire Démo A','6001000000011',300,500,40,'Boîte',20,120,540],
+    ['PAR1G','Paracétamol 1 g','Paracétamol','1 g','Comprimé','Antalgique','Laboratoire Démo A','6001000000028',450,750,30,'Boîte',20,80,420],
+    ['IBU400','Ibuprofène 400 mg','Ibuprofène','400 mg','Comprimé','Anti-inflammatoire','Laboratoire Démo B','6001000000035',600,1000,30,'Boîte',10,60,300],
+    ['AMX500','Amoxicilline 500 mg','Amoxicilline','500 mg','Gélule','Antibiotique','Laboratoire Démo C','6001000000042',1200,1800,25,'Boîte',12,45,25],
+    ['AMC1G','Amoxicilline + acide clavulanique 1 g','Amoxicilline / acide clavulanique','1 g','Comprimé','Antibiotique','Laboratoire Démo C','6001000000059',2600,3800,15,'Boîte',10,18,210],
+    ['AZI250','Azithromycine 250 mg','Azithromycine','250 mg','Comprimé','Antibiotique','Laboratoire Démo B','6001000000066',2200,3200,12,'Boîte',6,7,380],
+    ['CIP500','Ciprofloxacine 500 mg','Ciprofloxacine','500 mg','Comprimé','Antibiotique','Laboratoire Démo D','6001000000073',1500,2300,12,'Boîte',10,30,15],
+    ['MET500','Métronidazole 500 mg','Métronidazole','500 mg','Comprimé','Antiparasitaire','Laboratoire Démo D','6001000000080',700,1200,20,'Boîte',20,50,330],
+    ['ART80','Artéméther / luméfantrine 80/480 mg','Artéméther / luméfantrine','80/480 mg','Comprimé','Antipaludique','Laboratoire Démo E','6001000000097',1800,2800,30,'Boîte',6,90,260],
+    ['COA20','Artésunate / amodiaquine 100/270 mg','Artésunate / amodiaquine','100/270 mg','Comprimé','Antipaludique','Laboratoire Démo E','6001000000103',1300,2000,30,'Boîte',6,70,480],
+    ['OME20','Oméprazole 20 mg','Oméprazole','20 mg','Gélule','Gastro-entérologie','Laboratoire Démo B','6001000000110',900,1500,25,'Boîte',14,55,360],
+    ['SRO01','Sels de réhydratation orale','Électrolytes','—','Poudre','Réhydratation','Laboratoire Démo F','6001000000127',150,300,60,'Sachet',50,200,600],
+    ['LOP02','Lopéramide 2 mg','Lopéramide','2 mg','Gélule','Gastro-entérologie','Laboratoire Démo D','6001000000134',500,900,20,'Boîte',12,40,280],
+    ['LOR10','Loratadine 10 mg','Loratadine','10 mg','Comprimé','Antiallergique','Laboratoire Démo F','6001000000141',700,1200,20,'Boîte',10,35,420],
+    ['SAL100','Salbutamol 100 µg spray','Salbutamol','100 µg','Spray','Respiratoire','Laboratoire Démo G','6001000000158',1800,2800,10,'Flacon',1,4,300],
+    ['TOU01','Sirop contre la toux adulte','Dextrométhorphane','—','Sirop','Respiratoire','Laboratoire Démo G','6001000000165',1100,1800,15,'Flacon',1,28,330],
+    ['VITC5','Vitamine C 500 mg','Acide ascorbique','500 mg','Comprimé','Vitamines','Laboratoire Démo F','6001000000172',800,1300,25,'Tube',20,65,500],
+    ['FER60','Fer + acide folique','Fumarate ferreux / acide folique','60 mg','Comprimé','Vitamines','Laboratoire Démo F','6001000000189',600,1000,20,'Boîte',30,42,450],
+    ['BET10','Bétadine solution 10 %','Povidone iodée','10 %','Solution','Antiseptique','Laboratoire Démo H','6001000000196',900,1500,15,'Flacon',1,24,700],
+    ['COM01','Compresses stériles 10x10','—','—','Dispositif','Pansements','Laboratoire Démo H','6001000000202',250,500,30,'Sachet',10,150,900],
+    ['SER01','Sérum physiologique 5 ml','Chlorure de sodium','0,9 %','Unidose','Soins','Laboratoire Démo H','6001000000219',40,100,100,'Unidose',20,400,640],
+    ['DIC50','Diclofénac 50 mg','Diclofénac','50 mg','Comprimé','Anti-inflammatoire','Laboratoire Démo B','6001000000226',650,1100,20,'Boîte',20,3,320],
+    ['ACV01','Aciclovir crème 5 %','Aciclovir','5 %','Crème','Dermatologie','Laboratoire Démo D','6001000000233',1500,2400,8,'Tube',1,10,-12],
+    ['GLY01','Glibenclamide 5 mg','Glibenclamide','5 mg','Comprimé','Diabète','Laboratoire Démo I','6001000000240',700,1300,15,'Boîte',30,26,390]
+  ];
+  // Ventes d'exemple : [code produit, quantité]
+  var SALES_ADMIN=[[['PAR500',2],['SRO01',3]],[['AMX500',1],['IBU400',1]]];
+  var SALES_SELLER=[
+    [['PAR500',3],['VITC5',1]],[['ART80',1]],[['SRO01',5],['LOP02',1]],[['OME20',1],['PAR1G',1]],
+    [['LOR10',2]],[['COA20',2],['PAR500',2]],[['BET10',1],['COM01',2]],[['TOU01',1]],
+    [['MET500',1],['SER01',6]],[['IBU400',2]],[['FER60',1],['VITC5',1]],[['GLY01',1]]
+  ];
+
+  async function seed(){
+    say('Création du pharmacien et du vendeur…');
+    try{ await api('POST','/auth/login',{username:'init',password:'init'}); }catch(e){}   // déclenche l'initialisation du moteur local (route publique)
+    var owner=(await allUsers()).find(function(u){return u.is_owner===true&&u.active});
+    if(!owner) throw new Error('Initialisation impossible (propriétaire introuvable).');
+    setSession(forgeToken(owner),{id:owner.id,name:owner.name,username:owner.username,role:owner.role,active:true,is_owner:true});
+
+    var ul=await api('GET','/users'); var users=Array.isArray(ul)?ul:((ul&&ul.users)||[]); var has=function(n){return users.some(function(u){return u.username===n})};
+    if(!has('admin')) await api('POST','/users',{name:'Dr Awa Diallo',username:'admin',password:PASSWORD,role:'admin',phone:'+221 77 000 00 01'});
+    if(!has('vendeur')) await api('POST','/users',{name:'Moussa Konaté',username:'vendeur',password:PASSWORD,role:'seller',phone:'+221 77 000 00 02'});
+
+    say('Ajout des fournisseurs et des produits…');
+    var s1=await api('POST','/suppliers',{name:'Grossiste Santé Plus',phone:'+221 33 000 00 10',address:'Zone industrielle, Dakar'});
+    var s2=await api('POST','/suppliers',{name:'Pharma Distribution Sahel',phone:'+221 33 000 00 20',address:'Avenue des Pharmacies, Thiès'});
+    var byCode={};
+    for(var i=0;i<PRODUCTS.length;i++){
+      var p=PRODUCTS[i];
+      var created=await api('POST','/products',{code:p[0],name:p[1],active_ingredient:p[2],dosage:p[3],form:p[4],category:p[5],laboratory:p[6],barcode:p[7],
+        purchase_price:p[8],sale_price:p[9],alert_threshold:p[10],unit_name:p[11],units_per_carton:p[12]});
+      byCode[p[0]]=created.id;
+    }
+
+    say('Réception du stock (lots et péremptions)…');
+    var items1=[],items2=[];
+    PRODUCTS.forEach(function(p,idx){
+      var it={product_id:byCode[p[0]],lot_number:'L'+(24100+idx),expiry_date:iso(p[14]),quantity:p[13],purchase_price:p[8]};
+      (idx%2?items2:items1).push(it);
+    });
+    await api('POST','/receipts',{supplier_id:s1.id,invoice_number:'FAC-2026-0412',items:items1});
+    await api('POST','/receipts',{supplier_id:s2.id,invoice_number:'FAC-2026-0419',items:items2});
+
+    async function sale(list){
+      await api('POST','/sales',{payment_method:'CASH',items:list.map(function(l){return {product_id:byCode[l[0]],quantity:l[1]}})});
+    }
+    say('Enregistrement de ventes d’exemple…');
+    await login('admin');   for(var a=0;a<SALES_ADMIN.length;a++) await sale(SALES_ADMIN[a]);
+    await login('vendeur'); for(var b=0;b<SALES_SELLER.length;b++) await sale(SALES_SELLER[b]);
+    clearSession();
+    localStorage.setItem(SEED_FLAG,'1');
+  }
+
+  async function ready(){
+    try{
+      var seeded=localStorage.getItem(SEED_FLAG)==='1';
+      if(seeded){ try{ var us=await allUsers(); seeded=us.some(function(u){return u.username==='vendeur'}); }catch(e){ seeded=false; } }
+      if(!seeded) await seed();
+      say('Prête. Choisissez un rôle.');
+      adminBtn.disabled=false; sellerBtn.disabled=false;
+    }catch(e){
+      console.error(e); say('Erreur de préparation : '+(e.message||e)+' — touchez « Réinitialiser la démonstration ».',true);
+    }
+  }
+  async function enter(username){
+    adminBtn.disabled=true; sellerBtn.disabled=true; say('Ouverture…');
+    try{ await login(username); location.href='app/index.html'; }
+    catch(e){ say('Connexion impossible : '+(e.message||e),true); adminBtn.disabled=false; sellerBtn.disabled=false; }
+  }
+  async function reset(){
+    if(!confirm('Réinitialiser la démonstration ? Les données de la démo seront recréées.')) return;
+    adminBtn.disabled=true; sellerBtn.disabled=true; say('Réinitialisation…');
+    try{
+      await new Promise(function(res){ var q=indexedDB.deleteDatabase(DB_NAME); q.onsuccess=q.onerror=q.onblocked=function(){res()}; });
+      var drop=[]; for(var i=0;i<localStorage.length;i++){ var k=localStorage.key(i); if(/^(pg_|dpa_|pharmagest)/i.test(k)) drop.push(k); }
+      drop.forEach(function(k){localStorage.removeItem(k)});
+    }catch(e){}
+    location.reload();
+  }
+  adminBtn.addEventListener('click',function(){enter('admin')});
+  sellerBtn.addEventListener('click',function(){enter('vendeur')});
+  $('reset').addEventListener('click',reset);
+  ready();
+})();
+</script>
+</body>
+</html>

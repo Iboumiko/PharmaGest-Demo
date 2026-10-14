@@ -1,0 +1,2626 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><script src="assets/js/demo-guard.js"></script><style id="pg-boot-css">html.pg-boot body{opacity:0!important}</style><script>(function(){var h=document.documentElement;h.classList.add("pg-boot");window.__pgShow=function(){h.classList.remove("pg-boot")};setTimeout(window.__pgShow,800);window.addEventListener("load",function(){setTimeout(window.__pgShow,50)});})();</script><link rel="stylesheet" href="assets/css/app.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PharmaGest</title>
+
+  <style>
+    :root {
+      --navy: #0b1f3a;
+      --blue: #155eef;
+      --blue-dark: #1048bd;
+      --turquoise: #13b8a6;
+      --white: #ffffff;
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #6b7280;
+      --border: #dfe5ee;
+      --danger: #dc3545;
+      --warning: #f59e0b;
+      --success: #16845b;
+      --shadow: 0 8px 25px rgba(11, 31, 58, 0.08);
+      --radius: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 250px;
+      background: var(--navy);
+      color: white;
+      position: fixed;
+      inset: 0 auto 0 0;
+      z-index: 100;
+      overflow-y: auto;
+      transition: transform .25s ease;
+    }
+
+    .brand {
+      padding: 22px 18px;
+      border-bottom: 1px solid rgba(255,255,255,.1);
+    }
+
+    .brand-title {
+      font-size: 17px;
+      font-weight: 800;
+      line-height: 1.3;
+    }
+
+    .brand-subtitle {
+      margin-top: 5px;
+      color: #9fb3cf;
+      font-size: 12px;
+    }
+
+    .nav {
+      padding: 15px 10px 25px;
+    }
+
+    .nav-section {
+      margin: 16px 10px 8px;
+      color: #7790b2;
+      text-transform: uppercase;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .08em;
+    }
+
+    .nav a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #d9e4f3;
+      text-decoration: none;
+      padding: 11px 12px;
+      margin: 3px 0;
+      border-radius: 9px;
+      font-size: 14px;
+    }
+
+    .nav a:hover,
+    .nav a.active {
+      background: rgba(21,94,239,.28);
+      color: white;
+    }
+
+    .nav-icon {
+      width: 22px;
+      text-align: center;
+    }
+
+    /* MAIN */
+    .main {
+      margin-left: 250px;
+      width: calc(100% - 250px);
+      min-width: 0;
+    }
+
+    .topbar {
+      background: white;
+      border-bottom: 1px solid var(--border);
+      height: 68px;
+      padding: 0 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .mobile-menu {
+      display: none;
+      border: 0;
+      background: #edf3fb;
+      width: 42px;
+      height: 42px;
+      border-radius: 9px;
+      font-size: 20px;
+    }
+
+    .page-title {
+      font-size: 21px;
+      font-weight: 800;
+    }
+
+    .page-subtitle {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 3px;
+    }
+
+    .user-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .user-avatar {
+      width: 38px;
+      height: 38px;
+      background: #e7efff;
+      color: var(--blue);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+    }
+
+    .user-name {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .user-role {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .content {
+      padding: 25px 28px 40px;
+      max-width: 1500px;
+      margin: auto;
+    }
+
+    /* BUTTONS */
+    .btn {
+      border: 0;
+      border-radius: 9px;
+      min-height: 42px;
+      padding: 0 16px;
+      font-weight: 700;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--blue-dark);
+    }
+
+    .btn-secondary {
+      background: #edf2f8;
+      color: var(--text);
+    }
+
+    .btn-danger {
+      background: #fff0f1;
+      color: var(--danger);
+    }
+
+    .btn-small {
+      min-height: 34px;
+      padding: 0 11px;
+      font-size: 12px;
+    }
+
+    /* STATS */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .stat-value {
+      margin-top: 8px;
+      font-size: 25px;
+      font-weight: 800;
+      color: var(--navy);
+    }
+
+    .stat-note {
+      margin-top: 5px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* TOOLBAR */
+    .toolbar {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 15px;
+      margin-bottom: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .search {
+      width: 290px;
+      max-width: 100%;
+      height: 42px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 0 13px;
+      outline: none;
+    }
+
+    .search:focus,
+    input:focus,
+    select:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(21,94,239,.1);
+    }
+
+    /* CARD / TABLE */
+    .card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 850px;
+    }
+
+    th,
+    td {
+      padding: 13px 15px;
+      border-bottom: 1px solid #edf0f5;
+      text-align: left;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    th {
+      background: #f8fafc;
+      color: #596579;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .03em;
+    }
+
+    tbody tr:hover {
+      background: #fafcff;
+    }
+
+    .number {
+      font-weight: 800;
+      color: var(--blue);
+    }
+
+    .amount {
+      font-weight: 800;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .empty {
+      text-align: center;
+      padding: 45px 20px;
+      color: var(--muted);
+    }
+
+    .loading {
+      text-align: center;
+      padding: 35px;
+      color: var(--muted);
+    }
+
+    /* MODAL */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(7, 18, 34, .58);
+      z-index: 500;
+      padding: 25px;
+      overflow-y: auto;
+    }
+
+    .modal-backdrop.show {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    .modal {
+      width: min(1100px, calc(100vw - 24px));
+      max-width: 1100px;
+      max-height: calc(100vh - 40px);
+      overflow: auto;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.25);
+      margin: 20px auto;
+      overflow: hidden;
+    }
+
+    .receipt-detail-summary{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:16px;padding:14px;background:#f1f7ff;border-radius:10px;color:#0b1f3a}
+
+    .modal-header {
+      padding: 20px 22px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .modal-title {
+      font-size: 19px;
+      font-weight: 800;
+    }
+
+    .close-btn {
+      width: 38px;
+      height: 38px;
+      border: 0;
+      border-radius: 8px;
+      background: #f0f3f7;
+      font-size: 20px;
+    }
+
+    .modal-body {
+      padding: 22px;
+    }
+
+    .modal-footer {
+      padding: 17px 22px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 15px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    .field label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #4c5668;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      height: 42px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0 11px;
+      background: white;
+      outline: none;
+    }
+
+    .section-title {
+      margin: 25px 0 12px;
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--navy);
+    }
+
+    .receipt-lines {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .receipt-line {
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      padding: 15px;
+      background: #fbfcfe;
+    }
+
+    .line-grid {
+      display: grid;
+      grid-template-columns: 2fr 1.2fr 1.2fr .8fr .8fr 1fr auto;
+      gap: 10px;
+      align-items: end;
+    }
+
+    .line-total {
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      font-weight: 800;
+      color: var(--navy);
+      white-space: nowrap;
+    }
+
+    .remove-line {
+      height: 42px;
+      width: 42px;
+      border: 0;
+      border-radius: 8px;
+      background: #fff0f1;
+      color: var(--danger);
+      font-size: 18px;
+    }
+
+    .summary-box {
+      margin-top: 18px;
+      background: #f1f7ff;
+      border: 1px solid #d8e7ff;
+      border-radius: 11px;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .summary-label {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .summary-total {
+      font-size: 21px;
+      font-weight: 800;
+      color: var(--navy);
+    }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      z-index: 1000;
+      min-width: 280px;
+      max-width: 420px;
+      background: var(--navy);
+      color: white;
+      padding: 14px 17px;
+      border-radius: 10px;
+      box-shadow: 0 12px 35px rgba(0,0,0,.2);
+      display: none;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .toast.show {
+      display: block;
+    }
+
+    .toast.success {
+      border-left: 4px solid var(--turquoise);
+    }
+
+    .toast.error {
+      border-left: 4px solid var(--danger);
+    }
+
+    /* DETAIL */
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .detail-item {
+      background: #f7f9fc;
+      border-radius: 9px;
+      padding: 12px;
+    }
+
+    .detail-item span {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      margin-bottom: 5px;
+    }
+
+    .detail-item strong {
+      font-size: 13px;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1100px) {
+      .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .form-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .line-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 800px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .main {
+        margin-left: 0;
+        width: 100%;
+      }
+
+      .mobile-menu {
+        display: block;
+      }
+
+      .content {
+        padding: 18px 15px 30px;
+      }
+
+      .topbar {
+        padding: 0 15px;
+      }
+
+      .user-box .user-name,
+      .user-box .user-role {
+        display: none;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .field.full {
+        grid-column: auto;
+      }
+
+      .detail-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .line-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .toolbar {
+        align-items: stretch;
+      }
+
+      .toolbar-left {
+        width: 100%;
+      }
+
+      .search {
+        width: 100%;
+      }
+
+      .toolbar .btn {
+        width: 100%;
+      }
+
+      .line-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-backdrop {
+        padding: 8px;
+      }
+
+      .modal {
+        margin: 5px auto;
+      }
+
+      .modal-body,
+      .modal-header,
+      .modal-footer {
+        padding: 15px;
+      }
+
+      .detail-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .toast {
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+        min-width: 0;
+      }
+    }
+
+    #receiptPrintArea { display: none; }
+    @media print {
+      @page { size: A4 portrait; margin: 12mm; }
+      body * { visibility: hidden !important; }
+      #receiptPrintArea, #receiptPrintArea * { visibility: visible !important; }
+      #receiptPrintArea {
+        display: block !important;
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        color: #111827 !important;
+        background: #fff !important;
+        font-family: Arial, sans-serif !important;
+      }
+      #receiptPrintArea h1 { font-size: 20px; margin: 0 0 5px; }
+      #receiptPrintArea .print-meta { font-size: 10px; color: #4b5563; margin-bottom: 14px; }
+      #receiptPrintArea table { width: 100% !important; min-width: 0 !important; border-collapse: collapse !important; table-layout: auto !important; }
+      #receiptPrintArea th, #receiptPrintArea td { visibility: visible !important; white-space: normal !important; padding: 6px 5px !important; border: 1px solid #d1d5db !important; font-size: 9px !important; color: #111827 !important; }
+      #receiptPrintArea th { background: #f3f4f6 !important; }
+      #receiptPrintArea .print-total { margin-top: 12px; text-align: right; font-weight: bold; font-size: 11px; }
+      #receiptPrintArea tr { break-inside: avoid; }
+    }
+
+    /* =====================================================================
+       V48 — Fenêtres de la page Réceptions (détail + nouvelle réception)
+
+       CAUSE RACINE du débordement : app.css définit une classe globale
+       « .modal { position:fixed; inset:0; display:grid; place-items:center;
+       backdrop-filter... } ». Les fenêtres de cette page utilisent aussi la
+       classe « modal » : le « place-items:center » centrait le contenu au lieu
+       de l'étirer, et le corps de la fenêtre prenait la largeur de son
+       contenu (≈ 980 px) au lieu de celle de l'écran. On neutralise donc
+       cette règle globale ici, une seule fois, pour toutes les fenêtres.
+       ===================================================================== */
+    .modal-backdrop .modal {
+      position: relative;
+      inset: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: flex-start;
+      place-items: stretch;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      z-index: auto;
+      padding: 0;
+      box-sizing: border-box;
+      min-width: 0;
+      background: #fff;
+    }
+    .modal-backdrop .modal > * { min-width: 0; }
+    .modal-backdrop .modal-header,
+    .modal-backdrop .modal-footer { flex: 0 0 auto; }
+    .modal-backdrop .modal-body {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Fenêtre « Voir » de l'historique : toujours dans l'écran, contenu défilant */
+    #detailModal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1500;
+      background: rgba(7,18,34,.62);
+      padding: 16px;
+      box-sizing: border-box;
+      overflow: hidden;
+      align-items: center;
+      justify-content: center;
+    }
+    #detailModal.show { display: flex !important; }
+    #detailModal .detail-modal {
+      width: min(760px, 100%);
+      max-width: 100%;
+      max-height: 100%;
+      margin: 0;
+      border-radius: 14px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.25);
+      overflow: hidden;
+    }
+    #detailModal .modal-header {
+      padding: 16px 18px;
+      gap: 12px;
+      align-items: center;
+    }
+    #detailModal .modal-header > div { min-width: 0; }
+    #detailModal .modal-title { font-size: 18px; line-height: 1.3; overflow-wrap: anywhere; }
+    #detailModal .modal-body { padding: 16px 18px; }
+    #detailModal .modal-footer { padding: 12px 18px; }
+    #detailModal .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    #detailModal .detail-item { min-width: 0; overflow-wrap: anywhere; }
+    #detailModal .detail-item strong { overflow-wrap: anywhere; }
+    #detailModal .table-wrap {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    #detailModal .table-wrap table { min-width: 640px; }
+    #detailModal td.amount { white-space: nowrap; }
+    #detailModal .receipt-detail-summary { margin-top: 12px; }
+
+    /* Téléphone : chaque article devient une fiche lisible (plus de tableau large) */
+    @media (max-width: 600px) {
+      #detailModal { padding: 8px; }
+      #detailModal .detail-modal { width: 100%; border-radius: 12px; }
+      #detailModal .modal-header,
+      #detailModal .modal-body,
+      #detailModal .modal-footer { padding-left: 14px; padding-right: 14px; }
+      #detailModal .modal-title { font-size: 16px; }
+      #detailModal .modal-footer .btn { width: 100%; }
+      #detailModal .table-wrap { overflow-x: visible; border: 0; background: transparent; box-shadow: none; }
+      #detailModal .table-wrap table,
+      #detailModal .table-wrap tbody { display: block; min-width: 0; width: 100%; }
+      #detailModal .table-wrap thead { display: none; }
+      #detailModal .table-wrap tr {
+        display: block;
+        margin-bottom: 10px;
+        padding: 10px 12px;
+        border: 1px solid #e5eaf0;
+        border-radius: 10px;
+        background: #fafcff;
+      }
+      #detailModal .table-wrap td {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 12px;
+        padding: 4px 0;
+        border: 0;
+        text-align: right;
+        overflow-wrap: anywhere;
+      }
+      #detailModal .table-wrap td::before {
+        content: attr(data-label);
+        flex: 0 0 auto;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--muted);
+        text-align: left;
+      }
+      #detailModal .table-wrap td:first-child {
+        font-weight: 800;
+        padding-bottom: 6px;
+        margin-bottom: 4px;
+        border-bottom: 1px dashed #d8e0ea;
+      }
+      #detailModal .table-wrap td:first-child::before { content: none; }
+      #detailModal .table-wrap td:not([data-label])::before { content: none; }
+      #detailModal .table-wrap td[colspan] { display: block; text-align: center; }
+    }
+    @media (max-width: 360px) {
+      #detailModal .detail-grid { grid-template-columns: minmax(0, 1fr); }
+    }
+
+    /* Téléphone en paysage (écran peu haut) : présentation compacte */
+    @media (max-height: 500px) {
+      #detailModal { padding: 8px; }
+      #detailModal .modal-header { padding: 8px 16px; }
+      #detailModal .modal-title { font-size: 16px; }
+      #detailModal .modal-header .page-subtitle { display: none; }
+      #detailModal .modal-body { padding: 10px 16px; }
+      #detailModal .modal-footer { padding: 8px 16px; }
+      #detailModal .detail-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-bottom: 10px; }
+      #detailModal .detail-item { padding: 8px 10px; }
+      #detailModal .table-wrap th,
+      #detailModal .table-wrap td { padding: 8px 10px; font-size: 12px; }
+    }
+
+  </style>
+<link rel="stylesheet" href="assets/css/mobile-shell.css">
+<link rel="stylesheet" href="assets/css/theme.css">
+<script src="assets/js/theme.js"></script>
+<link rel="stylesheet" href="assets/css/modals.css">
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+
+    <div class="brand">
+      <div class="brand-title">Pharma<span>Gest</span></div>
+      <div class="brand-subtitle"><span data-establishment-name>Nom de l’établissement</span> · Version 1.0</div>
+    </div>
+
+    <nav class="nav">
+
+      <div class="nav-section">Principal</div>
+
+      <a href="index.html">
+        <span class="nav-icon">▦</span>
+        Tableau de bord
+      </a>
+
+      <a href="vente.html">
+        <span class="nav-icon">🛒</span>
+        Ventes
+      </a>
+
+      <div class="nav-section">Gestion</div>
+
+      <a href="produits.html">
+        <span class="nav-icon">💊</span>
+        Produits
+      </a>
+
+      <a href="stocks.html">
+        <span class="nav-icon">📦</span>
+        Stocks
+      </a>
+
+      <a href="receptions.html" class="active">
+        <span class="nav-icon">🚚</span>
+        Réceptions
+      </a>
+
+      <a href="fournisseurs.html">
+        <span class="nav-icon">🏢</span>
+        Fournisseurs
+      </a>
+
+      <a href="lots.html">
+        <span class="nav-icon">🏷️</span>
+        Lots & expirations
+      </a>
+
+      <div class="nav-section">Analyse</div>
+
+      <a href="rapports.html">
+        <span class="nav-icon">📊</span>
+        Rapports
+      </a>
+
+      <div class="nav-section">Administration</div>
+
+      <a href="utilisateurs.html">
+        <span class="nav-icon">👥</span>
+        Utilisateurs
+      </a>
+
+      <a href="audit.html">
+        <span class="nav-icon">📋</span>
+        Audit
+      </a>
+
+      <a href="vente_partenaire.html"><span class="menu-icon">⇄</span>Vente partenaire</a>
+      <a href="parametres.html">
+        <span class="nav-icon">⚙️</span>
+        Paramètres
+      </a>
+
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <header class="topbar">
+
+      <div class="topbar-left">
+        <button class="mobile-menu" id="mobileMenu" type="button">☰</button>
+
+        <div>
+          <div class="page-title">Réceptions</div>
+          <div class="page-subtitle">
+            Entrées de marchandises, lots et mise à jour du stock
+          </div>
+        </div>
+      </div>
+
+      <div class="user-box">
+        <div class="user-avatar" id="userAvatar">A</div>
+
+        <div>
+          <div class="user-name" id="userName">Administrateur</div>
+          <div class="user-role" id="userRole">ADMIN</div>
+        </div>
+      </div>
+
+    </header>
+
+    <section class="content">
+
+      <!-- STATS -->
+      <div class="stats">
+
+        <div class="stat-card">
+          <div class="stat-label">Réceptions ce mois</div>
+          <div class="stat-value" id="statReceipts">0</div>
+          <div class="stat-note">Réceptions enregistrées</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Valeur reçue</div>
+          <div class="stat-value" id="statValue">0 FCFA</div>
+          <div class="stat-note">Prix d'achat des marchandises</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Fournisseurs actifs</div>
+          <div class="stat-value" id="statSuppliers">0</div>
+          <div class="stat-note">Fournisseurs disponibles</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Unités reçues</div>
+          <div class="stat-value" id="statUnits">0</div>
+          <div class="stat-note">Quantités des réceptions chargées</div>
+        </div>
+
+      </div>
+
+      <!-- TOOLBAR -->
+      <div class="toolbar">
+
+        <div class="toolbar-left">
+          <input
+            type="search"
+            id="searchInput"
+            class="search"
+            placeholder="Rechercher une réception..."
+            autocomplete="off"
+          >
+
+          <button
+            class="btn btn-secondary"
+            id="refreshBtn"
+            type="button"
+          >
+            ↻ Actualiser
+          </button>
+        </div>
+
+        <button
+          class="btn btn-primary"
+          id="newReceiptBtn"
+          type="button"
+        >
+          + Nouvelle réception
+        </button>
+
+      </div>
+
+      <!-- TABLE -->
+      <div class="card">
+
+        <div class="card-header">
+          <div class="card-title">Historique des réceptions</div>
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:flex-end">
+            <div class="muted" id="receiptCount">0 réception</div>
+            <button class="btn btn-secondary" id="printHistoryBtn" type="button">⎙ Imprimer le journal</button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+
+          <table>
+            <thead>
+              <tr>
+                <th>N° réception</th>
+                <th>Date</th>
+                <th>Fournisseur</th>
+                <th>Facture</th>
+                <th>Bon livraison</th>
+                <th>Articles</th>
+                <th>Unités</th>
+                <th>Valeur</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody id="receiptsBody">
+              <tr>
+                <td colspan="9" class="loading">
+                  Chargement des réceptions...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+</div>
+
+<!-- MODAL NOUVELLE RECEPTION -->
+<div class="modal-backdrop" id="receiptModal">
+
+  <div class="modal">
+
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Nouvelle réception</div>
+        <div class="page-subtitle">
+          Enregistrer une entrée réelle en stock
+        </div>
+      </div>
+
+      <button class="close-btn" id="closeReceiptModal" type="button">
+        ×
+      </button>
+    </div>
+
+    <form id="receiptForm">
+
+      <div class="modal-body">
+
+        <div class="form-grid">
+
+          <div class="field">
+            <label for="supplier">Fournisseur</label>
+
+            <select id="supplier">
+              <option value="">Sans fournisseur</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="invoiceNumber">N° facture</label>
+
+            <input
+              type="text"
+              id="invoiceNumber"
+              maxlength="100"
+              placeholder="Ex. FAC-2026-001"
+            >
+          </div>
+
+          <div class="field">
+            <label for="deliveryNote">Bon de livraison</label>
+
+            <input
+              type="text"
+              id="deliveryNote"
+              maxlength="100"
+              placeholder="Ex. BL-2026-001"
+            >
+          </div>
+
+        </div>
+
+        <div class="section-title">Marchandises reçues</div>
+
+        <div id="receiptLines" class="receipt-lines"></div>
+
+        <button
+          class="btn btn-secondary"
+          id="addLineBtn"
+          type="button"
+        >
+          + Ajouter un produit
+        </button>
+
+        <div class="summary-box">
+
+          <div>
+            <div class="summary-label">Valeur totale de la réception</div>
+            <div class="muted">
+              Calculée à partir du prix d'achat et des quantités.
+            </div>
+          </div>
+
+          <div class="summary-total" id="formTotal">
+            0 FCFA
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+
+        <button
+          class="btn btn-secondary"
+          id="cancelReceiptBtn"
+          type="button"
+        >
+          Annuler
+        </button>
+
+        <button
+          class="btn btn-primary"
+          id="saveReceiptBtn"
+          type="submit"
+        >
+          Enregistrer la réception
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+</div>
+
+<!-- MODAL DETAIL -->
+<div class="modal-backdrop" id="detailModal">
+
+  <div class="modal detail-modal">
+
+    <div class="modal-header">
+
+      <div>
+        <div class="modal-title" id="detailTitle">
+          Détail de la réception
+        </div>
+        <div class="page-subtitle">
+          Marchandises enregistrées
+        </div>
+      </div>
+
+      <button class="close-btn" id="closeDetailModal" type="button">
+        ×
+      </button>
+
+    </div>
+
+    <div class="modal-body">
+
+      <div class="detail-grid">
+
+        <div class="detail-item">
+          <span>Réception</span>
+          <strong id="detailNumber">—</strong>
+        </div>
+
+        <div class="detail-item">
+          <span>Date</span>
+          <strong id="detailDate">—</strong>
+        </div>
+
+        <div class="detail-item">
+          <span>Fournisseur</span>
+          <strong id="detailSupplier">—</strong>
+        </div>
+
+        <div class="detail-item">
+          <span>Facture</span>
+          <strong id="detailInvoice">—</strong>
+        </div>
+
+      </div>
+
+      <div class="table-wrap">
+
+        <table>
+          <thead>
+            <tr>
+              <th>Produit</th>
+              <th>Lot</th>
+              <th>Expiration</th>
+              <th>Cartons</th>
+              <th>Unités</th>
+              <th>Quantité</th>
+              <th>Prix achat</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+
+          <tbody id="detailBody">
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+    <div class="modal-footer">
+
+      <button
+        class="btn btn-secondary"
+        id="closeDetailBtn"
+        type="button"
+      >
+        Fermer
+      </button>
+
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<div id="receiptPrintArea" aria-hidden="true"></div>
+
+<script src="assets/js/local-api.js"></script>
+<script src="assets/js/branding.js"></script>
+<script src="assets/js/mobile-role.js"></script><script src="assets/js/mobile-shell.js"></script><script src="assets/js/modals.js"></script>
+<script>
+  const API_URL =
+  `${window.location.protocol}//${window.location.host}`;
+  const token = localStorage.getItem('dpa_token');
+  const storedUser = localStorage.getItem('dpa_user');
+
+  if (!token) {
+    window.location.href = 'index.html';
+  }
+
+  let currentUser = null;
+  let products = [];
+  let suppliers = [];
+  let receipts = [];
+
+  try {
+    currentUser = storedUser ? JSON.parse(storedUser) : null;
+  } catch (error) {
+    currentUser = null;
+  }
+
+  const elements = {
+    sidebar: document.getElementById('sidebar'),
+    mobileMenu: document.getElementById('mobileMenu'),
+
+    userName: document.getElementById('userName'),
+    userRole: document.getElementById('userRole'),
+    userAvatar: document.getElementById('userAvatar'),
+
+    statReceipts: document.getElementById('statReceipts'),
+    statValue: document.getElementById('statValue'),
+    statSuppliers: document.getElementById('statSuppliers'),
+    statUnits: document.getElementById('statUnits'),
+
+    searchInput: document.getElementById('searchInput'),
+    refreshBtn: document.getElementById('refreshBtn'),
+    newReceiptBtn: document.getElementById('newReceiptBtn'),
+
+    receiptCount: document.getElementById('receiptCount'),
+    receiptsBody: document.getElementById('receiptsBody'),
+    printHistoryBtn: document.getElementById('printHistoryBtn'),
+    receiptPrintArea: document.getElementById('receiptPrintArea'),
+
+    receiptModal: document.getElementById('receiptModal'),
+    closeReceiptModal: document.getElementById('closeReceiptModal'),
+    cancelReceiptBtn: document.getElementById('cancelReceiptBtn'),
+    receiptForm: document.getElementById('receiptForm'),
+
+    supplier: document.getElementById('supplier'),
+    invoiceNumber: document.getElementById('invoiceNumber'),
+    deliveryNote: document.getElementById('deliveryNote'),
+
+    receiptLines: document.getElementById('receiptLines'),
+    addLineBtn: document.getElementById('addLineBtn'),
+
+    formTotal: document.getElementById('formTotal'),
+    saveReceiptBtn: document.getElementById('saveReceiptBtn'),
+
+    detailModal: document.getElementById('detailModal'),
+    closeDetailModal: document.getElementById('closeDetailModal'),
+    closeDetailBtn: document.getElementById('closeDetailBtn'),
+
+    detailTitle: document.getElementById('detailTitle'),
+    detailNumber: document.getElementById('detailNumber'),
+    detailDate: document.getElementById('detailDate'),
+    detailSupplier: document.getElementById('detailSupplier'),
+    detailInvoice: document.getElementById('detailInvoice'),
+    detailBody: document.getElementById('detailBody'),
+
+    toast: document.getElementById('toast')
+  };
+
+  function escapeHtml(value) {
+    return String(value ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  function formatMoney(value) {
+    const number = Number(value || 0);
+
+    return new Intl.NumberFormat('fr-FR', {
+      maximumFractionDigits: 0
+    }).format(number) + ' FCFA';
+  }
+
+  function formatDate(value) {
+    if (!value) return '—';
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+      return '—';
+    }
+
+    return new Intl.DateTimeFormat('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    }).format(date);
+  }
+
+  function formatDateTime(value) {
+    if (!value) return '—';
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+      return '—';
+    }
+
+    return new Intl.DateTimeFormat('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    }).format(date);
+  }
+
+  function showToast(message, type = 'success') {
+    elements.toast.textContent = message;
+    elements.toast.className = 'toast show ' + type;
+
+    clearTimeout(showToast.timer);
+
+    showToast.timer = setTimeout(() => {
+      elements.toast.className = 'toast';
+    }, 4500);
+  }
+
+  function getRole() {
+    if (!currentUser) return '';
+
+    return String(
+      currentUser.role ||
+      currentUser.user_role ||
+      ''
+    ).toUpperCase();
+  }
+
+  function isAdmin() {
+    return getRole() === 'ADMIN';
+  }
+
+  function setupUser() {
+    if (!currentUser) return;
+
+    const name =
+      currentUser.full_name ||
+      currentUser.name ||
+      currentUser.username ||
+      'Utilisateur';
+
+    elements.userName.textContent = name;
+    elements.userRole.textContent = getRole() || 'UTILISATEUR';
+
+    const firstLetter = String(name).trim().charAt(0).toUpperCase();
+
+    elements.userAvatar.textContent = firstLetter || 'U';
+
+    if (!isAdmin()) {
+      elements.newReceiptBtn.style.display = 'none';
+    }
+  }
+
+  async function apiFetch(path, options = {}) {
+    const headers = {
+      ...(options.headers || {}),
+      'Authorization': 'Bearer ' + token
+    };
+
+    if (options.body && !headers['Content-Type']) {
+      headers['Content-Type'] = 'application/json';
+    }
+
+    const response = await fetch(API_URL + path, {
+      ...options,
+      headers
+    });
+
+    if (response.status === 401) {
+      localStorage.removeItem('dpa_token');
+      localStorage.removeItem('dpa_user');
+      window.location.href = 'index.html';
+      throw new Error('Session expirée.');
+    }
+
+    let data = null;
+
+    try {
+      data = await response.json();
+    } catch (error) {
+      data = null;
+    }
+
+    if (!response.ok) {
+      throw new Error(
+        data?.message ||
+        data?.error ||
+        'Erreur serveur (' + response.status + ')'
+      );
+    }
+
+    return data;
+  }
+
+  async function loadSuppliers() {
+    const data = await apiFetch('/api/suppliers');
+
+    suppliers = Array.isArray(data)
+      ? data
+      : (Array.isArray(data?.suppliers) ? data.suppliers : []);
+
+    renderSupplierOptions();
+  }
+
+  async function loadProducts() {
+    const data = await apiFetch('/api/products');
+
+    products = Array.isArray(data)
+      ? data
+      : (Array.isArray(data?.products) ? data.products : []);
+  }
+
+  async function loadReceipts() {
+    const data = await apiFetch('/api/receipts');
+
+    receipts = Array.isArray(data)
+      ? data
+      : (Array.isArray(data?.receipts) ? data.receipts : []);
+
+    renderStats();
+    renderReceipts();
+  }
+
+  async function loadAll() {
+    try {
+      elements.receiptsBody.innerHTML = `
+        <tr>
+          <td colspan="9" class="loading">
+            Chargement des données...
+          </td>
+        </tr>
+      `;
+
+      await Promise.all([
+        loadSuppliers(),
+        loadProducts(),
+        loadReceipts()
+      ]);
+
+    } catch (error) {
+      console.error(error);
+
+      elements.receiptsBody.innerHTML = `
+        <tr>
+          <td colspan="9" class="empty">
+            Impossible de charger les réceptions.<br>
+            <small>${escapeHtml(error.message)}</small>
+          </td>
+        </tr>
+      `;
+
+      showToast(error.message, 'error');
+    }
+  }
+
+  function renderSupplierOptions() {
+    const currentValue = elements.supplier.value;
+
+    elements.supplier.innerHTML = `
+      <option value="">Sans fournisseur</option>
+    `;
+
+    suppliers.forEach(supplier => {
+      const id = supplier.id;
+
+      const name =
+        supplier.name ||
+        supplier.company_name ||
+        supplier.supplier_name ||
+        ('Fournisseur ' + id);
+
+      const option = document.createElement('option');
+
+      option.value = id;
+      option.textContent = name;
+
+      elements.supplier.appendChild(option);
+    });
+
+    if (currentValue) {
+      elements.supplier.value = currentValue;
+    }
+  }
+
+  function getSupplierNameById(id) {
+    if (!id) return 'Sans fournisseur';
+
+    const supplier = suppliers.find(item =>
+      String(item.id) === String(id)
+    );
+
+    if (!supplier) return 'Fournisseur inconnu';
+
+    return (
+      supplier.name ||
+      supplier.company_name ||
+      supplier.supplier_name ||
+      'Fournisseur'
+    );
+  }
+
+  function getProductNameById(id) {
+    const product = products.find(item =>
+      String(item.id) === String(id)
+    );
+
+    if (!product) return 'Produit inconnu';
+
+    return product.name || product.code || 'Produit';
+  }
+
+  function getProductById(id) {
+    return products.find(item =>
+      String(item.id) === String(id)
+    );
+  }
+
+  function getReceiptValue(receipt) {
+    if (receipt.total_value !== undefined && receipt.total_value !== null) {
+      return Number(receipt.total_value || 0);
+    }
+
+    if (receipt.value !== undefined && receipt.value !== null) {
+      return Number(receipt.value || 0);
+    }
+
+    if (receipt.total !== undefined && receipt.total !== null) {
+      return Number(receipt.total || 0);
+    }
+
+    return 0;
+  }
+
+  function getReceiptUnits(receipt) {
+    return Number(
+      receipt.total_units ??
+      receipt.quantity ??
+      receipt.units ??
+      0
+    );
+  }
+
+  function getReceiptItemsCount(receipt) {
+    return Number(
+      receipt.items_count ??
+      receipt.item_count ??
+      receipt.lines_count ??
+      receipt.items?.length ??
+      0
+    );
+  }
+
+  function renderStats() {
+    const now = new Date();
+
+    const month = now.getMonth();
+    const year = now.getFullYear();
+
+    const currentMonthReceipts = receipts.filter(receipt => {
+      const date = new Date(
+        receipt.received_at ||
+        receipt.created_at
+      );
+
+      return (
+        !Number.isNaN(date.getTime()) &&
+        date.getMonth() === month &&
+        date.getFullYear() === year
+      );
+    });
+
+    const totalValue = currentMonthReceipts.reduce(
+      (sum, receipt) => sum + getReceiptValue(receipt),
+      0
+    );
+
+    const totalUnits = currentMonthReceipts.reduce(
+      (sum, receipt) => sum + getReceiptUnits(receipt),
+      0
+    );
+
+    elements.statReceipts.textContent =
+      currentMonthReceipts.length.toLocaleString('fr-FR');
+
+    elements.statValue.textContent =
+      formatMoney(totalValue);
+
+    elements.statSuppliers.textContent =
+      suppliers.length.toLocaleString('fr-FR');
+
+    elements.statUnits.textContent =
+      totalUnits.toLocaleString('fr-FR');
+  }
+
+  function getFilteredReceipts() {
+    const query = elements.searchInput.value.trim().toLowerCase();
+    if (!query) return [...receipts];
+    return receipts.filter(receipt => {
+      const supplierName = receipt.supplier_name || getSupplierNameById(receipt.supplier_id);
+      const text = [receipt.receipt_number, receipt.invoice_number, receipt.delivery_note,
+        supplierName, receipt.received_at, receipt.created_at]
+        .filter(Boolean).join(' ').toLowerCase();
+      return text.includes(query);
+    });
+  }
+
+  function renderReceipts() {
+    const filtered = getFilteredReceipts();
+
+    elements.receiptCount.textContent =
+      filtered.length +
+      (filtered.length > 1 ? ' réceptions' : ' réception');
+
+    if (!filtered.length) {
+      elements.receiptsBody.innerHTML = `
+        <tr>
+          <td colspan="9" class="empty">
+            Aucune réception enregistrée.
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    elements.receiptsBody.innerHTML = filtered.map(receipt => {
+
+      const supplierName =
+        (receipt.supplier_name || getSupplierNameById(receipt.supplier_id));
+
+      const date =
+        receipt.received_at ||
+        receipt.created_at;
+
+      const itemsCount =
+        getReceiptItemsCount(receipt);
+
+      const units =
+        getReceiptUnits(receipt);
+
+      const value =
+        getReceiptValue(receipt);
+
+      return `
+        <tr>
+
+          <td>
+            <span class="number">
+              ${escapeHtml(receipt.receipt_number || '—')}
+            </span>
+          </td>
+
+          <td>
+            ${formatDateTime(date)}
+          </td>
+
+          <td>
+            ${escapeHtml(supplierName)}
+          </td>
+
+          <td>
+            ${escapeHtml(receipt.invoice_number || '—')}
+          </td>
+
+          <td>
+            ${escapeHtml(receipt.delivery_note || '—')}
+          </td>
+
+          <td>
+            ${itemsCount.toLocaleString('fr-FR')}
+          </td>
+
+          <td>
+            ${units.toLocaleString('fr-FR')}
+          </td>
+
+          <td class="amount">
+            ${formatMoney(value)}
+          </td>
+
+          <td>
+            <button
+              class="btn btn-secondary btn-small"
+              type="button"
+              data-detail-id="${escapeHtml(receipt.id)}"
+            >
+              Voir
+            </button>
+          </td>
+
+        </tr>
+      `;
+    }).join('');
+
+    document
+      .querySelectorAll('[data-detail-id]')
+      .forEach(button => {
+        button.addEventListener('click', () => {
+          openReceiptDetail(button.dataset.detailId);
+        });
+      });
+  }
+
+  function productOptions(selectedId = '') {
+    let html = `
+      <option value="">Choisir un produit</option>
+    `;
+
+    products.forEach(product => {
+
+      const selected =
+        String(product.id) === String(selectedId)
+          ? 'selected'
+          : '';
+
+      const code = product.code
+        ? ' — ' + product.code
+        : '';
+
+      html += `
+        <option
+          value="${escapeHtml(product.id)}"
+          ${selected}
+        >
+          ${escapeHtml(product.name || 'Produit')}${escapeHtml(code)}
+        </option>
+      `;
+    });
+
+    return html;
+  }
+
+  function addReceiptLine(data = {}) {
+
+    if (!products.length) {
+      showToast(
+        'Aucun produit actif disponible. Créez d’abord un produit.',
+        'error'
+      );
+      return;
+    }
+
+    const line = document.createElement('div');
+
+    line.className = 'receipt-line';
+
+    line.innerHTML = `
+      <div class="line-grid">
+
+        <div class="field">
+          <label>Produit</label>
+
+          <select
+            class="line-product"
+            required
+          >
+            ${productOptions(data.product_id || '')}
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Lot</label>
+
+          <input
+            type="text"
+            class="line-lot"
+            maxlength="100"
+            placeholder="Ex. PARA-2026-001"
+            value="${escapeHtml(data.lot_number || '')}"
+            required
+          >
+        </div>
+
+        <div class="field">
+          <label>Expiration</label>
+
+          <input
+            type="date"
+            class="line-expiry"
+            value="${escapeHtml(data.expiry_date || '')}"
+            required
+          >
+        </div>
+
+        <div class="field">
+          <label>Cartons</label>
+
+          <input
+            type="number"
+            class="line-cartons"
+            min="0"
+            step="1"
+            value="${Number(data.cartons || 0)}"
+          >
+        </div>
+
+        <div class="field">
+          <label>Unités</label>
+
+          <input
+            type="number"
+            class="line-loose"
+            min="0"
+            step="1"
+            value="${Number(data.loose_units || 0)}"
+          >
+        </div>
+
+        <div class="field">
+          <label>Prix achat</label>
+
+          <input
+            type="number"
+            class="line-price"
+            min="0"
+            step="0.01"
+            value="${Number(data.purchase_price || 0)}"
+            required
+          >
+        </div>
+
+        <button
+          class="remove-line"
+          type="button"
+          title="Supprimer cette ligne"
+        >
+          ×
+        </button>
+
+      </div>
+
+      <div class="line-total">
+        Total ligne :
+        <span class="line-total-value" style="margin-left:8px;">
+          0 FCFA
+        </span>
+      </div>
+    `;
+
+    elements.receiptLines.appendChild(line);
+
+    const productSelect =
+      line.querySelector('.line-product');
+
+    const lotInput =
+      line.querySelector('.line-lot');
+
+    const expiryInput =
+      line.querySelector('.line-expiry');
+
+    const cartonsInput =
+      line.querySelector('.line-cartons');
+
+    const looseInput =
+      line.querySelector('.line-loose');
+
+    const priceInput =
+      line.querySelector('.line-price');
+
+    const removeButton =
+      line.querySelector('.remove-line');
+
+    function updateLine() {
+
+      const product =
+        getProductById(productSelect.value);
+
+      const cartons =
+        Math.max(
+          0,
+          parseInt(cartonsInput.value, 10) || 0
+        );
+
+      const loose =
+        Math.max(
+          0,
+          parseInt(looseInput.value, 10) || 0
+        );
+
+      let unitsPerCarton =
+        Number(product?.units_per_carton || 1);
+
+      if (!Number.isFinite(unitsPerCarton) || unitsPerCarton < 1) {
+        unitsPerCarton = 1;
+      }
+
+      const quantity =
+        (cartons * unitsPerCarton) + loose;
+
+      const price =
+        Math.max(
+          0,
+          Number(priceInput.value) || 0
+        );
+
+      const total =
+        quantity * price;
+
+      line.dataset.quantity = String(quantity);
+
+      line.querySelector('.line-total-value').textContent =
+        formatMoney(total);
+
+      updateFormTotal();
+    }
+
+    productSelect.addEventListener('change', () => {
+
+      const product =
+        getProductById(productSelect.value);
+
+      if (product) {
+
+        const currentPrice =
+          Number(priceInput.value || 0);
+
+        if (
+          currentPrice === 0 &&
+          Number(product.purchase_price || 0) > 0
+        ) {
+          priceInput.value =
+            Number(product.purchase_price);
+        }
+      }
+
+      updateLine();
+    });
+
+    cartonsInput.addEventListener('input', updateLine);
+    looseInput.addEventListener('input', updateLine);
+    priceInput.addEventListener('input', updateLine);
+
+    removeButton.addEventListener('click', () => {
+
+      line.remove();
+
+      if (!elements.receiptLines.children.length) {
+        addReceiptLine();
+      }
+
+      updateFormTotal();
+    });
+
+    updateLine();
+  }
+
+  function updateFormTotal() {
+
+    let total = 0;
+
+    document
+      .querySelectorAll('.receipt-line')
+      .forEach(line => {
+
+        const quantity =
+          Number(line.dataset.quantity || 0);
+
+        const price =
+          Number(
+            line.querySelector('.line-price')?.value || 0
+          );
+
+        total += quantity * price;
+      });
+
+    elements.formTotal.textContent =
+      formatMoney(total);
+  }
+
+  function openReceiptModal() {
+
+    if (!isAdmin()) {
+      showToast(
+        'Seul un administrateur peut enregistrer une réception.',
+        'error'
+      );
+      return;
+    }
+
+    if (!products.length) {
+      showToast(
+        'Aucun produit actif disponible.',
+        'error'
+      );
+      return;
+    }
+
+    elements.receiptForm.reset();
+
+    elements.receiptLines.innerHTML = '';
+
+    addReceiptLine();
+
+    elements.receiptModal.classList.add('show');
+  }
+
+  function closeReceiptModal() {
+    elements.receiptModal.classList.remove('show');
+  }
+
+  async function saveReceipt(event) {
+
+    event.preventDefault();
+
+    if (!isAdmin()) {
+      showToast(
+        'Seul un administrateur peut enregistrer une réception.',
+        'error'
+      );
+      return;
+    }
+
+    const lines =
+      Array.from(
+        elements.receiptLines.querySelectorAll('.receipt-line')
+      );
+
+    if (!lines.length) {
+      showToast(
+        'Ajoutez au moins un produit.',
+        'error'
+      );
+      return;
+    }
+
+    const items = [];
+
+    for (const line of lines) {
+
+      const productId =
+        line.querySelector('.line-product').value;
+
+      const lotNumber =
+        line.querySelector('.line-lot').value.trim();
+
+      const expiryDate =
+        line.querySelector('.line-expiry').value;
+
+      const cartons =
+        Math.max(
+          0,
+          parseInt(
+            line.querySelector('.line-cartons').value,
+            10
+          ) || 0
+        );
+
+      const looseUnits =
+        Math.max(
+          0,
+          parseInt(
+            line.querySelector('.line-loose').value,
+            10
+          ) || 0
+        );
+
+      const purchasePrice =
+        Math.max(
+          0,
+          Number(
+            line.querySelector('.line-price').value
+          ) || 0
+        );
+
+      if (!productId) {
+        showToast(
+          'Sélectionnez un produit pour chaque ligne.',
+          'error'
+        );
+        return;
+      }
+
+      if (!lotNumber) {
+        showToast(
+          'Le numéro de lot est obligatoire.',
+          'error'
+        );
+        return;
+      }
+
+      if (!expiryDate) {
+        showToast(
+          'La date d’expiration est obligatoire.',
+          'error'
+        );
+        return;
+      }
+
+      const expiry =
+        new Date(expiryDate + 'T00:00:00');
+
+      const today =
+        new Date();
+
+      today.setHours(0, 0, 0, 0);
+
+      if (
+        Number.isNaN(expiry.getTime()) ||
+        expiry <= today
+      ) {
+        showToast(
+          'La date d’expiration doit être dans le futur.',
+          'error'
+        );
+        return;
+      }
+
+      const product =
+        getProductById(productId);
+
+      const unitsPerCarton =
+        Number(product?.units_per_carton || 1);
+
+      const quantity =
+        (cartons * unitsPerCarton) + looseUnits;
+
+      if (quantity <= 0) {
+        showToast(
+          'La quantité reçue doit être supérieure à zéro.',
+          'error'
+        );
+        return;
+      }
+
+      items.push({
+        product_id: productId,
+        lot_number: lotNumber,
+        expiry_date: expiryDate,
+        cartons,
+        loose_units: looseUnits,
+        purchase_price: purchasePrice
+      });
+    }
+
+    const payload = {
+      supplier_id: elements.supplier.value || null,
+      invoice_number:
+        elements.invoiceNumber.value.trim() || null,
+      delivery_note:
+        elements.deliveryNote.value.trim() || null,
+      items
+    };
+
+    try {
+
+      elements.saveReceiptBtn.disabled = true;
+      elements.saveReceiptBtn.textContent =
+        'Enregistrement...';
+
+      const data =
+        await apiFetch('/api/receipts', {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        });
+
+      closeReceiptModal();
+
+      await loadReceipts();
+
+      const number =
+        data?.receipt?.receipt_number ||
+        data?.receipt_number ||
+        'Réception enregistrée';
+
+      showToast(
+        number + ' enregistrée avec succès.',
+        'success'
+      );
+
+    } catch (error) {
+
+      console.error(error);
+
+      showToast(
+        error.message,
+        'error'
+      );
+
+    } finally {
+
+      elements.saveReceiptBtn.disabled = false;
+      elements.saveReceiptBtn.textContent =
+        'Enregistrer la réception';
+    }
+  }
+
+  function printReceiptHistory() {
+    const filtered = getFilteredReceipts();
+    if (!filtered.length) {
+      showToast('Aucune réception à imprimer.', 'error');
+      return;
+    }
+    const totalUnits = filtered.reduce((sum, receipt) => sum + getReceiptUnits(receipt), 0);
+    const totalValue = filtered.reduce((sum, receipt) => sum + getReceiptValue(receipt), 0);
+    const rows = filtered.map(receipt => {
+      const date = receipt.received_at || receipt.created_at;
+      const supplier = receipt.supplier_name || getSupplierNameById(receipt.supplier_id) || '—';
+      return `<tr>
+        <td>${escapeHtml(receipt.receipt_number || '—')}</td>
+        <td>${escapeHtml(formatDateTime(date))}</td>
+        <td>${escapeHtml(supplier)}</td>
+        <td>${escapeHtml(receipt.invoice_number || '—')}</td>
+        <td style="text-align:right">${getReceiptItemsCount(receipt).toLocaleString('fr-FR')}</td>
+        <td style="text-align:right">${getReceiptUnits(receipt).toLocaleString('fr-FR')}</td>
+        <td style="text-align:right">${escapeHtml(formatMoney(getReceiptValue(receipt)))}</td>
+      </tr>`;
+    }).join('');
+    elements.receiptPrintArea.innerHTML = `
+      <h1>Journal des réceptions</h1>
+      <div class="print-meta">Édité le ${escapeHtml(formatDateTime(new Date().toISOString()))} · ${filtered.length} réception(s)${elements.searchInput.value.trim() ? ' · Filtre : ' + escapeHtml(elements.searchInput.value.trim()) : ''}</div>
+      <table><thead><tr><th>N° réception</th><th>Date</th><th>Fournisseur</th><th>Facture</th><th>Articles</th><th>Unités reçues</th><th>Valeur des marchandises</th></tr></thead>
+      <tbody>${rows}</tbody></table>
+      <div class="print-total">Total des unités reçues : ${totalUnits.toLocaleString('fr-FR')}<br>Valeur totale des marchandises : ${escapeHtml(formatMoney(totalValue))}</div>`;
+    try {
+      if (window.PharmaGestNative?.printReport) {
+        window.PharmaGestNative.printReport();
+      } else {
+        window.print();
+      }
+    } catch (error) {
+      console.error(error);
+      showToast('Impossible d’ouvrir l’impression : ' + (error.message || error), 'error');
+    }
+  }
+
+  async function openReceiptDetail(id) {
+
+    try {
+
+      elements.detailBody.innerHTML = `
+        <tr>
+          <td colspan="8" class="loading">
+            Chargement du détail...
+          </td>
+        </tr>
+      `;
+
+      elements.detailModal.classList.add('show');
+      const oldSummary = document.getElementById('receiptDetailSummary');
+      if (oldSummary) oldSummary.remove();
+
+      const data =
+        await apiFetch('/api/receipts/' + encodeURIComponent(id));
+
+      const receipt =
+        data?.receipt || data;
+
+      const items =
+        Array.isArray(data?.items)
+          ? data.items
+          : (Array.isArray(receipt?.items) ? receipt.items : []);
+
+      elements.detailNumber.textContent =
+        receipt.receipt_number || '—';
+
+      elements.detailTitle.textContent =
+        receipt.receipt_number
+          ? 'Réception ' + receipt.receipt_number
+          : 'Détail de la réception';
+
+      elements.detailDate.textContent =
+        formatDateTime(
+          receipt.received_at ||
+          receipt.created_at
+        );
+
+      elements.detailSupplier.textContent =
+        (receipt.supplier_name || getSupplierNameById(receipt.supplier_id));
+
+      elements.detailInvoice.textContent =
+        receipt.invoice_number || '—';
+
+      if (!items.length) {
+
+        elements.detailBody.innerHTML = `
+          <tr>
+            <td colspan="8" class="empty">
+              Aucune ligne trouvée pour cette réception.
+            </td>
+          </tr>
+        `;
+
+        return;
+      }
+
+      elements.detailBody.innerHTML =
+        items.map(item => {
+
+          const productName =
+            item.product_name ||
+            getProductNameById(item.product_id);
+
+          const lotNumber =
+            item.lot_number ||
+            item.lot ||
+            '—';
+
+          const expiry =
+            item.expiry_date ||
+            item.expiration_date;
+
+          const cartons =
+            Number(item.cartons || 0);
+
+          const loose =
+            Number(item.loose_units || 0);
+
+          const quantity =
+            Number(
+              item.quantity ||
+              (
+                cartons *
+                Number(item.units_per_carton || 1)
+              ) +
+              loose
+            );
+
+          const purchasePrice =
+            Number(item.purchase_price || 0);
+
+          const total =
+            quantity * purchasePrice;
+
+          return `
+            <tr>
+              <td data-label="Produit">${escapeHtml(productName)}</td>
+              <td data-label="Lot">${escapeHtml(lotNumber)}</td>
+              <td data-label="Expiration">${formatDate(expiry)}</td>
+              <td data-label="Cartons">${cartons.toLocaleString('fr-FR')}</td>
+              <td data-label="Unités">${loose.toLocaleString('fr-FR')}</td>
+              <td data-label="Quantité"><strong>${quantity.toLocaleString('fr-FR')}</strong></td>
+              <td data-label="Prix achat">${formatMoney(purchasePrice)}</td>
+              <td data-label="Total" class="amount">${formatMoney(total)}</td>
+            </tr>
+          `;
+        }).join('');
+
+      const totalUnits = items.reduce((sum, item) => sum + Number(item.quantity || 0), 0);
+      const totalValue = items.reduce((sum, item) => sum + Number(item.total_value ?? (Number(item.quantity || 0) * Number(item.purchase_price || 0))), 0);
+      let summary = document.getElementById('receiptDetailSummary');
+      if (!summary) {
+        summary = document.createElement('div');
+        summary.id = 'receiptDetailSummary';
+        summary.className = 'receipt-detail-summary';
+        elements.detailBody.closest('.modal-body').appendChild(summary);
+      }
+      summary.innerHTML = `<strong>Unités reçues : ${totalUnits.toLocaleString('fr-FR')}</strong><strong>Valeur totale : ${formatMoney(totalValue)}</strong>`;
+
+    } catch (error) {
+
+      console.error(error);
+
+      elements.detailBody.innerHTML = `
+        <tr>
+          <td colspan="8" class="empty">
+            Impossible de charger le détail.<br>
+            <small>${escapeHtml(error.message)}</small>
+          </td>
+        </tr>
+      `;
+
+      showToast(
+        error.message,
+        'error'
+      );
+    }
+  }
+
+  function closeDetailModal() {
+    elements.detailModal.classList.remove('show');
+  }
+
+  /* MOBILE MENU */
+  elements.mobileMenu.addEventListener('click', () => {
+    elements.sidebar.classList.toggle('open');
+  });
+
+  /* SEARCH */
+  elements.searchInput.addEventListener('input', () => {
+    renderReceipts();
+  });
+
+  /* REFRESH */
+  elements.refreshBtn.addEventListener('click', async () => {
+
+    elements.refreshBtn.disabled = true;
+    elements.refreshBtn.textContent = 'Actualisation...';
+
+    try {
+      await loadAll();
+      showToast(
+        'Données actualisées.',
+        'success'
+      );
+    } finally {
+      elements.refreshBtn.disabled = false;
+      elements.refreshBtn.textContent = '↻ Actualiser';
+    }
+  });
+
+  /* NEW RECEIPT */
+  elements.newReceiptBtn.addEventListener(
+    'click',
+    openReceiptModal
+  );
+
+  elements.closeReceiptModal.addEventListener(
+    'click',
+    closeReceiptModal
+  );
+
+  elements.cancelReceiptBtn.addEventListener(
+    'click',
+    closeReceiptModal
+  );
+
+  elements.receiptModal.addEventListener('click', event => {
+
+    if (event.target === elements.receiptModal) {
+      closeReceiptModal();
+    }
+
+  });
+
+  /* ADD LINE */
+  elements.addLineBtn.addEventListener(
+    'click',
+    () => addReceiptLine()
+  );
+
+  /* FORM */
+  elements.receiptForm.addEventListener(
+    'submit',
+    saveReceipt
+  );
+
+  /* DETAIL */
+  elements.closeDetailModal.addEventListener(
+    'click',
+    closeDetailModal
+  );
+
+  elements.closeDetailBtn.addEventListener(
+    'click',
+    closeDetailModal
+  );
+
+  elements.detailModal.addEventListener('click', event => {
+
+    if (event.target === elements.detailModal) {
+      closeDetailModal();
+    }
+
+  });
+
+  /* ESCAPE */
+  document.addEventListener('keydown', event => {
+
+    if (event.key !== 'Escape') return;
+
+    closeReceiptModal();
+    closeDetailModal();
+
+  });
+
+  elements.printHistoryBtn.addEventListener('click', printReceiptHistory);
+
+  /* INITIALISATION */
+  setupUser();
+
+  loadAll();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><script src="assets/js/demo-guard.js"></script><style id="pg-boot-css">html.pg-boot body{opacity:0!important}</style><script>(function(){var h=document.documentElement;h.classList.add("pg-boot");window.__pgShow=function(){h.classList.remove("pg-boot")};setTimeout(window.__pgShow,800);window.addEventListener("load",function(){setTimeout(window.__pgShow,50)});})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vente partenaire — PharmaGest</title>
+<link rel="stylesheet" href="assets/css/app.css">
+<link rel="stylesheet" href="assets/css/mobile-shell.css">
+<link rel="stylesheet" href="assets/css/theme.css">
+<link rel="stylesheet" href="assets/css/modals.css">
+<script src="assets/js/theme.js"></script>
+<style>
+  :root{--vp-blue:#087f8c;--vp-blue2:#155eef;--vp-navy:#071b3a;--vp-bg:#f4f7fb;--vp-line:#e5eaf0;--vp-muted:#718096;--vp-danger:#c0394d;--vp-soft:#eef8f8}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--vp-bg);color:#172033;font-family:Arial,Helvetica,sans-serif}
+  a{text-decoration:none;color:inherit}
+  button,input,select{font:inherit}
+  .sidebar{position:fixed;left:0;top:0;width:260px;height:100vh;background:#071b3a;color:#fff;padding:20px 14px;overflow-y:auto;z-index:1000}
+  .logo{padding:10px 12px 25px;border-bottom:1px solid rgba(255,255,255,.12);margin-bottom:18px}
+  .logo h2{font-size:19px;margin:0}.logo p{font-size:12px;color:#8edee2;margin:5px 0 0}
+  .menu a{display:flex;align-items:center;gap:12px;text-decoration:none;color:#cbd5e1;padding:12px 13px;border-radius:9px;margin-bottom:5px;font-size:14px}
+  .menu a:hover{background:#12305d;color:#fff}.menu a.active{background:#087f8c;color:#fff}.menu-icon{width:20px;text-align:center}
+  .main{margin-left:260px;min-height:100vh}.topbar{height:70px;background:#fff;border-bottom:1px solid #e3e8ef;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:50}
+  .topbar-left{display:flex;align-items:center;gap:15px}.menu-toggle{display:none;border:0;background:#071b3a;color:#fff;width:40px;height:40px;border-radius:8px;font-size:20px;cursor:pointer}
+  .status{display:flex;align-items:center;gap:8px;color:#16834b;font-size:13px}.status-dot{width:9px;height:9px;background:#20b56b;border-radius:50%}
+  .admin-user{display:flex;align-items:center;gap:10px}.avatar{width:38px;height:38px;border-radius:50%;background:#0b7891;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:bold}.admin-user small{display:block;color:#778399;font-size:11px}
+  .content{padding:28px;max-width:1450px;margin:auto}.page-header{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:20px}.page-header h1{font-size:27px;margin:0 0 7px}.page-header p{color:#718096;font-size:14px;margin:0;max-width:780px}
+  .notice{background:#eaf7f7;border:1px solid #cfe9e8;color:#315d62;border-radius:12px;padding:12px 14px;margin-bottom:18px;font-size:13px}
+  .grid{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:18px;align-items:start}.card{background:#fff;border:1px solid var(--vp-line);border-radius:14px;padding:20px;box-shadow:0 3px 12px rgba(15,35,65,.04)}
+  .section-title{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}.section-title h2{font-size:17px;margin:0}.section-title p{font-size:11px;color:var(--vp-muted);margin:3px 0 0}
+  .field{display:flex;flex-direction:column;gap:7px}.field label{font-size:12px;font-weight:700;color:#697586}.field input,.field select{height:43px;width:100%;border:1px solid #d8dee8;border-radius:8px;padding:0 12px;background:#fff;color:#344054;outline:none}.field input:focus,.field select:focus{border-color:#087f8c;box-shadow:0 0 0 3px rgba(8,127,140,.08)}
+  .head-fields{display:grid;grid-template-columns:minmax(0,1fr) 210px;gap:12px;margin-bottom:18px}
+  .btn{border:0;border-radius:8px;padding:11px 16px;cursor:pointer;font-weight:700;font-size:13px;min-height:42px;display:inline-flex;align-items:center;justify-content:center;gap:8px}.btn-primary{background:#087f8c;color:#fff}.btn-primary:hover{background:#066b76}.btn-secondary{background:#e9eef5;color:#344054}.btn-light{background:#fff;color:#344054;border:1px solid #d8dee8}.btn-danger{background:#fff0f1;color:#c0394d}.btn-small{min-height:34px;padding:0 11px;font-size:12px}
+  .line{border:1px solid #e5eaf0;border-radius:12px;padding:15px;margin-bottom:12px;background:#fff}.line-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:13px}.line-number{font-size:12px;font-weight:800;color:#087f8c}.line-grid{display:grid;grid-template-columns:minmax(190px,1.5fr) 130px 110px 110px 130px 130px;gap:10px;align-items:end}.line-grid .field label{font-size:10px}.line-total{background:#f5f8fa;border:1px solid #e5eaf0;border-radius:8px;height:43px;padding:0 10px;display:flex;align-items:center;justify-content:flex-end;font-weight:800;color:#172033;white-space:nowrap}.qty-summary{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.pill{font-size:11px;background:#eef5f7;color:#5f6f7a;border-radius:99px;padding:5px 9px}.line-actions{display:flex;justify-content:flex-end;margin-top:11px}
+  .add-row{display:flex;justify-content:center;margin-top:4px}.add-row .btn{width:100%}
+  .summary{position:sticky;top:88px}.summary-row{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid #edf0f4;font-size:13px}.summary-row:last-of-type{border-bottom:0}.summary-label{color:#697586}.summary-value{font-weight:800;text-align:right}.grand-total{font-size:27px;font-weight:900;color:#071b3a;text-align:right;padding:16px 0 5px}.summary-actions{display:grid;gap:9px;margin-top:13px}.small-note{font-size:11px;line-height:1.5;color:#7a8798;margin-top:12px}.empty-lines{padding:30px 10px;text-align:center;color:#7a8798;border:1px dashed #ccd7df;border-radius:12px}
+  .modal-overlay{position:fixed;inset:0;background:rgba(7,27,58,.68);backdrop-filter:blur(3px);z-index:1200;display:none;align-items:center;justify-content:center;padding:12px}.modal-overlay.open{display:flex}.receipt-modal{width:min(760px,100%);max-height:94vh;overflow:auto;background:#fff;border-radius:15px;padding:18px;box-shadow:0 20px 60px rgba(0,0,0,.25)}.receipt-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:12px}.receipt-head h2{margin:0;font-size:18px}.receipt-head p{margin:3px 0 0;color:#788598;font-size:11px}.receipt{border:1px solid #dfe5ee;border-radius:10px;padding:18px;background:#fff;color:#111}.receipt-brand{text-align:center;font-size:20px;font-weight:900}.receipt-sub{text-align:center;font-size:11px;margin-top:2px;color:#555}.receipt-meta{display:grid;grid-template-columns:1fr 1fr;gap:5px 18px;margin:15px 0;padding:10px 0;border-top:1px dashed #bbb;border-bottom:1px dashed #bbb;font-size:11px}.receipt-table{width:100%;border-collapse:collapse;font-size:11px}.receipt-table th,.receipt-table td{padding:7px 4px;border-bottom:1px solid #eee;text-align:left}.receipt-table th{text-transform:uppercase;color:#666;font-size:9px}.receipt-table .right{text-align:right}.receipt-total{text-align:right;font-size:19px;font-weight:900;margin-top:13px}.receipt-note{text-align:center;color:#777;font-size:9px;margin-top:15px}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px;flex-wrap:wrap}
+  .status-message{min-height:20px;font-size:12px;margin-top:9px}.status-message.success{color:#16834b}.status-message.error{color:#c0394d}
+  @media(max-width:1150px){.grid{grid-template-columns:1fr}.summary{position:static}.line-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.line-grid .product-field{grid-column:1/-1}}
+  @media(max-width:800px){.sidebar{transform:translateX(-100%);transition:.25s}.sidebar.open{transform:translateX(0)}.main{margin-left:0}.menu-toggle{display:block}.topbar{padding:0 15px}.content{padding:18px}.page-header{flex-direction:column}.head-fields{grid-template-columns:1fr}.line-grid{grid-template-columns:1fr 1fr}.line-grid .product-field{grid-column:1/-1}.line-grid .price-field{grid-column:span 1}.receipt-meta{grid-template-columns:1fr}.modal-overlay{padding:8px}.receipt-modal{max-height:96vh;padding:13px}}
+  @media(max-width:520px){.content{padding:12px}.card{padding:14px}.line-grid{grid-template-columns:1fr 1fr}.line-grid .field:nth-child(2),.line-grid .field:nth-child(3){grid-column:span 1}.line-grid .field:nth-child(4),.line-grid .field:nth-child(5),.line-grid .field:nth-child(6){grid-column:span 2}.page-header h1{font-size:23px}.admin-user div:last-child{display:none}.modal-actions .btn{width:100%}}
+  html[data-theme="dark"] .receipt,html[data-theme="dark"] .receipt-modal{filter:invert(1) hue-rotate(180deg)}
+  .history-modal{max-width:900px}.history-list{display:grid;gap:10px;max-height:62vh;overflow:auto;padding:2px}.history-item{border:1px solid #dbe3ef;border-radius:14px;padding:13px;background:#fff;cursor:pointer;transition:.18s}.history-item:hover{transform:translateY(-1px);box-shadow:0 5px 18px rgba(15,35,65,.08)}.history-top{display:flex;justify-content:space-between;gap:12px;align-items:center}.history-ref{font-weight:800;color:#12345b}.history-date{font-size:12px;color:#718096}.history-info{display:flex;justify-content:space-between;gap:10px;margin-top:7px}.history-partner{font-weight:700}.history-total{font-weight:800}.history-empty{text-align:center;padding:35px 15px;color:#718096;border:1px dashed #cbd5e1;border-radius:14px}.history-detail{margin-top:10px;padding-top:10px;border-top:1px solid #e5eaf1;font-size:13px;display:none}.history-item.open .history-detail{display:block}.history-detail-row{display:flex;justify-content:space-between;gap:10px;padding:5px 0}.history-detail-total{font-weight:800;margin-top:7px;padding-top:8px;border-top:1px solid #dbe3ef}.dark-mode .history-item,html[data-theme="dark"] .history-item{background:#172033;border-color:#334155;color:#e5edf8}html[data-theme="dark"] .history-ref{color:#8fdcf0}html[data-theme="dark"] .history-date,html[data-theme="dark"] .history-empty{color:#a9b5c7}
+  @media print{body{background:#fff}.sidebar,.topbar,.notice,.page-header,.grid>.summary,.modal-actions{display:none!important}.main{margin-left:0}.content{padding:0}.modal-overlay{position:static!important;display:block!important;background:#fff!important;padding:0!important}.receipt-modal{width:100%;max-height:none;box-shadow:none;padding:0}.receipt{border:0;border-radius:0;padding:0}.receipt-brand{font-size:18px}}
+</style>
+</head>
+<body>
+<aside class="sidebar" id="sidebar">
+  <div class="logo"><h2>PharmaGest</h2><p><span data-establishment-name>Nom de l’établissement</span></p></div>
+  <nav class="menu">
+    <a href="index.html"><span class="menu-icon">▣</span>Tableau de bord</a>
+    <a href="vente.html"><span class="menu-icon">🛒</span>Vente / Caisse</a>
+    <a href="produits.html"><span class="menu-icon">▤</span>Produits</a>
+    <a href="stocks.html"><span class="menu-icon">▥</span>Stocks</a>
+    <a href="receptions.html"><span class="menu-icon">⇩</span>Réceptions</a>
+    <a href="fournisseurs.html"><span class="menu-icon">♜</span>Fournisseurs</a>
+    <a href="lots.html"><span class="menu-icon">◫</span>Lots & péremptions</a>
+    <a href="rapports.html"><span class="menu-icon">▦</span>Rapports</a>
+    <a href="vente_partenaire.html" class="active"><span class="menu-icon">⇄</span>Vente partenaire</a>
+    <a href="utilisateurs.html"><span class="menu-icon">♙</span>Utilisateurs</a>
+    <a href="audit.html"><span class="menu-icon">◉</span>Journal d’audit</a>
+    <a href="parametres.html"><span class="menu-icon">⚙</span>Paramètres</a>
+  </nav>
+</aside>
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="menu-toggle" onclick="toggleMenu()" aria-label="Menu">☰</button>
+      <div class="status"><span class="status-dot"></span>Système opérationnel</div>
+    </div>
+    <div class="admin-user"><div class="avatar" id="currentAvatar">AD</div><div><strong id="currentUserName">Administrateur</strong><small id="currentUserRole">Accès administrateur</small></div></div>
+  </header>
+
+  <div class="content">
+    <div class="page-header">
+      <div>
+        <h1>Vente partenaire</h1>
+        <p>Préparez une transaction de plusieurs produits pour un partenaire, avec ses propres prix, puis générez un reçu unique.</p>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn btn-secondary" type="button" id="historyBtn">🧾 Historique</button><button class="btn btn-secondary" type="button" id="resetBtn">Réinitialiser</button></div>
+    </div>
+
+    <div class="notice"><strong>Mode indépendant :</strong> cette opération ne modifie ni le stock PharmaGest, ni les lots, ni les prix normaux de vente. Elle sert uniquement à préparer et documenter la transaction partenaire.</div>
+
+    <div class="grid">
+      <section class="card">
+        <div class="section-title"><div><h2>Informations de la transaction</h2><p>Une seule référence pour toute la transaction.</p></div></div>
+        <div class="head-fields">
+          <div class="field"><label for="partner">Nom du partenaire</label><input id="partner" type="text" placeholder="Ex. Dépôt Pharmaceutique XYZ" autocomplete="off"></div>
+          <div class="field"><label for="reference">Référence</label><input id="reference" type="text" readonly></div>
+        </div>
+
+        <div class="section-title"><div><h2>Produits de la transaction</h2><p>Produit libre ou produit existant du catalogue, sans modification du catalogue.</p></div></div>
+        <div id="lines"></div>
+        <div class="add-row"><button class="btn btn-secondary" type="button" id="addBtn">＋ Ajouter un produit</button></div>
+        <div id="statusMessage" class="status-message"></div>
+      </section>
+
+      <aside class="card summary">
+        <div class="section-title"><div><h2>Résumé</h2><p>Total de la transaction</p></div></div>
+        <div class="summary-row"><span class="summary-label">Partenaire</span><span class="summary-value" id="sumPartner">—</span></div>
+        <div class="summary-row"><span class="summary-label">Produits</span><span class="summary-value" id="sumProducts">0</span></div>
+        <div class="summary-row"><span class="summary-label">Unités</span><span class="summary-value" id="sumUnits">0</span></div>
+        <div class="grand-total" id="grandTotal">0 FCFA</div>
+        <div class="summary-actions"><button class="btn btn-primary" type="button" id="receiptBtn">Générer le reçu</button><button class="btn btn-light" type="button" id="resetBtn2">Nouvelle transaction</button></div>
+        <div class="small-note">Les prix saisis ici sont ceux convenus avec le partenaire pour cette transaction. Ils ne remplacent pas les prix de vente normaux de PharmaGest.</div>
+      </aside>
+    </div>
+  </div>
+</main>
+
+<div class="modal-overlay" id="historyModal" aria-hidden="true">
+  <div class="receipt-modal history-modal">
+    <div class="receipt-head"><div><h2>Historique des ventes partenaire</h2><p>Transactions enregistrées sur cet appareil.</p></div><button class="btn btn-light" type="button" id="closeHistory">Fermer</button></div>
+    <div id="historyList" class="history-list"></div>
+    <div class="modal-actions"><button class="btn btn-light" type="button" id="closeHistory2">Retour</button><button class="btn btn-danger" type="button" id="clearHistory">Effacer l’historique</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="receiptModal" aria-hidden="true">
+  <div class="receipt-modal">
+    <div class="receipt-head"><div><h2>Reçu de vente partenaire</h2><p>Transaction générée localement — aucun stock modifié.</p></div><button class="btn btn-light" type="button" id="closeReceipt">Fermer</button></div>
+    <div id="receiptPrintArea"></div>
+    <div class="modal-actions"><button class="btn btn-secondary" type="button" id="closeReceipt2">Retour</button><button class="btn btn-light" type="button" id="shareBtn">Partager</button><button class="btn btn-primary" type="button" id="printBtn">Imprimer</button></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  var token=localStorage.getItem('dpa_token')||'';
+  var user={}; try{user=JSON.parse(localStorage.getItem('dpa_user')||'{}')||{};}catch(e){}
+  var native=window.PharmaGestNative||null;
+  var role=String((native&&native.getRole&&native.getRole())||user.role||'').toLowerCase();
+  if(role==='seller'){
+    window.location.replace('index.html');
+    return;
+  }
+  var name=String(user.name||user.username||'Administrateur');
+  document.getElementById('currentUserName').textContent=name;
+  document.getElementById('currentUserRole').textContent='Accès administrateur';
+  document.getElementById('currentAvatar').textContent=(name.trim().split(/\s+/).slice(0,2).map(function(x){return x[0]||'';}).join('')||'AD').toUpperCase();
+  try{var est=localStorage.getItem('pg_company_name'); document.querySelectorAll('[data-establishment-name]').forEach(function(x){if(est)x.textContent=est;});}catch(e){}
+
+  var lines=document.getElementById('lines');
+  var partner=document.getElementById('partner');
+  var reference=document.getElementById('reference');
+  var status=document.getElementById('statusMessage');
+  var products=[];
+  var seq=0;
+  var HISTORY_KEY='pharmagest_vente_partenaire_history_v1';
+
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function money(n){return String(Math.round(Number(n)||0)).replace(/\B(?=(\d{3})+(?!\d))/g,' ')+' FCFA';}
+  function num(v){var n=Number(v); return isFinite(n)&&n>=0?n:0;}
+  function makeRef(){var d=new Date(), y=d.getFullYear(), r=String(Math.floor(Math.random()*900000)+100000); return 'VSP-'+y+'-'+r;}
+  function setStatus(msg,type){status.textContent=msg||''; status.className='status-message '+(type||'');}
+
+  function addLine(data){
+    data=data||{}; seq++;
+    var id='line-'+seq;
+    var div=document.createElement('div'); div.className='line'; div.dataset.id=id;
+    div.innerHTML='<div class="line-head"><span class="line-number">Produit '+seq+'</span><button class="btn btn-danger btn-small remove-line" type="button">Supprimer</button></div>'+
+      '<div class="line-grid">'+
+      '<div class="field product-field"><label>Produit</label><input class="product-name" type="text" placeholder="Nom du produit" value="'+esc(data.name||'')+'" list="productSuggestions-'+id+'"><datalist id="productSuggestions-'+id+'"></datalist></div>'+ 
+      '<div class="field"><label>Unités / carton</label><input class="units-carton" type="number" min="1" step="1" value="'+(data.unitsCarton||1)+'"></div>'+ 
+      '<div class="field"><label>Cartons</label><input class="cartons" type="number" min="0" step="1" value="'+(data.cartons||0)+'"></div>'+ 
+      '<div class="field"><label>Unités en plus</label><input class="extra" type="number" min="0" step="1" value="'+(data.extra||0)+'"></div>'+ 
+      '<div class="field"><label>Prix / carton</label><input class="price-carton" type="number" min="0" step="1" value="'+(data.priceCarton||0)+'"></div>'+ 
+      '<div class="field"><label>Prix / unité</label><input class="price-unit" type="number" min="0" step="1" value="'+(data.priceUnit||0)+'"></div>'+ 
+      '</div><div class="qty-summary"><span class="pill qty-pill">Quantité totale : 0 unité</span><span class="pill sub-pill">Sous-total : 0 FCFA</span></div><div class="line-actions"></div>';
+    lines.appendChild(div);
+    var inputs=div.querySelectorAll('input'); inputs.forEach(function(i){i.addEventListener('input',update); i.addEventListener('change',maybeMatchProduct);});
+    div.querySelector('.remove-line').addEventListener('click',function(){div.remove(); renumber(); update();});
+    loadSuggestions(div);
+    update();
+  }
+  function renumber(){Array.from(lines.querySelectorAll('.line')).forEach(function(x,i){x.querySelector('.line-number').textContent='Produit '+(i+1);});}
+  function readLine(div){
+    var units=Math.max(1,Math.floor(num(div.querySelector('.units-carton').value)||1));
+    var cartons=Math.floor(num(div.querySelector('.cartons').value));
+    var extra=Math.floor(num(div.querySelector('.extra').value));
+    var pc=num(div.querySelector('.price-carton').value), pu=num(div.querySelector('.price-unit').value);
+    var totalUnits=cartons*units+extra, subtotal=cartons*pc+extra*pu;
+    return {name:div.querySelector('.product-name').value.trim(),unitsCarton:units,cartons:cartons,extra:extra,priceCarton:pc,priceUnit:pu,totalUnits:totalUnits,subtotal:subtotal};
+  }
+  function update(){
+    var total=0, units=0, count=0;
+    Array.from(lines.querySelectorAll('.line')).forEach(function(div){var x=readLine(div);total+=x.subtotal;units+=x.totalUnits;if(x.name)count++;div.querySelector('.qty-pill').textContent='Quantité totale : '+x.totalUnits+' unité'+(x.totalUnits>1?'s':'');div.querySelector('.sub-pill').textContent='Sous-total : '+money(x.subtotal);});
+    document.getElementById('sumPartner').textContent=partner.value.trim()||'—';
+    document.getElementById('sumProducts').textContent=String(count);
+    document.getElementById('sumUnits').textContent=String(units);
+    document.getElementById('grandTotal').textContent=money(total);
+  }
+  function loadSuggestions(div){
+    var dl=div.querySelector('datalist'); if(!dl||!token)return;
+    fetch('/api/products',{headers:{Authorization:'Bearer '+token}}).then(function(r){return r.ok?r.json():[]}).then(function(list){
+      if(!Array.isArray(list))return;
+      products=list.slice(0,500); dl.innerHTML=products.map(function(p){return '<option value="'+esc(p.name||'')+'"></option>';}).join('');
+    }).catch(function(){});
+  }
+  function maybeMatchProduct(e){
+    if(!e||!e.target||!e.target.classList.contains('product-name'))return;
+    var div=e.target.closest('.line'), value=e.target.value.trim().toLowerCase();
+    var p=products.find(function(x){return String(x.name||'').trim().toLowerCase()===value;});
+    if(p){
+      var u=Number(p.units_per_carton||p.unitsPerCarton||1); if(u>0)div.querySelector('.units-carton').value=u;
+      update();
+    }
+  }
+  function valid(){
+    if(!partner.value.trim()){setStatus('Veuillez renseigner le nom du partenaire.','error');partner.focus();return false;}
+    var data=Array.from(lines.querySelectorAll('.line')).map(readLine).filter(function(x){return x.name;});
+    if(!data.length){setStatus('Ajoutez au moins un produit à la transaction.','error');return false;}
+    for(var i=0;i<data.length;i++){
+      if(data[i].totalUnits<=0){setStatus('La quantité du produit « '+data[i].name+' » doit être supérieure à zéro.','error');return false;}
+      if(data[i].priceCarton<0||data[i].priceUnit<0){setStatus('Les prix ne peuvent pas être négatifs.','error');return false;}
+    }
+    return data;
+  }
+  function receiptHtml(data, brand){
+    var total=data.reduce(function(a,x){return a+x.subtotal;},0);
+    var now=new Date();
+    var date=now.toLocaleDateString('fr-FR')+' '+now.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+    var rows=data.map(function(x){return '<tr><td>'+esc(x.name)+'</td><td>'+x.cartons+' c. + '+x.extra+' u.</td><td class="right">'+x.totalUnits+'</td><td class="right">'+money(x.subtotal)+'</td></tr>';}).join('');
+    var b=brand||{};
+    return '<div class="receipt"><div class="receipt-brand">'+esc(b.name||'PharmaGest')+'</div>'
+      +(b.address?'<div class="receipt-sub">'+esc(b.address)+'</div>':'')
+      +(b.phone?'<div class="receipt-sub">'+esc(b.phone)+'</div>':'')
+      +'<div class="receipt-sub">VENTE DE STOCK — PARTENAIRE</div><div class="receipt-meta"><div><strong>Partenaire :</strong> '+esc(partner.value.trim())+'</div><div><strong>Référence :</strong> '+esc(reference.value)+'</div><div><strong>Date :</strong> '+esc(date)+'</div><div><strong>Produits :</strong> '+data.length+'</div></div><table class="receipt-table"><thead><tr><th>Produit</th><th>Conditionnement</th><th class="right">Unités</th><th class="right">Montant</th></tr></thead><tbody>'+rows+'</tbody></table><div class="receipt-total">TOTAL : '+money(total)+'</div><div class="receipt-note">Transaction partenaire indépendante — le stock PharmaGest, les lots et les prix de vente normaux ne sont pas modifiés.</div>'
+      +(b.footer?'<div class="receipt-footer">'+esc(b.footer)+'</div>':'')
+      +'</div>';
+  }
+  async function getReceiptBranding(){
+    var fallback='PharmaGest';
+    try{ fallback=String(localStorage.getItem('pg_company_name')||'').trim()||fallback; }catch(e){}
+    var brand={name:fallback,address:'',phone:'',footer:'Merci pour votre confiance.'};
+    try{
+      var response=await fetch('/api/settings',{headers:{Authorization:'Bearer '+(localStorage.getItem('dpa_token')||'')}});
+      if(response.ok){
+        var payload=await response.json();
+        var settings=(payload&&typeof payload.settings==='object'&&payload.settings)?payload.settings:(payload||{});
+        var general=settings.general||{}, recu=settings.recu||{};
+        brand.name=String(general.companyName||brand.name).trim()||fallback;
+        brand.address=String(general.address||'').trim();
+        brand.phone=String(general.phone||'').trim();
+        brand.footer=String(recu.footer||brand.footer).trim()||brand.footer;
+        try{localStorage.setItem('pg_company_name',brand.name);}catch(e){}
+      }
+    }catch(e){}
+    return brand;
+  }
+  async function openReceipt(){
+    var data=valid(); if(!data)return;
+    update(); saveHistory(data);
+    var brand=await getReceiptBranding();
+    document.getElementById('receiptPrintArea').innerHTML=receiptHtml(data,brand); document.getElementById('receiptModal').classList.add('open');document.getElementById('receiptModal').setAttribute('aria-hidden','false');document.body.classList.add('pgm-lock');
+    setStatus('Reçu prêt. Vous pouvez l’imprimer ou le partager.','success');
+  }
+  function closeReceipt(){document.getElementById('receiptModal').classList.remove('open');document.getElementById('receiptModal').setAttribute('aria-hidden','true');document.body.classList.remove('pgm-lock');}
+  function printReceipt(){
+    try{if(window.PharmaGestNative&&window.PharmaGestNative.printWebView){window.PharmaGestNative.printWebView();return;}}catch(e){}
+    window.print();
+  }
+  function shareReceipt(){
+    var data=valid(); if(!data)return;
+    var total=data.reduce(function(a,x){return a+x.subtotal;},0);
+    var text='PharmaGest — VENTE DE STOCK — PARTENAIRE\nPartenaire : '+partner.value.trim()+'\nRéférence : '+reference.value+'\n\n'
+      +data.map(function(x){return x.name+' — '+x.cartons+' carton(s) + '+x.extra+' unité(s) — '+x.totalUnits+' unités — '+money(x.subtotal);}).join('\n')
+      +'\n\nTOTAL : '+money(total);
+    if(navigator.share){navigator.share({title:'Reçu PharmaGest — Vente partenaire',text:text}).catch(function(){});}
+    else if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(function(){setStatus('Le contenu du reçu a été copié.','success');}).catch(function(){setStatus('Le partage n’est pas disponible sur cet appareil.','error');});}
+    else{setStatus('Le partage n’est pas disponible sur cet appareil.','error');}
+  }
+  function readHistory(){try{var h=JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]');return Array.isArray(h)?h:[];}catch(e){return [];}}
+  function saveHistory(data){
+    var h=readHistory();
+    if(h.some(function(x){return x.reference===reference.value;})) return;
+    var now=new Date();
+    var total=data.reduce(function(a,x){return a+x.subtotal;},0);
+    h.unshift({id:Date.now()+'-'+Math.random().toString(36).slice(2,8),reference:reference.value,partner:partner.value.trim(),date:now.toISOString(),products:data,total:total});
+    if(h.length>200)h=h.slice(0,200);
+    try{localStorage.setItem(HISTORY_KEY,JSON.stringify(h));}catch(e){}
+  }
+  function formatDate(iso){try{return new Date(iso).toLocaleString('fr-FR',{dateStyle:'short',timeStyle:'short'});}catch(e){return iso||'';}}
+  function renderHistory(){
+    var list=document.getElementById('historyList'), h=readHistory();
+    if(!h.length){list.innerHTML='<div class="history-empty">Aucune transaction partenaire enregistrée pour le moment.</div>';return;}
+    list.innerHTML=h.map(function(x,i){
+      var details=(x.products||[]).map(function(p){return '<div class="history-detail-row"><span>'+esc(p.name)+' — '+p.cartons+' c. + '+p.extra+' u. ('+p.totalUnits+' unités)</span><strong>'+money(p.subtotal)+'</strong></div>';}).join('');
+      return '<div class="history-item" data-index="'+i+'"><div class="history-top"><span class="history-ref">'+esc(x.reference)+'</span><span class="history-date">'+esc(formatDate(x.date))+'</span></div><div class="history-info"><span class="history-partner">'+esc(x.partner)+'</span><span class="history-total">'+money(x.total)+'</span></div><div class="history-detail">'+details+'<div class="history-detail-total">Total : '+money(x.total)+'</div></div></div>';
+    }).join('');
+    list.querySelectorAll('.history-item').forEach(function(item){item.addEventListener('click',function(){item.classList.toggle('open');});});
+  }
+  function openHistory(){renderHistory();var m=document.getElementById('historyModal');m.classList.add('open');m.setAttribute('aria-hidden','false');document.body.classList.add('pgm-lock');}
+  function closeHistory(){var m=document.getElementById('historyModal');m.classList.remove('open');m.setAttribute('aria-hidden','true');document.body.classList.remove('pgm-lock');}
+  function clearHistory(){if(!readHistory().length)return;if(!confirm('Effacer tout l’historique des ventes partenaire sur cet appareil ?'))return;try{localStorage.removeItem(HISTORY_KEY);}catch(e){}renderHistory();}
+  function reset(){lines.innerHTML='';seq=0;partner.value='';reference.value=makeRef();setStatus('');addLine();addLine();update();}
+  function toggleMenu(){document.getElementById('sidebar').classList.toggle('open');}
+  window.toggleMenu=toggleMenu;
+  document.getElementById('addBtn').addEventListener('click',function(){addLine();});
+  document.getElementById('historyBtn').addEventListener('click',openHistory);
+  document.getElementById('closeHistory').addEventListener('click',closeHistory);
+  document.getElementById('closeHistory2').addEventListener('click',closeHistory);
+  document.getElementById('clearHistory').addEventListener('click',clearHistory);
+  document.getElementById('historyModal').addEventListener('click',function(e){if(e.target===this)closeHistory();});
+  partner.addEventListener('input',update);
+  document.getElementById('receiptBtn').addEventListener('click',openReceipt);
+  document.getElementById('closeReceipt').addEventListener('click',closeReceipt);
+  document.getElementById('closeReceipt2').addEventListener('click',closeReceipt);
+  document.getElementById('printBtn').addEventListener('click',printReceipt);
+  document.getElementById('shareBtn').addEventListener('click',shareReceipt);
+  document.getElementById('receiptModal').addEventListener('click',function(e){if(e.target===this)closeReceipt();});
+  document.getElementById('resetBtn').addEventListener('click',reset);document.getElementById('resetBtn2').addEventListener('click',reset);
+  reference.value=makeRef();addLine();addLine();
+})();
+</script>
+<script src="assets/js/local-api.js"></script>
+<script src="assets/js/branding.js"></script>
+<script src="assets/js/mobile-role.js"></script>
+<script src="assets/js/mobile-shell.js"></script>
+<script src="assets/js/modals.js"></script>
+</body>
+</html>

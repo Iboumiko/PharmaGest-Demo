@@ -1,0 +1,1809 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><script src="assets/js/demo-guard.js"></script><style id="pg-boot-css">html.pg-boot body{opacity:0!important}</style><script>(function(){var h=document.documentElement;h.classList.add("pg-boot");window.__pgShow=function(){h.classList.remove("pg-boot")};setTimeout(window.__pgShow,800);window.addEventListener("load",function(){setTimeout(window.__pgShow,50)});})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PharmaGest</title>
+<link rel="stylesheet" href="assets/css/app.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
+body{background:#f4f7fb;color:#172033}
+a{text-decoration:none;color:inherit}
+button,input{font:inherit}
+.sidebar{position:fixed;left:0;top:0;width:260px;height:100vh;background:#071b3a;color:white;padding:20px 14px;overflow-y:auto;z-index:1000}
+.logo{padding:10px 12px 25px;border-bottom:1px solid rgba(255,255,255,.12);margin-bottom:18px}
+.logo h2{font-size:19px}.logo p{font-size:12px;color:#8edee2;margin-top:5px}
+.menu a{display:flex;align-items:center;gap:12px;text-decoration:none;color:#cbd5e1;padding:12px 13px;border-radius:9px;margin-bottom:5px;font-size:14px}
+.menu a:hover{background:#12305d;color:white}.menu a.active{background:#087f8c;color:white}.menu-icon{width:20px;text-align:center}
+.main{margin-left:260px;min-height:100vh}.topbar{height:70px;background:white;border-bottom:1px solid #e3e8ef;display:flex;align-items:center;justify-content:space-between;padding:0 28px}
+.topbar-left{display:flex;align-items:center;gap:15px}.menu-toggle{display:none;border:0;background:#071b3a;color:white;width:40px;height:40px;border-radius:8px;font-size:20px;cursor:pointer}
+.status{display:flex;align-items:center;gap:8px;color:#16834b;font-size:13px}.status-dot{width:9px;height:9px;background:#20b56b;border-radius:50%}
+.admin-user{display:flex;align-items:center;gap:10px}.avatar{width:38px;height:38px;border-radius:50%;background:#0b7891;color:white;display:flex;align-items:center;justify-content:center;font-weight:bold}.admin-user small{display:block;color:#778399;font-size:11px}
+.content{padding:28px}.page-header{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:25px}.page-header h1{font-size:27px;margin-bottom:7px}.page-header p{color:#718096;font-size:14px}
+.btn{border:none;border-radius:8px;padding:11px 16px;cursor:pointer;font-weight:bold;font-size:13px}.btn-primary{background:#087f8c;color:white}.btn-primary:hover{background:#066b76}.btn-secondary{background:#e9eef5;color:#344054}.btn-light{background:white;color:#344054;border:1px solid #d8dee8}.btn-light:hover{background:#f7f9fb}
+.filters{background:white;border:1px solid #e5eaf0;border-radius:12px;padding:15px;margin-bottom:18px;box-shadow:0 3px 12px rgba(15,35,65,.04)}
+.filters-grid{display:grid;grid-template-columns:repeat(2,minmax(180px,1fr)) auto auto;gap:12px;align-items:end}.field{display:flex;flex-direction:column;gap:7px}.field label{font-size:12px;font-weight:bold;color:#697586}.field input{height:43px;border:1px solid #d8dee8;border-radius:8px;padding:0 12px;background:white;color:#344054;outline:none}.field input:focus{border-color:#087f8c;box-shadow:0 0 0 3px rgba(8,127,140,.08)}.button-row{display:flex;gap:9px}
+.period{color:#788598;font-size:12px;margin:0 0 18px}.period strong{color:#344054}.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:24px}.stat-card{background:white;border:1px solid #e5eaf0;border-radius:12px;padding:20px;box-shadow:0 3px 12px rgba(15,35,65,.04)}.stat-label{color:#7a8798;font-size:13px;margin-bottom:8px}.stat-value{font-size:25px;font-weight:700}.stat-extra{color:#8a95a5;font-size:11px;margin-top:7px}
+.export-bar{background:white;border:1px solid #e5eaf0;border-radius:12px;padding:15px;margin-bottom:18px;display:flex;gap:10px;flex-wrap:wrap}
+.section-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-bottom:18px}.section{background:white;border:1px solid #e5eaf0;border-radius:12px;box-shadow:0 3px 12px rgba(15,35,65,.04);overflow:hidden}.section.full{margin-bottom:18px}.section-header{padding:18px 20px;border-bottom:1px solid #e5eaf0;display:flex;justify-content:space-between;align-items:center;gap:12px}.section-header h2,.section-header h3{font-size:16px}.section-header span{color:#788598;font-size:12px}.section-body{padding:18px 20px}.list{display:flex;flex-direction:column}.list-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #edf0f4}.list-row:last-child{border-bottom:0}.list-name{font-weight:bold;font-size:13px}.list-sub{color:#8a95a5;font-size:11px;margin-top:3px}.list-value{text-align:right;font-weight:bold;font-size:13px}.progress{height:7px;background:#edf2f5;border-radius:99px;overflow:hidden;margin-top:8px}.progress>div{height:100%;background:#087f8c;border-radius:99px}.search-box{width:100%;padding:11px 13px;border:1px solid #d8dee8;border-radius:8px;outline:none;margin-bottom:14px}.search-box:focus{border-color:#087f8c;box-shadow:0 0 0 3px rgba(8,127,140,.08)}
+.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:700px}th,td{padding:14px 16px;border-bottom:1px solid #edf0f4;text-align:left;font-size:13px}th{background:#f8fafc;color:#697586;font-size:12px;text-transform:uppercase}tbody tr:hover{background:#fafcfd}.text-right{text-align:right}.badge{display:inline-flex;padding:5px 9px;border-radius:20px;font-size:11px;font-weight:bold;white-space:nowrap}.badge-gray{background:#eef2f6;color:#596579}.badge-blue{background:#e9f1ff;color:#3567a8}.empty{text-align:center;padding:35px 20px;color:#7a8798}.status{min-height:18px}.status.success{color:#16834b}.status.error{color:#c0394d}.spinner{display:inline-block;width:14px;height:14px;border:2px solid #dbe5e8;border-top-color:#087f8c;border-radius:50%;animation:spin .7s linear infinite;vertical-align:-2px;margin-right:7px}@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:1100px){.stats-grid{grid-template-columns:repeat(2,1fr)}.section-grid{grid-template-columns:1fr}}
+@media(max-width:800px){.sidebar{transform:translateX(-100%);transition:.25s}.sidebar.open{transform:translateX(0)}.main{margin-left:0}.menu-toggle{display:block}.topbar{padding:0 15px}.content{padding:18px}.page-header{flex-direction:column}.filters-grid{grid-template-columns:1fr 1fr}.filters-grid .button-row{width:100%}.filters-grid .button-row .btn{width:100%}}
+@media(max-width:550px){.stats-grid{grid-template-columns:1fr}.filters-grid{grid-template-columns:1fr}.admin-user div:last-child{display:none}.export-bar{flex-direction:column}.export-bar .btn{width:100%}}
+@media print{.sidebar,.topbar,.filters,.export-bar{display:none!important}.main{margin-left:0}.content{padding:0}.section{box-shadow:none}.page-header{margin-bottom:12px}.section.full{break-inside:auto}}
+</style>
+<link rel="stylesheet" href="assets/css/mobile-shell.css">
+<link rel="stylesheet" href="assets/css/theme.css">
+<script src="assets/js/theme.js"></script>
+<link rel="stylesheet" href="assets/css/modals.css">
+</head>
+<body>
+<aside class="sidebar" id="sidebar">
+  <div class="logo">
+    <h2>PharmaGest</h2>
+    <p><span data-establishment-name>Nom de l’établissement</span></p>
+  </div>
+  <nav class="menu">
+    <a href="index.html"><span class="menu-icon">▣</span>Tableau de bord</a>
+    <a href="vente.html"><span class="menu-icon">🛒</span>Vente / Caisse</a>
+    <a href="produits.html"><span class="menu-icon">▤</span>Produits</a>
+    <a href="stocks.html"><span class="menu-icon">▥</span>Stocks</a>
+    <a href="receptions.html"><span class="menu-icon">⇩</span>Réceptions</a>
+    <a href="fournisseurs.html"><span class="menu-icon">♜</span>Fournisseurs</a>
+    <a href="lots.html"><span class="menu-icon">◫</span>Lots & péremptions</a>
+    <a href="rapports.html" class="active"><span class="menu-icon">▦</span>Rapports</a>
+    <a href="utilisateurs.html"><span class="menu-icon">♙</span>Utilisateurs</a>
+    <a href="audit.html"><span class="menu-icon">◉</span>Journal d’audit</a>
+    <a href="vente_partenaire.html"><span class="menu-icon">⇄</span>Vente partenaire</a>
+    <a href="parametres.html"><span class="menu-icon">⚙</span>Paramètres</a>
+  </nav>
+</aside>
+<main class="main">
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="menu-toggle" onclick="toggleMenu()" aria-label="Menu">☰</button>
+    <div class="status"><span class="status-dot"></span>Système opérationnel</div>
+  </div>
+  <div class="admin-user">
+    <div class="avatar" id="currentAvatar">AD</div>
+    <div><strong id="currentUserName">Administrateur</strong><small id="currentUserRole">Accès complet</small></div>
+  </div>
+</header>
+<div class="content">
+    <div class="page-header">
+      <div>
+        <h1>Rapports & statistiques</h1>
+        <p>
+          Suivi des ventes, du chiffre d'affaires, des paiements,
+          des vendeurs et des produits.
+        </p>
+      </div>
+    </div>
+
+    <!-- FILTRES -->
+
+    <section class="filters">
+
+      <div class="filters-grid">
+
+        <div class="field">
+          <label for="dateFrom">Du</label>
+          <input type="date" id="dateFrom">
+        </div>
+
+        <div class="field">
+          <label for="dateTo">Au</label>
+          <input type="date" id="dateTo">
+        </div>
+
+        <div class="button-row">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            id="todayBtn"
+          >
+            Aujourd'hui
+          </button>
+        </div>
+
+        <div class="button-row">
+          <button
+            type="button"
+            class="btn btn-primary"
+            id="refreshBtn"
+          >
+            Actualiser
+          </button>
+        </div>
+
+      </div>
+
+    </section>
+
+    <div id="status" class="status"></div>
+
+    <p class="period">
+      Période :
+      <strong id="periodText">—</strong>
+    </p>
+
+    <!-- STATISTIQUES PRINCIPALES -->
+
+    <section class="stats-grid">
+
+      <article class="stat-card">
+        <div class="stat-label">Chiffre d'affaires</div>
+        <div class="stat-value" id="revenueValue">0 FCFA</div>
+        <div class="stat-extra">Total des ventes de la période</div>
+      </article>
+
+      <article class="stat-card">
+        <div class="stat-label">Nombre de ventes</div>
+        <div class="stat-value" id="salesCountValue">0</div>
+        <div class="stat-extra">Transactions enregistrées</div>
+      </article>
+
+      <article class="stat-card">
+        <div class="stat-label">Quantités vendues</div>
+        <div class="stat-value" id="quantityValue">0</div>
+        <div class="stat-extra">Articles / unités vendus</div>
+      </article>
+
+      <article class="stat-card">
+        <div class="stat-label">Panier moyen</div>
+        <div class="stat-value" id="averageValue">0 FCFA</div>
+        <div class="stat-extra">Chiffre d'affaires / ventes</div>
+      </article>
+
+    </section>
+
+    <!-- EXPORT -->
+
+    <div class="export-bar">
+
+      <button
+        type="button"
+        class="btn btn-light"
+        id="csvBtn"
+      >
+        Export CSV
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-light"
+        id="excelBtn"
+      >
+        Export Excel
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-light"
+        id="printBtn"
+      >
+        Imprimer / PDF
+      </button>
+
+    </div>
+
+    <!-- PAIEMENTS + VENDEURS -->
+
+    <section class="section-grid">
+
+      <article class="section">
+
+        <div class="section-header">
+          <h2>Répartition des paiements</h2>
+          <span id="paymentCountLabel">0 mode</span>
+        </div>
+
+        <div class="section-body">
+          <div id="paymentsList" class="list"></div>
+        </div>
+
+      </article>
+
+      <article class="section">
+
+        <div class="section-header">
+          <h2>Ventes par vendeur</h2>
+          <span id="sellerCountLabel">0 vendeur</span>
+        </div>
+
+        <div class="section-body">
+          <div id="sellersList" class="list"></div>
+        </div>
+
+      </article>
+
+    </section>
+
+    <!-- PRODUITS -->
+
+    <section class="section full">
+
+      <div class="section-header">
+        <h2>Performance des produits</h2>
+        <span id="productCountLabel">0 produit</span>
+      </div>
+
+      <div class="section-body">
+
+        <input
+          type="search"
+          id="productSearch"
+          class="search-box"
+          placeholder="Rechercher un produit..."
+        >
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Produit</th>
+                <th>Code</th>
+                <th class="text-right">Quantité</th>
+                <th class="text-right">CA</th>
+                <th class="text-right">% CA</th>
+              </tr>
+            </thead>
+
+            <tbody id="productsTableBody"></tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- DETAIL VENTES -->
+
+    <section class="section full">
+
+      <div class="section-header">
+        <h2>Détail des ventes</h2>
+        <span id="salesDetailCount">0 vente</span>
+      </div>
+
+      <div class="section-body">
+
+        <div class="table-wrap">
+
+          <table id="salesTable">
+
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Référence</th>
+                <th>Vendeur</th>
+                <th>Paiement</th>
+                <th class="text-right">Quantité</th>
+                <th class="text-right">Total</th>
+              </tr>
+            </thead>
+
+            <tbody id="salesTableBody"></tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </div>
+</main>
+<script src="assets/js/local-api.js"></script>
+<script src="assets/js/branding.js"></script>
+<script src="assets/js/mobile-role.js"></script><script src="assets/js/mobile-shell.js"></script><script src="assets/js/modals.js"></script>
+<script>
+function toggleMenu(){document.getElementById('sidebar')?.classList.toggle('open')}
+try{
+  const u=JSON.parse(localStorage.getItem('dpa_user')||'{}');
+  const n=u.name||'Administrateur';
+  const r=u.role==='admin'?'Accès complet':'Vendeur';
+  const el=document.getElementById('currentUserName'); if(el) el.textContent=n;
+  const er=document.getElementById('currentUserRole'); if(er) er.textContent=r;
+  const av=document.getElementById('currentAvatar'); if(av) av.textContent=(n.trim().split(/\s+/).map(x=>x[0]).join('').slice(0,2)||'AD').toUpperCase();
+}catch(e){}
+</script>
+<script>
+  "use strict";
+
+  /*
+   * ============================================================
+   * CONFIGURATION
+   * ============================================================
+   */
+
+  const API_BASE = "/api";
+
+  const TOKEN_KEY = "dpa_token";
+
+  let allSales = [];
+  let filteredSales = [];
+
+  let productStats = [];
+
+  /*
+   * ============================================================
+   * DOM
+   * ============================================================
+   */
+
+  const dateFrom = document.getElementById("dateFrom");
+  const dateTo = document.getElementById("dateTo");
+
+  const refreshBtn = document.getElementById("refreshBtn");
+  const todayBtn = document.getElementById("todayBtn");
+
+  const statusBox = document.getElementById("status");
+
+  const periodText = document.getElementById("periodText");
+
+  const revenueValue = document.getElementById("revenueValue");
+  const salesCountValue = document.getElementById("salesCountValue");
+  const quantityValue = document.getElementById("quantityValue");
+  const averageValue = document.getElementById("averageValue");
+
+  const paymentsList = document.getElementById("paymentsList");
+  const sellersList = document.getElementById("sellersList");
+
+  const productsTableBody =
+    document.getElementById("productsTableBody");
+
+  const salesTableBody =
+    document.getElementById("salesTableBody");
+
+  const productSearch =
+    document.getElementById("productSearch");
+
+  /*
+   * ============================================================
+   * UTILITAIRES
+   * ============================================================
+   */
+
+  function getToken() {
+    return localStorage.getItem(TOKEN_KEY);
+  }
+
+  function requireToken() {
+    const token = getToken();
+
+    if (!token) {
+      showStatus(
+        "Session absente. Veuillez vous reconnecter.",
+        "error"
+      );
+
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 1000);
+
+      return null;
+    }
+
+    return token;
+  }
+
+  function showStatus(message, type = "info") {
+    statusBox.textContent = message;
+    statusBox.className = `status show ${type}`;
+  }
+
+  function hideStatus() {
+    statusBox.className = "status";
+    statusBox.textContent = "";
+  }
+
+  function escapeHtml(value) {
+    if (value === null || value === undefined) {
+      return "";
+    }
+
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  function numberValue(value) {
+    const n = Number(value);
+
+    return Number.isFinite(n) ? n : 0;
+  }
+
+  function formatMoney(value) {
+    return `${Math.round(numberValue(value)).toLocaleString("fr-FR")} FCFA`;
+  }
+
+  function formatNumber(value) {
+    return numberValue(value).toLocaleString("fr-FR");
+  }
+
+  function normalizeDate(value) {
+    if (!value) {
+      return null;
+    }
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+      return null;
+    }
+
+    return date;
+  }
+
+  function formatDateTime(value) {
+    const date = normalizeDate(value);
+
+    if (!date) {
+      return "—";
+    }
+
+    return date.toLocaleString("fr-FR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+  }
+
+  function formatDateOnly(dateString) {
+    if (!dateString) {
+      return "—";
+    }
+
+    const parts = dateString.split("-");
+
+    if (parts.length !== 3) {
+      return dateString;
+    }
+
+    return `${parts[2]}/${parts[1]}/${parts[0]}`;
+  }
+
+  function localToday() {
+    const now = new Date();
+
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  }
+
+  function addDays(dateString, amount) {
+    const date = new Date(`${dateString}T12:00:00`);
+
+    date.setDate(date.getDate() + amount);
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  }
+
+  function dateOnlyFromDate(value) {
+    const date = normalizeDate(value);
+
+    if (!date) {
+      return null;
+    }
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  }
+
+  function saleDate(sale) {
+    return (
+      sale.created_at ||
+      sale.date ||
+      sale.sale_date ||
+      sale.createdAt ||
+      null
+    );
+  }
+
+  function saleReference(sale) {
+    return (
+      sale.sale_number ||
+      sale.reference ||
+      sale.saleNumber ||
+      sale.id ||
+      "—"
+    );
+  }
+
+  function saleSeller(sale) {
+    return (
+      sale.seller_name ||
+      sale.seller ||
+      sale.user_name ||
+      sale.username ||
+      sale.cashier_name ||
+      (sale.user && (
+        sale.user.name ||
+        sale.user.username
+      )) ||
+      "Non précisé"
+    );
+  }
+
+  function salePayment(sale) {
+    return (
+      sale.payment_method ||
+      sale.paymentMethod ||
+      sale.payment ||
+      "Non précisé"
+    );
+  }
+
+  function saleTotal(sale) {
+    return numberValue(
+      sale.total ??
+      sale.amount ??
+      sale.total_amount ??
+      sale.totalAmount
+    );
+  }
+
+  /*
+   * ============================================================
+   * NORMALISATION DES ARTICLES
+   * ============================================================
+   */
+
+  function getSaleItems(sale) {
+    if (Array.isArray(sale.items)) {
+      return sale.items;
+    }
+
+    if (Array.isArray(sale.sale_items)) {
+      return sale.sale_items;
+    }
+
+    if (Array.isArray(sale.saleItems)) {
+      return sale.saleItems;
+    }
+
+    if (Array.isArray(sale.products)) {
+      return sale.products;
+    }
+
+    return [];
+  }
+
+  function itemProductName(item) {
+    return (
+      item.product_name ||
+      item.productName ||
+      item.name ||
+      item.product?.name ||
+      "Produit non précisé"
+    );
+  }
+
+  function itemProductCode(item) {
+    return (
+      item.product_code ||
+      item.productCode ||
+      item.code ||
+      item.barcode ||
+      item.product?.code ||
+      item.product?.barcode ||
+      "—"
+    );
+  }
+
+  function itemQuantity(item) {
+    return numberValue(
+      item.quantity ??
+      item.qty ??
+      item.amount
+    );
+  }
+
+  function itemUnitPrice(item) {
+    return numberValue(
+      item.unit_price ??
+      item.unitPrice ??
+      item.price ??
+      item.sale_price
+    );
+  }
+
+  function itemTotal(item) {
+    const explicit = (
+      item.total ??
+      item.line_total ??
+      item.lineTotal
+    );
+
+    if (
+      explicit !== undefined &&
+      explicit !== null
+    ) {
+      return numberValue(explicit);
+    }
+
+    return itemQuantity(item) * itemUnitPrice(item);
+  }
+
+  /*
+   * ============================================================
+   * API AUTHENTIFIÉE
+   * ============================================================
+   */
+
+  async function apiFetch(url, options = {}) {
+
+    const token = requireToken();
+
+    if (!token) {
+      throw new Error("SESSION_REQUIRED");
+    }
+
+    const headers = {
+      ...(options.headers || {}),
+      "Authorization": `Bearer ${token}`,
+      "Accept": "application/json"
+    };
+
+    if (
+      options.body &&
+      !(options.body instanceof FormData)
+    ) {
+      headers["Content-Type"] = "application/json";
+    }
+
+    const response = await fetch(url, {
+      ...options,
+      headers
+    });
+
+    if (response.status === 401) {
+
+      localStorage.removeItem(TOKEN_KEY);
+
+      showStatus(
+        "Votre session a expiré. Reconnectez-vous.",
+        "error"
+      );
+
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 1000);
+
+      throw new Error("AUTHENTICATION_REQUIRED");
+    }
+
+    let data = null;
+
+    const contentType =
+      response.headers.get("content-type") || "";
+
+    if (contentType.includes("application/json")) {
+      data = await response.json();
+    } else {
+      const text = await response.text();
+
+      data = {
+        raw: text
+      };
+    }
+
+    if (!response.ok) {
+
+      const message =
+        data?.error ||
+        data?.message ||
+        `Erreur HTTP ${response.status}`;
+
+      throw new Error(message);
+    }
+
+    return data;
+  }
+
+  /*
+   * ============================================================
+   * DATES
+   * ============================================================
+   */
+
+  function initializeDates() {
+
+    const today = localToday();
+
+    dateFrom.value = today;
+    dateTo.value = today;
+  }
+
+  function validateDates() {
+
+    const from = dateFrom.value;
+    const to = dateTo.value;
+
+    if (!from || !to) {
+
+      showStatus(
+        "Veuillez sélectionner les deux dates.",
+        "error"
+      );
+
+      return false;
+    }
+
+    if (from > to) {
+
+      showStatus(
+        "La date « Du » doit être antérieure ou égale à la date « Au ».",
+        "error"
+      );
+
+      return false;
+    }
+
+    return true;
+  }
+
+  /*
+   * ============================================================
+   * CHARGEMENT RAPPORT
+   * ============================================================
+   */
+
+  async function loadReport() {
+
+    if (!validateDates()) {
+      return;
+    }
+
+    const from = dateFrom.value;
+    const to = dateTo.value;
+
+    refreshBtn.disabled = true;
+
+    refreshBtn.innerHTML =
+      `<span class="spinner"></span>Chargement...`;
+
+    showStatus(
+      "Chargement du rapport...",
+      "info"
+    );
+
+    try {
+
+      /*
+       * IMPORTANT :
+       *
+       * Le backend reçoit le token Authorization.
+       *
+       * On envoie le lendemain comme borne supérieure
+       * pour éviter les problèmes classiques de date/heure.
+       *
+       * Le résultat sera ensuite filtré côté navigateur
+       * sur les dates exactes choisies.
+       */
+
+      const apiTo = addDays(to, 1);
+
+      const url =
+        `${API_BASE}/reports/sales` +
+        `?from=${encodeURIComponent(from)}` +
+        `&to=${encodeURIComponent(apiTo)}`;
+
+      let data;
+      try {
+        data = await apiFetch(url);
+      } catch (reportError) {
+        // Secours : charger les ventes brutes si la route de rapport n'est pas disponible.
+        // Le filtrage de dates et les calculs sont ensuite faits dans cette page.
+        if (reportError.message === "AUTHENTICATION_REQUIRED" || reportError.message === "SESSION_REQUIRED") throw reportError;
+        const fallback = await apiFetch(`${API_BASE}/sales`);
+        data = Array.isArray(fallback) ? fallback : (fallback.sales || fallback.rows || fallback.data?.sales || []);
+      }
+
+      /*
+       * Le backend attendu :
+       *
+       * {
+       *   sales: [...],
+       *   summary: {...}
+       * }
+       *
+       * On accepte également directement un tableau.
+       */
+
+      if (Array.isArray(data)) {
+        allSales = data;
+      } else {
+        allSales =
+          Array.isArray(data.sales) ? data.sales :
+          Array.isArray(data.rows) ? data.rows :
+          Array.isArray(data.data?.sales) ? data.data.sales :
+          Array.isArray(data.data) ? data.data : [];
+      }
+
+      /*
+       * Filtrage strict de la période sélectionnée.
+       */
+
+      filteredSales = allSales.filter((sale) => {
+
+        const date = dateOnlyFromDate(
+          saleDate(sale)
+        );
+
+        if (!date) {
+          return false;
+        }
+
+        return date >= from && date <= to;
+      });
+
+      renderAll();
+
+      showStatus(
+        `${filteredSales.length.toLocaleString("fr-FR")} vente(s) chargée(s).`,
+        "success"
+      );
+
+    } catch (error) {
+
+      console.error(
+        "Erreur chargement rapport :",
+        error
+      );
+
+      if (
+        error.message !== "AUTHENTICATION_REQUIRED" &&
+        error.message !== "SESSION_REQUIRED"
+      ) {
+
+        showStatus(
+          `Impossible de charger le rapport : ${error.message}`,
+          "error"
+        );
+
+        clearReport();
+      }
+
+    } finally {
+
+      refreshBtn.disabled = false;
+      refreshBtn.textContent = "Actualiser";
+    }
+  }
+
+  /*
+   * ============================================================
+   * RENDU GLOBAL
+   * ============================================================
+   */
+
+  function renderAll() {
+
+    const from = dateFrom.value;
+    const to = dateTo.value;
+
+    periodText.textContent =
+      `${formatDateOnly(from)} → ${formatDateOnly(to)}`;
+
+    renderSummary();
+
+    renderPayments();
+
+    renderSellers();
+
+    buildProductStats();
+
+    renderProducts();
+
+    renderSalesTable();
+  }
+
+  /*
+   * ============================================================
+   * STATISTIQUES PRINCIPALES
+   * ============================================================
+   */
+
+  function renderSummary() {
+
+    let revenue = 0;
+    let quantity = 0;
+
+    filteredSales.forEach((sale) => {
+
+      revenue += saleTotal(sale);
+
+      const items = getSaleItems(sale);
+
+      if (items.length > 0) {
+
+        items.forEach((item) => {
+          quantity += itemQuantity(item);
+        });
+
+      } else if (
+        sale.quantity !== undefined &&
+        sale.quantity !== null
+      ) {
+
+        quantity += numberValue(sale.quantity);
+
+      }
+    });
+
+    const count = filteredSales.length;
+
+    const average =
+      count > 0
+        ? revenue / count
+        : 0;
+
+    revenueValue.textContent =
+      formatMoney(revenue);
+
+    salesCountValue.textContent =
+      formatNumber(count);
+
+    quantityValue.textContent =
+      formatNumber(quantity);
+
+    averageValue.textContent =
+      formatMoney(average);
+  }
+
+  /*
+   * ============================================================
+   * PAIEMENTS
+   * ============================================================
+   */
+
+  function renderPayments() {
+
+    const map = {};
+
+    filteredSales.forEach((sale) => {
+
+      const method = salePayment(sale);
+
+      if (!map[method]) {
+        map[method] = {
+          amount: 0,
+          count: 0
+        };
+      }
+
+      map[method].amount += saleTotal(sale);
+      map[method].count++;
+    });
+
+    const entries = Object.entries(map)
+      .sort((a, b) =>
+        b[1].amount - a[1].amount
+      );
+
+    paymentCountLabel.textContent =
+      `${entries.length} mode${entries.length > 1 ? "s" : ""}`;
+
+    if (!entries.length) {
+
+      paymentsList.innerHTML =
+        `<div class="empty">Aucune donnée.</div>`;
+
+      return;
+    }
+
+    const totalRevenue =
+      entries.reduce(
+        (sum, [, data]) =>
+          sum + data.amount,
+        0
+      );
+
+    paymentsList.innerHTML =
+      entries.map(([name, data]) => {
+
+        const percent =
+          totalRevenue > 0
+            ? (data.amount / totalRevenue) * 100
+            : 0;
+
+        return `
+          <div class="list-row">
+
+            <div style="flex:1;min-width:0;">
+
+              <div class="list-name">
+                ${escapeHtml(name)}
+              </div>
+
+              <div class="list-sub">
+                ${formatNumber(data.count)}
+                vente${data.count > 1 ? "s" : ""}
+              </div>
+
+              <div class="progress">
+                <span style="width:${Math.min(percent, 100)}%"></span>
+              </div>
+
+            </div>
+
+            <div class="list-value">
+              ${formatMoney(data.amount)}
+              <div class="list-sub">
+                ${percent.toFixed(1)} %
+              </div>
+            </div>
+
+          </div>
+        `;
+
+      }).join("");
+  }
+
+  /*
+   * ============================================================
+   * VENDEURS
+   * ============================================================
+   */
+
+  function renderSellers() {
+
+    const map = {};
+
+    filteredSales.forEach((sale) => {
+
+      const seller = saleSeller(sale);
+
+      if (!map[seller]) {
+        map[seller] = {
+          amount: 0,
+          count: 0
+        };
+      }
+
+      map[seller].amount += saleTotal(sale);
+      map[seller].count++;
+    });
+
+    const entries = Object.entries(map)
+      .sort((a, b) =>
+        b[1].amount - a[1].amount
+      );
+
+    sellerCountLabel.textContent =
+      `${entries.length} vendeur${entries.length > 1 ? "s" : ""}`;
+
+    if (!entries.length) {
+
+      sellersList.innerHTML =
+        `<div class="empty">Aucune donnée.</div>`;
+
+      return;
+    }
+
+    const totalRevenue =
+      entries.reduce(
+        (sum, [, data]) =>
+          sum + data.amount,
+        0
+      );
+
+    sellersList.innerHTML =
+      entries.map(([name, data]) => {
+
+        const percent =
+          totalRevenue > 0
+            ? (data.amount / totalRevenue) * 100
+            : 0;
+
+        return `
+          <div class="list-row">
+
+            <div style="flex:1;min-width:0;">
+
+              <div class="list-name">
+                ${escapeHtml(name)}
+              </div>
+
+              <div class="list-sub">
+                ${formatNumber(data.count)}
+                vente${data.count > 1 ? "s" : ""}
+              </div>
+
+              <div class="progress">
+                <span style="width:${Math.min(percent, 100)}%"></span>
+              </div>
+
+            </div>
+
+            <div class="list-value">
+              ${formatMoney(data.amount)}
+              <div class="list-sub">
+                ${percent.toFixed(1)} %
+              </div>
+            </div>
+
+          </div>
+        `;
+
+      }).join("");
+  }
+
+  /*
+   * ============================================================
+   * PRODUITS
+   * ============================================================
+   */
+
+  function buildProductStats() {
+
+    const map = {};
+
+    filteredSales.forEach((sale) => {
+
+      const items = getSaleItems(sale);
+
+      items.forEach((item) => {
+
+        const name = itemProductName(item);
+        const code = itemProductCode(item);
+
+        /*
+         * Clé basée sur code + nom pour éviter
+         * de mélanger deux produits différents.
+         */
+
+        const key = `${code}|||${name}`;
+
+        if (!map[key]) {
+
+          map[key] = {
+            name,
+            code,
+            quantity: 0,
+            revenue: 0
+          };
+        }
+
+        map[key].quantity +=
+          itemQuantity(item);
+
+        map[key].revenue +=
+          itemTotal(item);
+      });
+    });
+
+    productStats = Object.values(map)
+      .sort((a, b) =>
+        b.revenue - a.revenue
+      );
+
+    productCountLabel.textContent =
+      `${productStats.length} produit${productStats.length > 1 ? "s" : ""}`;
+  }
+
+  function renderProducts() {
+
+    const search =
+      productSearch.value
+        .trim()
+        .toLowerCase();
+
+    const products =
+      productStats.filter((product) => {
+
+        if (!search) {
+          return true;
+        }
+
+        return (
+          product.name.toLowerCase().includes(search) ||
+          String(product.code)
+            .toLowerCase()
+            .includes(search)
+        );
+      });
+
+    if (!products.length) {
+
+      productsTableBody.innerHTML = `
+        <tr>
+          <td colspan="5">
+            <div class="empty">
+              ${
+                productStats.length
+                  ? "Aucun produit ne correspond à la recherche."
+                  : "Aucune donnée produit disponible."
+              }
+            </div>
+          </td>
+        </tr>
+      `;
+
+      return;
+    }
+
+    const totalRevenue =
+      productStats.reduce(
+        (sum, product) =>
+          sum + product.revenue,
+        0
+      );
+
+    productsTableBody.innerHTML =
+      products.map((product) => {
+
+        const percent =
+          totalRevenue > 0
+            ? (product.revenue / totalRevenue) * 100
+            : 0;
+
+        return `
+          <tr>
+
+            <td>
+              <strong>
+                ${escapeHtml(product.name)}
+              </strong>
+            </td>
+
+            <td>
+              <span class="badge badge-gray">
+                ${escapeHtml(product.code)}
+              </span>
+            </td>
+
+            <td class="text-right">
+              ${formatNumber(product.quantity)}
+            </td>
+
+            <td class="text-right">
+              <strong>
+                ${formatMoney(product.revenue)}
+              </strong>
+            </td>
+
+            <td class="text-right">
+              ${percent.toFixed(1)} %
+            </td>
+
+          </tr>
+        `;
+
+      }).join("");
+  }
+
+  /*
+   * ============================================================
+   * TABLE DES VENTES
+   * ============================================================
+   */
+
+  function renderSalesTable() {
+
+    salesDetailCount.textContent =
+      `${filteredSales.length} vente${filteredSales.length > 1 ? "s" : ""}`;
+
+    if (!filteredSales.length) {
+
+      salesTableBody.innerHTML = `
+        <tr>
+          <td colspan="6">
+            <div class="empty">
+              Aucune vente pour cette période.
+            </div>
+          </td>
+        </tr>
+      `;
+
+      return;
+    }
+
+    /*
+     * Plus récentes en premier.
+     */
+
+    const sales = [...filteredSales]
+      .sort((a, b) => {
+
+        const dateA =
+          normalizeDate(saleDate(a))?.getTime() || 0;
+
+        const dateB =
+          normalizeDate(saleDate(b))?.getTime() || 0;
+
+        return dateB - dateA;
+      });
+
+    salesTableBody.innerHTML =
+      sales.map((sale) => {
+
+        const items =
+          getSaleItems(sale);
+
+        let quantity = 0;
+
+        if (items.length) {
+
+          quantity = items.reduce(
+            (sum, item) =>
+              sum + itemQuantity(item),
+            0
+          );
+
+        } else {
+
+          quantity =
+            numberValue(
+              sale.quantity ??
+              sale.total_quantity ??
+              sale.totalQuantity
+            );
+        }
+
+        const payment =
+          salePayment(sale);
+
+        return `
+          <tr>
+
+            <td>
+              ${formatDateTime(saleDate(sale))}
+            </td>
+
+            <td>
+              <strong>
+                ${escapeHtml(saleReference(sale))}
+              </strong>
+            </td>
+
+            <td>
+              ${escapeHtml(saleSeller(sale))}
+            </td>
+
+            <td>
+              <span class="badge badge-blue">
+                ${escapeHtml(payment)}
+              </span>
+            </td>
+
+            <td class="text-right">
+              ${formatNumber(quantity)}
+            </td>
+
+            <td class="text-right">
+              <strong>
+                ${formatMoney(saleTotal(sale))}
+              </strong>
+            </td>
+
+          </tr>
+        `;
+
+      }).join("");
+  }
+
+  /*
+   * ============================================================
+   * NETTOYAGE
+   * ============================================================
+   */
+
+  function clearReport() {
+
+    allSales = [];
+    filteredSales = [];
+    productStats = [];
+
+    revenueValue.textContent = "0 FCFA";
+    salesCountValue.textContent = "0";
+    quantityValue.textContent = "0";
+    averageValue.textContent = "0 FCFA";
+
+    paymentsList.innerHTML =
+      `<div class="empty">Aucune donnée.</div>`;
+
+    sellersList.innerHTML =
+      `<div class="empty">Aucune donnée.</div>`;
+
+    productsTableBody.innerHTML =
+      `<tr><td colspan="5"><div class="empty">Aucune donnée.</div></td></tr>`;
+
+    salesTableBody.innerHTML =
+      `<tr><td colspan="6"><div class="empty">Aucune donnée.</div></td></tr>`;
+
+    productCountLabel.textContent = "0 produit";
+    sellerCountLabel.textContent = "0 vendeur";
+    paymentCountLabel.textContent = "0 mode";
+    salesDetailCount.textContent = "0 vente";
+  }
+
+  /*
+   * ============================================================
+   * EXPORT CSV
+   * ============================================================
+   */
+
+  function csvEscape(value) {
+
+    const text =
+      value === null ||
+      value === undefined
+        ? ""
+        : String(value);
+
+    return `"${text.replace(/"/g, '""')}"`;
+  }
+
+  function exportCSV() {
+
+    if (!filteredSales.length) {
+
+      showStatus(
+        "Aucune vente à exporter.",
+        "error"
+      );
+
+      return;
+    }
+
+    const rows = [
+      [
+        "Date",
+        "Référence",
+        "Vendeur",
+        "Paiement",
+        "Quantité",
+        "Total"
+      ]
+    ];
+
+    [...filteredSales]
+      .sort((a, b) => {
+
+        const dateA =
+          normalizeDate(saleDate(a))?.getTime() || 0;
+
+        const dateB =
+          normalizeDate(saleDate(b))?.getTime() || 0;
+
+        return dateB - dateA;
+      })
+      .forEach((sale) => {
+
+        const items =
+          getSaleItems(sale);
+
+        const quantity =
+          items.length
+            ? items.reduce(
+                (sum, item) =>
+                  sum + itemQuantity(item),
+                0
+              )
+            : numberValue(
+                sale.quantity ??
+                sale.total_quantity ??
+                0
+              );
+
+        rows.push([
+          formatDateTime(saleDate(sale)),
+          saleReference(sale),
+          saleSeller(sale),
+          salePayment(sale),
+          quantity,
+          saleTotal(sale)
+        ]);
+      });
+
+    const csv =
+      "\uFEFF" +
+      rows
+        .map(row =>
+          row.map(csvEscape).join(";")
+        )
+        .join("\n");
+
+    const filename = `rapport_ventes_${dateFrom.value}_${dateTo.value}.csv`;
+    const mime = 'text/csv;charset=utf-8';
+    if (window.PharmaGestNative?.saveExportFile) {
+      const saved = window.PharmaGestNative.saveExportFile(filename, csv, mime);
+      if (saved) { showStatus('Fichier CSV enregistré dans Téléchargements/PharmaGest.', 'success'); return; }
+    }
+    downloadFile(csv, filename, mime);
+  }
+
+  /*
+   * ============================================================
+   * EXPORT EXCEL
+   * ============================================================
+   *
+   * Format HTML compatible Excel.
+   */
+
+  function exportExcel() {
+
+    if (!filteredSales.length) {
+
+      showStatus(
+        "Aucune vente à exporter.",
+        "error"
+      );
+
+      return;
+    }
+
+    const rows =
+      [...filteredSales]
+        .sort((a, b) => {
+
+          const dateA =
+            normalizeDate(saleDate(a))?.getTime() || 0;
+
+          const dateB =
+            normalizeDate(saleDate(b))?.getTime() || 0;
+
+          return dateB - dateA;
+        })
+        .map((sale) => {
+
+          const items =
+            getSaleItems(sale);
+
+          const quantity =
+            items.length
+              ? items.reduce(
+                  (sum, item) =>
+                    sum + itemQuantity(item),
+                  0
+                )
+              : numberValue(
+                  sale.quantity ??
+                  sale.total_quantity ??
+                  0
+                );
+
+          return `
+            <tr>
+              <td>${escapeHtml(formatDateTime(saleDate(sale)))}</td>
+              <td>${escapeHtml(saleReference(sale))}</td>
+              <td>${escapeHtml(saleSeller(sale))}</td>
+              <td>${escapeHtml(salePayment(sale))}</td>
+              <td>${quantity}</td>
+              <td>${saleTotal(sale)}</td>
+            </tr>
+          `;
+        })
+        .join("");
+
+    const html = `
+      <html>
+      <head>
+        <meta charset="UTF-8">
+      </head>
+
+      <body>
+
+        <h2><span data-establishment-name>Nom de l’établissement</span> — Rapport des ventes</h2>
+
+        <p>
+          Période :
+          ${escapeHtml(formatDateOnly(dateFrom.value))}
+          →
+          ${escapeHtml(formatDateOnly(dateTo.value))}
+        </p>
+
+        <table border="1">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Référence</th>
+              <th>Vendeur</th>
+              <th>Paiement</th>
+              <th>Quantité</th>
+              <th>Total FCFA</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            ${rows}
+          </tbody>
+        </table>
+
+      </body>
+      </html>
+    `;
+
+    const filename = `rapport_ventes_${dateFrom.value}_${dateTo.value}.xls`;
+    const mime = 'application/vnd.ms-excel;charset=utf-8';
+    if (window.PharmaGestNative?.saveExportFile) {
+      const saved = window.PharmaGestNative.saveExportFile(filename, html, mime);
+      if (saved) { showStatus('Fichier Excel enregistré dans Téléchargements/PharmaGest.', 'success'); return; }
+    }
+    downloadFile(html, filename, mime);
+  }
+
+  /*
+   * ============================================================
+   * TELECHARGEMENT
+   * ============================================================
+   */
+
+  function downloadFile(
+    content,
+    filename,
+    type
+  ) {
+
+    const blob =
+      new Blob(
+        [content],
+        { type }
+      );
+
+    const url =
+      URL.createObjectURL(blob);
+
+    const a =
+      document.createElement("a");
+
+    a.href = url;
+    a.download = filename;
+
+    document.body.appendChild(a);
+
+    a.click();
+
+    a.remove();
+
+    URL.revokeObjectURL(url);
+  }
+
+  /*
+   * ============================================================
+   * IMPRESSION / PDF
+   * ============================================================
+   */
+
+  function printReport() {
+
+    if (!filteredSales.length) {
+
+      showStatus(
+        "Aucune donnée à imprimer.",
+        "error"
+      );
+
+      return;
+    }
+
+    if (window.PharmaGestNative?.printReport) {
+      window.PharmaGestNative.printReport();
+    } else {
+      window.print();
+    }
+  }
+
+  /*
+   * ============================================================
+   * ÉVÉNEMENTS
+   * ============================================================
+   */
+
+  refreshBtn.addEventListener(
+    "click",
+    loadReport
+  );
+
+  todayBtn.addEventListener(
+    "click",
+    () => {
+
+      const today = localToday();
+
+      dateFrom.value = today;
+      dateTo.value = today;
+
+      loadReport();
+    }
+  );
+
+  dateFrom.addEventListener(
+    "change",
+    () => {
+
+      if (
+        dateTo.value &&
+        dateFrom.value > dateTo.value
+      ) {
+        dateTo.value = dateFrom.value;
+      }
+
+      loadReport();
+    }
+  );
+
+  dateTo.addEventListener(
+    "change",
+    () => {
+
+      if (
+        dateFrom.value &&
+        dateTo.value < dateFrom.value
+      ) {
+        dateFrom.value = dateTo.value;
+      }
+
+      loadReport();
+    }
+  );
+
+  productSearch.addEventListener(
+    "input",
+    renderProducts
+  );
+
+  document
+    .getElementById("csvBtn")
+    .addEventListener(
+      "click",
+      exportCSV
+    );
+
+  document
+    .getElementById("excelBtn")
+    .addEventListener(
+      "click",
+      exportExcel
+    );
+
+  document
+    .getElementById("printBtn")
+    .addEventListener(
+      "click",
+      printReport
+    );
+
+  /*
+   * ============================================================
+   * INITIALISATION
+   * ============================================================
+   */
+
+  initializeDates();
+
+  if (getToken()) {
+    loadReport();
+  } else {
+
+    showStatus(
+      "Vous devez être connecté pour consulter les rapports.",
+      "error"
+    );
+
+    setTimeout(() => {
+      window.location.href = "index.html";
+    }, 1000);
+  }
+
+</script>
+</body>
+</html>

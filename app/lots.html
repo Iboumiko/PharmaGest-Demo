@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+
+<html lang="fr">
+<head><script src="assets/js/demo-guard.js"></script><style id="pg-boot-css">html.pg-boot body{opacity:0!important}</style><script>(function(){var h=document.documentElement;h.classList.add("pg-boot");window.__pgShow=function(){h.classList.remove("pg-boot")};setTimeout(window.__pgShow,800);window.addEventListener("load",function(){setTimeout(window.__pgShow,50)});})();</script><link href="assets/css/app.css" rel="stylesheet"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lots &amp; péremptions — PharmaGest</title>
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    background:#f4f7fb;
+    color:#172033;
+}
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    width:260px;
+    height:100vh;
+    background:#071b3a;
+    color:white;
+    padding:20px 14px;
+    overflow-y:auto;
+    z-index:1000;
+}
+
+.logo{
+    padding:10px 12px 25px;
+    border-bottom:1px solid rgba(255,255,255,.12);
+    margin-bottom:18px;
+}
+
+.logo h2{
+    font-size:19px;
+}
+
+.logo p{
+    font-size:12px;
+    color:#8edee2;
+    margin-top:5px;
+}
+
+.menu a{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    text-decoration:none;
+    color:#cbd5e1;
+    padding:12px 13px;
+    border-radius:9px;
+    margin-bottom:5px;
+    font-size:14px;
+}
+
+.menu a:hover{
+    background:#12305d;
+    color:white;
+}
+
+.menu a.active{
+    background:#087f8c;
+    color:white;
+}
+
+.menu-icon{
+    width:20px;
+    text-align:center;
+}
+
+.main{
+    margin-left:260px;
+    min-height:100vh;
+}
+
+.topbar{
+    height:70px;
+    background:white;
+    border-bottom:1px solid #e3e8ef;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 28px;
+}
+
+.topbar-left{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.menu-toggle{
+    display:none;
+    border:0;
+    background:#071b3a;
+    color:white;
+    width:40px;
+    height:40px;
+    border-radius:8px;
+    font-size:20px;
+    cursor:pointer;
+}
+
+.status{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    color:#16834b;
+    font-size:13px;
+}
+
+.status-dot{
+    width:9px;
+    height:9px;
+    background:#20b56b;
+    border-radius:50%;
+}
+
+.admin-user{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.avatar{
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    background:#0b7891;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+}
+
+.admin-user small{
+    display:block;
+    color:#778399;
+    font-size:11px;
+}
+
+.content{
+    padding:28px;
+}
+
+.page-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:20px;
+    margin-bottom:25px;
+}
+
+.page-header h1{
+    font-size:27px;
+    margin-bottom:7px;
+}
+
+.page-header p{
+    color:#718096;
+    font-size:14px;
+}
+
+.btn{
+    border:none;
+    border-radius:8px;
+    padding:11px 16px;
+    cursor:pointer;
+    font-weight:bold;
+    font-size:13px;
+}
+
+.btn-primary{
+    background:#087f8c;
+    color:white;
+}
+
+.btn-primary:hover{
+    background:#066b76;
+}
+
+.btn-secondary{
+    background:#e9eef5;
+    color:#344054;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    margin-bottom:24px;
+}
+
+.card{
+    background:white;
+    border:1px solid #e5eaf0;
+    border-radius:12px;
+    padding:20px;
+    box-shadow:0 3px 12px rgba(15,35,65,.04);
+}
+
+.stat-card{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.stat-info p{
+    color:#7a8798;
+    font-size:13px;
+    margin-bottom:8px;
+}
+
+.stat-info h2{
+    font-size:25px;
+}
+
+.stat-icon{
+    width:48px;
+    height:48px;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:21px;
+    background:#e6f5f6;
+}
+
+.toolbar{
+    background:white;
+    border:1px solid #e5eaf0;
+    border-radius:12px;
+    padding:15px;
+    margin-bottom:18px;
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+.search{
+    flex:1;
+    min-width:230px;
+    position:relative;
+}
+
+.search input{
+    width:100%;
+    padding:11px 13px 11px 38px;
+    border:1px solid #d8dee8;
+    border-radius:8px;
+    outline:none;
+}
+
+.search input:focus,
+select:focus,
+input[type="date"]:focus{
+    border-color:#087f8c;
+    box-shadow:0 0 0 3px rgba(8,127,140,.08);
+}
+
+.search span{
+    position:absolute;
+    left:13px;
+    top:10px;
+    color:#8793a5;
+}
+
+select,
+input[type="date"]{
+    padding:11px 13px;
+    border:1px solid #d8dee8;
+    border-radius:8px;
+    background:white;
+    color:#344054;
+    min-width:150px;
+    outline:none;
+}
+
+.table-card{
+    padding:0;
+    overflow:hidden;
+}
+
+.table-header{
+    padding:18px 20px;
+    border-bottom:1px solid #e5eaf0;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.table-header h3{
+    font-size:16px;
+}
+
+.table-header span{
+    color:#788598;
+    font-size:12px;
+}
+
+.table-container{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:1050px;
+}
+
+th,
+td{
+    padding:14px 16px;
+    border-bottom:1px solid #edf0f4;
+    text-align:left;
+    font-size:13px;
+}
+
+th{
+    background:#f8fafc;
+    color:#697586;
+    font-size:12px;
+    text-transform:uppercase;
+}
+
+tbody tr:hover{
+    background:#fafcfd;
+}
+
+.user-cell{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.user-avatar{
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    background:#dff3f4;
+    color:#087f8c;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+    flex-shrink:0;
+}
+
+.user-name{
+    font-weight:bold;
+}
+
+.user-login{
+    color:#8a95a5;
+    font-size:11px;
+    margin-top:3px;
+}
+
+.badge{
+    display:inline-flex;
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:bold;
+    white-space:nowrap;
+}
+
+.badge-success{
+    background:#e7f7ee;
+    color:#16834b;
+}
+
+.badge-sale{
+    background:#e1f5f2;
+    color:#087f8c;
+}
+
+.badge-stock{
+    background:#fff2d9;
+    color:#a56a00;
+}
+
+.badge-security{
+    background:#ece7ff;
+    color:#6941c6;
+}
+
+.badge-warning{
+    background:#fff0df;
+    color:#b65f00;
+}
+
+.badge-danger{
+    background:#fcebed;
+    color:#c0394d;
+}
+
+.badge-info{
+    background:#e9f1ff;
+    color:#3567a8;
+}
+
+.details{
+    color:#667085;
+    max-width:350px;
+    white-space:normal;
+    line-height:1.4;
+}
+
+.ip{
+    font-family:monospace;
+    font-size:12px;
+    color:#667085;
+}
+
+.empty{
+    display:none;
+    text-align:center;
+    padding:50px 20px;
+    color:#7a8798;
+}
+
+.loading{
+    text-align:center;
+    padding:45px 20px;
+    color:#7a8798;
+}
+
+.error-box{
+    display:none;
+    margin:0 20px 20px;
+    padding:14px 16px;
+    border-radius:8px;
+    background:#fcebed;
+    color:#9d2639;
+    border-left:4px solid #c0394d;
+    font-size:13px;
+}
+
+.info-box{
+    margin-top:18px;
+    background:#eaf7f8;
+    border-left:4px solid #087f8c;
+    border-radius:8px;
+    padding:15px;
+    color:#37515a;
+    font-size:13px;
+    line-height:1.6;
+}
+
+.pagination{
+    padding:15px 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    color:#788598;
+    font-size:12px;
+}
+
+.pagination-buttons{
+    display:flex;
+    gap:7px;
+}
+
+.page-btn{
+    border:1px solid #d8dee8;
+    background:white;
+    border-radius:6px;
+    padding:7px 10px;
+    cursor:pointer;
+}
+
+.page-btn.active{
+    background:#087f8c;
+    color:white;
+    border-color:#087f8c;
+}
+
+.page-btn:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+}
+
+@media(max-width:1100px){
+
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:800px){
+
+    .sidebar{
+        transform:translateX(-100%);
+        transition:.25s;
+    }
+
+    .sidebar.open{
+        transform:translateX(0);
+    }
+
+    .main{
+        margin-left:0;
+    }
+
+    .menu-toggle{
+        display:block;
+    }
+
+    .topbar{
+        padding:0 15px;
+    }
+
+    .content{
+        padding:18px;
+    }
+
+    .page-header{
+        flex-direction:column;
+    }
+
+    .stats{
+        grid-template-columns:1fr 1fr;
+    }
+}
+
+@media(max-width:550px){
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .admin-user div:last-child{
+        display:none;
+    }
+
+    .toolbar{
+        flex-direction:column;
+    }
+
+    .toolbar > *{
+        width:100%;
+    }
+}
+
+
+/* ============================================================
+   PHARMAGEST — AUDIT STYLE FOR STOCKS / LOTS
+   ============================================================ */
+
+body{background:#f4f7fb;color:#172033;}
+.sidebar{position:fixed;left:0;top:0;width:260px;height:100vh;background:#071b3a;color:white;padding:20px 14px;overflow-y:auto;z-index:1000;}
+.main{margin-left:260px;min-height:100vh;}
+.topbar{height:70px;background:white;border-bottom:1px solid #e3e8ef;display:flex;align-items:center;justify-content:space-between;padding:0 28px;}
+.topbar-left{display:flex;align-items:center;gap:15px;}
+.menu-toggle{display:none;border:0;background:#071b3a;color:white;width:40px;height:40px;border-radius:8px;font-size:20px;cursor:pointer;}
+.status{display:flex;align-items:center;gap:8px;color:#16834b;font-size:13px;}
+.status-dot{width:9px;height:9px;background:#20b56b;border-radius:50%;}
+.admin-user{display:flex;align-items:center;gap:10px;}
+.avatar{width:38px;height:38px;border-radius:50%;background:#0b7891;color:white;display:flex;align-items:center;justify-content:center;font-weight:bold;}
+.admin-user small{display:block;color:#778399;font-size:11px;}
+.content{padding:28px;}
+.page-header,.page-head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:25px;}
+.page-header h1,.page-head h2,.page-head h1{font-size:27px;margin:0 0 7px;color:#172033;}
+.page-header p,.page-head p{color:#718096;font-size:14px;margin:0;}
+.btn{border:none;border-radius:8px;padding:11px 16px;cursor:pointer;font-weight:bold;font-size:13px;}
+.btn-primary{background:#087f8c;color:white;}
+.btn-primary:hover{background:#066b76;}
+.btn-secondary{background:#e9eef5;color:#344054;border:0;}
+
+/* Stock cards / lots stats */
+.cards,.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:24px;}
+.card{background:white;border:1px solid #e5eaf0;border-radius:12px;padding:20px;box-shadow:0 3px 12px rgba(15,35,65,.04);}
+.cards .card{min-height:104px;}
+.card-label,.stat-label{color:#7a8798;font-size:13px;}
+.card-value,.stat-value{margin-top:7px;font-size:25px;font-weight:700;color:#172033;}
+.stat{background:white;border:1px solid #e5eaf0;border-radius:12px;padding:20px;box-shadow:0 3px 12px rgba(15,35,65,.04);}
+.stat-note{color:#8a95a5;font-size:12px;margin-top:5px;}
+
+.toolbar,.filters{background:white;border:1px solid #e5eaf0;border-radius:12px;padding:15px;margin-bottom:18px;display:flex;gap:12px;flex-wrap:wrap;}
+.toolbar input,.toolbar select,.filters input,.filters select{padding:11px 13px;border:1px solid #d8dee8;border-radius:8px;background:white;color:#344054;min-height:42px;outline:none;}
+.toolbar input{flex:1;min-width:230px;}
+.toolbar input:focus,.toolbar select:focus,.filters input:focus,.filters select:focus{border-color:#087f8c;box-shadow:0 0 0 3px rgba(8,127,140,.08);}
+.filters .field{flex:1;min-width:230px;display:flex;flex-direction:column;gap:6px;}
+.filters label{font-size:12px;font-weight:700;color:#667085;}
+
+.table-card,.card{overflow:hidden;}
+.table-card{padding:0;margin-bottom:18px;}
+.table-card .section-title{padding:18px 20px;border-bottom:1px solid #e5eaf0;font-size:16px;font-weight:700;color:#172033;}
+.table-card .table-wrap{overflow-x:auto;}
+.table-card table,.card table{width:100%;border-collapse:collapse;min-width:900px;}
+.table-card th,.table-card td,.card th,.card td{padding:14px 16px;border-bottom:1px solid #edf0f4;text-align:left;font-size:13px;vertical-align:middle;}
+.table-card th,.card th{background:#f8fafc;color:#697586;font-size:12px;text-transform:uppercase;}
+.table-card tbody tr:hover,.card tbody tr:hover{background:#fafcfd;}
+
+.alert-list{padding:18px;display:grid;gap:10px;}
+.alert-item{border:1px solid #e5eaf0;border-radius:8px;padding:12px;display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap;}
+.error-box{display:none;margin:0 0 20px;padding:14px 16px;border-radius:8px;background:#fcebed;color:#9d2639;border-left:4px solid #c0394d;font-size:13px;}
+.loading{text-align:center;padding:45px 20px;color:#7a8798;}
+.empty{text-align:center;padding:45px 20px;color:#7a8798;}
+
+@media(max-width:1100px){.cards,.stats{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:800px){
+  .sidebar{transform:translateX(-100%);transition:.25s;}
+  .sidebar.open{transform:translateX(0);}
+  .main{margin-left:0;}
+  .menu-toggle{display:block;}
+  .topbar{padding:0 15px;}
+  .content{padding:18px;}
+  .page-header,.page-head{flex-direction:column;}
+  .cards,.stats{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:550px){
+  .cards,.stats{grid-template-columns:1fr;}
+  .admin-user div:last-child{display:none;}
+  .toolbar,.filters{flex-direction:column;}
+  .toolbar > *,.filters > *{width:100%;}
+}
+</style><link rel="stylesheet" href="assets/css/mobile-shell.css">
+<link rel="stylesheet" href="assets/css/theme.css">
+<script src="assets/js/theme.js"></script>
+<link rel="stylesheet" href="assets/css/modals.css">
+</head>
+<body>
+<aside class="sidebar" id="sidebar">
+<div class="logo">
+<h2><span data-establishment-name="">Nom de l’établissement</span></h2>
+<p>Gestion du dépôt pharmaceutique</p>
+</div>
+<nav class="menu">
+<a href="index.html"><span class="menu-icon">▣</span>Tableau de bord</a>
+<a href="vente.html"><span class="menu-icon">🛒</span>Vente / Caisse</a>
+<a href="produits.html"><span class="menu-icon">▤</span>Produits</a>
+<a href="stocks.html"><span class="menu-icon">▥</span>Stocks</a>
+<a href="receptions.html"><span class="menu-icon">⇩</span>Réceptions</a>
+<a href="fournisseurs.html"><span class="menu-icon">♜</span>Fournisseurs</a>
+<a class="active" href="lots.html"><span class="menu-icon">◫</span>Lots &amp; péremptions</a>
+<a href="rapports.html"><span class="menu-icon">▦</span>Rapports</a>
+<a href="utilisateurs.html"><span class="menu-icon">♙</span>Utilisateurs</a>
+<a href="audit.html"><span class="menu-icon">◉</span>Journal d’audit</a>
+<a href="vente_partenaire.html"><span class="menu-icon">⇄</span>Vente partenaire</a>
+<a href="parametres.html"><span class="menu-icon">⚙</span>Paramètres</a>
+</nav>
+</aside>
+<main class="main">
+<header class="topbar">
+<div class="topbar-left">
+<button class="menu-toggle" onclick="toggleMenu()">☰</button>
+<div class="status"><span class="status-dot"></span>Système opérationnel</div>
+</div>
+<div class="admin-user">
+<div class="avatar" id="currentAvatar">AD</div>
+<div>
+<strong id="userName">Administrateur</strong>
+<small id="userRole">Administrateur</small>
+</div>
+</div>
+</header>
+<section class="content">
+<div class="page-head">
+<div>
+<h1>Lots &amp; péremptions</h1>
+<p>Suivi réel des lots, quantités disponibles et dates d'expiration.</p>
+</div>
+<div class="actions">
+<button class="btn btn-secondary" id="refreshBtn" type="button">
+            ↻ Actualiser
+          </button>
+</div>
+</div>
+<div class="error-box" id="errorBox"></div>
+<section class="stats">
+<div class="stat">
+<div class="stat-label">Lots disponibles</div>
+<div class="stat-value" id="totalLots">0</div>
+<div class="stat-note">Lots avec stock positif</div>
+</div>
+<div class="stat">
+<div class="stat-label">Unités en stock</div>
+<div class="stat-value" id="totalUnits">0</div>
+<div class="stat-note">Toutes les quantités de lots</div>
+</div>
+<div class="stat">
+<div class="stat-label">Bientôt expirés</div>
+<div class="stat-value" id="soonLots">0</div>
+<div class="stat-note">Expiration dans les 90 jours</div>
+</div>
+<div class="stat">
+<div class="stat-label">Expirés</div>
+<div class="stat-value" id="expiredLots">0</div>
+<div class="stat-note">À contrôler immédiatement</div>
+</div>
+</section>
+<section class="filters">
+<div class="field">
+<label for="searchInput">Rechercher</label>
+<input autocomplete="off" id="searchInput" placeholder="Produit, code ou numéro de lot..." type="search"/>
+</div>
+<div class="field">
+<label for="statusFilter">Statut</label>
+<select id="statusFilter">
+<option value="ALL">Tous les statuts</option>
+<option value="NORMAL">Normal</option>
+<option value="SOON">Bientôt expiré</option>
+<option value="EXPIRED">Expiré</option>
+</select>
+</div>
+</section>
+<section class="card">
+<div class="card-head">
+<div>
+<div class="card-title">État des lots</div>
+<div class="card-sub">Données récupérées depuis Base locale IndexedDB</div>
+</div>
+<div class="card-sub" id="resultCount">0 lot</div>
+</div>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Produit</th>
+<th>Lot</th>
+<th>Quantité</th>
+<th>Expiration</th>
+<th>Délai</th>
+<th>Statut</th>
+<th>Réception</th>
+</tr>
+</thead>
+<tbody id="lotsBody">
+<tr>
+<td colspan="7">
+<div class="loading">Chargement des lots...</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<div class="footer-note">
+        Les lots expirés ne doivent pas être vendus. La sélection FEFO privilégie les dates d'expiration les plus proches.
+      </div>
+</section>
+</main>
+<script>
+function toggleMenu(){
+  const sidebar=document.getElementById('sidebar');
+  if(sidebar) sidebar.classList.toggle('open');
+}
+
+(function(){
+  const u=JSON.parse(localStorage.getItem('dpa_user')||'{}');
+  const name=u.full_name||u.name||u.username||'Administrateur';
+  const role=String(u.role||'admin').toLowerCase();
+  const n=document.getElementById('userName');
+  const r=document.getElementById('userRole');
+  const a=document.getElementById('currentAvatar');
+  if(n) n.textContent=name;
+  if(r) r.textContent=role==='admin'?'Administrateur':'Vendeur';
+  if(a) a.textContent=String(name).trim().slice(0,2).toUpperCase()||'AD';
+})();
+</script>
+<script src="assets/js/local-api.js"></script><script src="assets/js/branding.js"></script><script src="assets/js/mobile-role.js"></script><script src="assets/js/mobile-shell.js"></script><script src="assets/js/modals.js"></script><script>
+  const API =
+  `${window.location.protocol}//${window.location.host}`;
+  const token = localStorage.getItem("dpa_token");
+
+  if (!token) {
+    window.location.href = "index.html";
+  }
+
+  let allLots = [];
+
+  const user = JSON.parse(
+    localStorage.getItem("dpa_user") || "{}"
+  );
+
+  const userName =
+    user.full_name ||
+    user.name ||
+    user.username ||
+    "Administrateur";
+
+  const role =
+    String(user.role || "admin").toLowerCase();
+
+  document.getElementById("userName").textContent = userName;
+
+  document.getElementById("userRole").textContent =
+    role === "admin" ? "Administrateur" : "Vendeur";
+
+  function authHeaders() {
+    return {
+      "Authorization": "Bearer " + token,
+      "Content-Type": "application/json"
+    };
+  }
+
+  function escapeHtml(value) {
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  function numberFormat(value) {
+    return new Intl.NumberFormat("fr-FR").format(
+      Number(value || 0)
+    );
+  }
+
+  function formatDate(value) {
+    if (!value) {
+      return "—";
+    }
+
+    const text = String(value).slice(0, 10);
+
+    const parts = text.split("-");
+
+    if (parts.length === 3) {
+      return parts[2] + "/" + parts[1] + "/" + parts[0];
+    }
+
+    return text;
+  }
+
+  function parseDateOnly(value) {
+    if (!value) {
+      return null;
+    }
+
+    const text = String(value).slice(0, 10);
+
+    const parts = text.split("-");
+
+    if (parts.length !== 3) {
+      return null;
+    }
+
+    const year = Number(parts[0]);
+    const month = Number(parts[1]);
+    const day = Number(parts[2]);
+
+    if (!year || !month || !day) {
+      return null;
+    }
+
+    return new Date(
+      Date.UTC(year, month - 1, day)
+    );
+  }
+
+  function daysUntilExpiry(value) {
+    const expiry = parseDateOnly(value);
+
+    if (!expiry) {
+      return null;
+    }
+
+    const now = new Date();
+
+    const today = new Date(
+      Date.UTC(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate()
+      )
+    );
+
+    return Math.ceil(
+      (expiry.getTime() - today.getTime()) /
+      86400000
+    );
+  }
+
+  function getStatus(lot) {
+    const days = daysUntilExpiry(lot.expiry_date);
+
+    if (days === null) {
+      return "NORMAL";
+    }
+
+    if (days < 0) {
+      return "EXPIRED";
+    }
+
+    if (days <= 90) {
+      return "SOON";
+    }
+
+    return "NORMAL";
+  }
+
+  function statusLabel(status) {
+    if (status === "EXPIRED") {
+      return "Expiré";
+    }
+
+    if (status === "SOON") {
+      return "Bientôt expiré";
+    }
+
+    return "Normal";
+  }
+
+  function statusBadge(status) {
+    if (status === "EXPIRED") {
+      return '<span class="badge badge-danger">Expiré</span>';
+    }
+
+    if (status === "SOON") {
+      return '<span class="badge badge-warning">Bientôt expiré</span>';
+    }
+
+    return '<span class="badge badge-normal">Normal</span>';
+  }
+
+  function expiryText(days) {
+    if (days === null) {
+      return "—";
+    }
+
+    if (days < 0) {
+      const n = Math.abs(days);
+      return "Expiré depuis " + numberFormat(n) + " j";
+    }
+
+    if (days === 0) {
+      return "Expire aujourd'hui";
+    }
+
+    return numberFormat(days) + " j";
+  }
+
+  function normalizeLot(item) {
+    return {
+      id: item.id || item.lot_id || "",
+      product_id: item.product_id || "",
+      product_name:
+        item.product_name ||
+        item.name ||
+        item.product ||
+        "Produit inconnu",
+      product_code:
+        item.product_code ||
+        item.code ||
+        "—",
+      lot_number:
+        item.lot_number ||
+        item.lot ||
+        "—",
+      expiry_date:
+        item.expiry_date ||
+        item.expiration_date ||
+        item.expiry ||
+        null,
+      quantity:
+        Number(
+          item.quantity ??
+          item.stock_quantity ??
+          0
+        ),
+      received_at:
+        item.received_at ||
+        item.created_at ||
+        null,
+      supplier_name:
+        item.supplier_name ||
+        item.supplier ||
+        "—"
+    };
+  }
+
+  async function apiGet(path) {
+
+    const response = await fetch(
+      API + path,
+      {
+        method: "GET",
+        headers: authHeaders()
+      }
+    );
+
+    let data = null;
+
+    try {
+      data = await response.json();
+    } catch (error) {
+      data = null;
+    }
+
+    if (!response.ok) {
+
+      const message =
+        data?.error ||
+        data?.message ||
+        "Erreur serveur.";
+
+      throw new Error(message);
+    }
+
+    return data;
+  }
+
+  function extractArray(data) {
+
+    if (Array.isArray(data)) {
+      return data;
+    }
+
+    if (Array.isArray(data?.lots)) {
+      return data.lots;
+    }
+
+    if (Array.isArray(data?.data)) {
+      return data.data;
+    }
+
+    if (Array.isArray(data?.items)) {
+      return data.items;
+    }
+
+    return [];
+  }
+
+  async function loadLots() {
+
+    hideError();
+
+    document.getElementById("lotsBody").innerHTML = `
+      <tr>
+        <td colspan="7">
+          <div class="loading">Chargement des lots...</div>
+        </td>
+      </tr>
+    `;
+
+    try {
+
+      const data = await apiGet("/api/lots");
+
+      allLots = extractArray(data)
+        .map(normalizeLot);
+
+      renderStats();
+      renderLots();
+
+    } catch (error) {
+
+      allLots = [];
+
+      document.getElementById("lotsBody").innerHTML = `
+        <tr>
+          <td colspan="7">
+            <div class="empty">
+              Impossible de charger les lots.
+            </div>
+          </td>
+        </tr>
+      `;
+
+      showError(
+        error.message ||
+        "Erreur serveur lors du chargement des lots."
+      );
+    }
+  }
+
+  function renderStats() {
+
+    const totalLots = allLots.length;
+
+    const totalUnits = allLots.reduce(
+      (sum, lot) => sum + Math.max(0, lot.quantity),
+      0
+    );
+
+    const soon = allLots.filter(
+      lot => getStatus(lot) === "SOON"
+    ).length;
+
+    const expired = allLots.filter(
+      lot => getStatus(lot) === "EXPIRED"
+    ).length;
+
+    document.getElementById("totalLots").textContent =
+      numberFormat(totalLots);
+
+    document.getElementById("totalUnits").textContent =
+      numberFormat(totalUnits);
+
+    document.getElementById("soonLots").textContent =
+      numberFormat(soon);
+
+    document.getElementById("expiredLots").textContent =
+      numberFormat(expired);
+  }
+
+  function getFilteredLots() {
+
+    const search =
+      document
+        .getElementById("searchInput")
+        .value
+        .trim()
+        .toLowerCase();
+
+    const filter =
+      document
+        .getElementById("statusFilter")
+        .value;
+
+    return allLots.filter(lot => {
+
+      const searchable =
+        [
+          lot.product_name,
+          lot.product_code,
+          lot.lot_number
+        ]
+        .join(" ")
+        .toLowerCase();
+
+      if (
+        search &&
+        !searchable.includes(search)
+      ) {
+        return false;
+      }
+
+      const status = getStatus(lot);
+
+      if (
+        filter !== "ALL" &&
+        status !== filter
+      ) {
+        return false;
+      }
+
+      return true;
+    });
+  }
+
+  function renderLots() {
+
+    const lots = getFilteredLots();
+
+    const body =
+      document.getElementById("lotsBody");
+
+    document.getElementById("resultCount").textContent =
+      numberFormat(lots.length) +
+      (lots.length > 1 ? " lots" : " lot");
+
+    if (!lots.length) {
+
+      body.innerHTML = `
+        <tr>
+          <td colspan="7">
+            <div class="empty">
+              Aucun lot ne correspond aux critères.
+            </div>
+          </td>
+        </tr>
+      `;
+
+      return;
+    }
+
+    body.innerHTML = lots.map(lot => {
+
+      const status = getStatus(lot);
+
+      const days =
+        daysUntilExpiry(lot.expiry_date);
+
+      return `
+        <tr>
+
+          <td>
+            <div class="product-name">
+              ${escapeHtml(lot.product_name)}
+            </div>
+
+            <div class="product-code">
+              ${escapeHtml(lot.product_code)}
+            </div>
+          </td>
+
+          <td>
+            <div class="lot-number">
+              ${escapeHtml(lot.lot_number)}
+            </div>
+          </td>
+
+          <td>
+            <span class="qty">
+              ${numberFormat(lot.quantity)}
+            </span>
+            unité${lot.quantity > 1 ? "s" : ""}
+          </td>
+
+          <td>
+            ${escapeHtml(
+              formatDate(lot.expiry_date)
+            )}
+          </td>
+
+          <td>
+            ${escapeHtml(
+              expiryText(days)
+            )}
+          </td>
+
+          <td>
+            ${statusBadge(status)}
+          </td>
+
+          <td>
+            ${
+              lot.received_at
+                ? escapeHtml(
+                    formatDate(lot.received_at)
+                  )
+                : "—"
+            }
+          </td>
+
+        </tr>
+      `;
+
+    }).join("");
+  }
+
+  function showError(message) {
+
+    const box =
+      document.getElementById("errorBox");
+
+    box.textContent = message;
+    box.style.display = "block";
+  }
+
+  function hideError() {
+
+    const box =
+      document.getElementById("errorBox");
+
+    box.textContent = "";
+    box.style.display = "none";
+  }
+
+  function showToast(message) {
+
+    const toast =
+      document.getElementById("toast");
+
+    toast.textContent = message;
+    toast.classList.add("show");
+
+    setTimeout(() => {
+      toast.classList.remove("show");
+    }, 2500);
+  }
+
+  document
+    .getElementById("refreshBtn")
+    .addEventListener(
+      "click",
+      async () => {
+
+        showToast("Actualisation...");
+
+        await loadLots();
+
+      }
+    );
+
+  document
+    .getElementById("searchInput")
+    .addEventListener(
+      "input",
+      renderLots
+    );
+
+  document
+    .getElementById("statusFilter")
+    .addEventListener(
+      "change",
+      renderLots
+    );
+
+  loadLots();
+</script>
+</body>
+</html>

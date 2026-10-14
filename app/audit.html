@@ -1,0 +1,2291 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><script src="assets/js/demo-guard.js"></script><style id="pg-boot-css">html.pg-boot body{opacity:0!important}</style><script>(function(){var h=document.documentElement;h.classList.add("pg-boot");window.__pgShow=function(){h.classList.remove("pg-boot")};setTimeout(window.__pgShow,800);window.addEventListener("load",function(){setTimeout(window.__pgShow,50)});})();</script><link rel="stylesheet" href="assets/css/app.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PharmaGest</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    background:#f4f7fb;
+    color:#172033;
+}
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    width:260px;
+    height:100vh;
+    background:#071b3a;
+    color:white;
+    padding:20px 14px;
+    overflow-y:auto;
+    z-index:1000;
+}
+
+.logo{
+    padding:10px 12px 25px;
+    border-bottom:1px solid rgba(255,255,255,.12);
+    margin-bottom:18px;
+}
+
+.logo h2{
+    font-size:19px;
+}
+
+.logo p{
+    font-size:12px;
+    color:#8edee2;
+    margin-top:5px;
+}
+
+.menu a{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    text-decoration:none;
+    color:#cbd5e1;
+    padding:12px 13px;
+    border-radius:9px;
+    margin-bottom:5px;
+    font-size:14px;
+}
+
+.menu a:hover{
+    background:#12305d;
+    color:white;
+}
+
+.menu a.active{
+    background:#087f8c;
+    color:white;
+}
+
+.menu-icon{
+    width:20px;
+    text-align:center;
+}
+
+.main{
+    margin-left:260px;
+    min-height:100vh;
+}
+
+.topbar{
+    height:70px;
+    background:white;
+    border-bottom:1px solid #e3e8ef;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 28px;
+}
+
+.topbar-left{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.menu-toggle{
+    display:none;
+    border:0;
+    background:#071b3a;
+    color:white;
+    width:40px;
+    height:40px;
+    border-radius:8px;
+    font-size:20px;
+    cursor:pointer;
+}
+
+.status{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    color:#16834b;
+    font-size:13px;
+}
+
+.status-dot{
+    width:9px;
+    height:9px;
+    background:#20b56b;
+    border-radius:50%;
+}
+
+.admin-user{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.avatar{
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    background:#0b7891;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+}
+
+.admin-user small{
+    display:block;
+    color:#778399;
+    font-size:11px;
+}
+
+.content{
+    padding:28px;
+}
+
+.page-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:20px;
+    margin-bottom:25px;
+}
+
+.page-header h1{
+    font-size:27px;
+    margin-bottom:7px;
+}
+
+.page-header p{
+    color:#718096;
+    font-size:14px;
+}
+
+.btn{
+    border:none;
+    border-radius:8px;
+    padding:11px 16px;
+    cursor:pointer;
+    font-weight:bold;
+    font-size:13px;
+}
+
+.btn-primary{
+    background:#087f8c;
+    color:white;
+}
+
+.btn-primary:hover{
+    background:#066b76;
+}
+
+.btn-secondary{
+    background:#e9eef5;
+    color:#344054;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    margin-bottom:24px;
+}
+
+.card{
+    background:white;
+    border:1px solid #e5eaf0;
+    border-radius:12px;
+    padding:20px;
+    box-shadow:0 3px 12px rgba(15,35,65,.04);
+}
+
+.stat-card{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.stat-info p{
+    color:#7a8798;
+    font-size:13px;
+    margin-bottom:8px;
+}
+
+.stat-info h2{
+    font-size:25px;
+}
+
+.stat-icon{
+    width:48px;
+    height:48px;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:21px;
+    background:#e6f5f6;
+}
+
+.toolbar{
+    background:white;
+    border:1px solid #e5eaf0;
+    border-radius:12px;
+    padding:15px;
+    margin-bottom:18px;
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+.search{
+    flex:1;
+    min-width:230px;
+    position:relative;
+}
+
+.search input{
+    width:100%;
+    padding:11px 13px 11px 38px;
+    border:1px solid #d8dee8;
+    border-radius:8px;
+    outline:none;
+}
+
+.search input:focus,
+select:focus,
+input[type="date"]:focus{
+    border-color:#087f8c;
+    box-shadow:0 0 0 3px rgba(8,127,140,.08);
+}
+
+.search span{
+    position:absolute;
+    left:13px;
+    top:10px;
+    color:#8793a5;
+}
+
+select,
+input[type="date"]{
+    padding:11px 13px;
+    border:1px solid #d8dee8;
+    border-radius:8px;
+    background:white;
+    color:#344054;
+    min-width:150px;
+    outline:none;
+}
+
+.table-card{
+    padding:0;
+    overflow:hidden;
+}
+
+.table-header{
+    padding:18px 20px;
+    border-bottom:1px solid #e5eaf0;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.table-header h3{
+    font-size:16px;
+}
+
+.table-header span{
+    color:#788598;
+    font-size:12px;
+}
+
+.table-container{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:1050px;
+}
+
+th,
+td{
+    padding:14px 16px;
+    border-bottom:1px solid #edf0f4;
+    text-align:left;
+    font-size:13px;
+}
+
+th{
+    background:#f8fafc;
+    color:#697586;
+    font-size:12px;
+    text-transform:uppercase;
+}
+
+tbody tr:hover{
+    background:#fafcfd;
+}
+
+.user-cell{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.user-avatar{
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    background:#dff3f4;
+    color:#087f8c;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+    flex-shrink:0;
+}
+
+.user-name{
+    font-weight:bold;
+}
+
+.user-login{
+    color:#8a95a5;
+    font-size:11px;
+    margin-top:3px;
+}
+
+.badge{
+    display:inline-flex;
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:bold;
+    white-space:nowrap;
+}
+
+.badge-success{
+    background:#e7f7ee;
+    color:#16834b;
+}
+
+.badge-sale{
+    background:#e1f5f2;
+    color:#087f8c;
+}
+
+.badge-stock{
+    background:#fff2d9;
+    color:#a56a00;
+}
+
+.badge-security{
+    background:#ece7ff;
+    color:#6941c6;
+}
+
+.badge-warning{
+    background:#fff0df;
+    color:#b65f00;
+}
+
+.badge-danger{
+    background:#fcebed;
+    color:#c0394d;
+}
+
+.badge-info{
+    background:#e9f1ff;
+    color:#3567a8;
+}
+
+.details{
+    color:#667085;
+    max-width:350px;
+    white-space:normal;
+    line-height:1.4;
+}
+
+.ip{
+    font-family:monospace;
+    font-size:12px;
+    color:#667085;
+}
+
+.empty{
+    display:none;
+    text-align:center;
+    padding:50px 20px;
+    color:#7a8798;
+}
+
+.loading{
+    text-align:center;
+    padding:45px 20px;
+    color:#7a8798;
+}
+
+.error-box{
+    display:none;
+    margin:0 20px 20px;
+    padding:14px 16px;
+    border-radius:8px;
+    background:#fcebed;
+    color:#9d2639;
+    border-left:4px solid #c0394d;
+    font-size:13px;
+}
+
+.info-box{
+    margin-top:18px;
+    background:#eaf7f8;
+    border-left:4px solid #087f8c;
+    border-radius:8px;
+    padding:15px;
+    color:#37515a;
+    font-size:13px;
+    line-height:1.6;
+}
+
+.pagination{
+    padding:15px 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    color:#788598;
+    font-size:12px;
+}
+
+.pagination-buttons{
+    display:flex;
+    gap:7px;
+}
+
+.page-btn{
+    border:1px solid #d8dee8;
+    background:white;
+    border-radius:6px;
+    padding:7px 10px;
+    cursor:pointer;
+}
+
+.page-btn.active{
+    background:#087f8c;
+    color:white;
+    border-color:#087f8c;
+}
+
+.page-btn:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+}
+
+@media(max-width:1100px){
+
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:800px){
+
+    .sidebar{
+        transform:translateX(-100%);
+        transition:.25s;
+    }
+
+    .sidebar.open{
+        transform:translateX(0);
+    }
+
+    .main{
+        margin-left:0;
+    }
+
+    .menu-toggle{
+        display:block;
+    }
+
+    .topbar{
+        padding:0 15px;
+    }
+
+    .content{
+        padding:18px;
+    }
+
+    .page-header{
+        flex-direction:column;
+    }
+
+    .stats{
+        grid-template-columns:1fr 1fr;
+    }
+}
+
+@media(max-width:550px){
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .admin-user div:last-child{
+        display:none;
+    }
+
+    .toolbar{
+        flex-direction:column;
+    }
+
+    .toolbar > *{
+        width:100%;
+    }
+}
+</style>
+<link rel="stylesheet" href="assets/css/mobile-shell.css">
+<link rel="stylesheet" href="assets/css/theme.css">
+<script src="assets/js/theme.js"></script>
+<link rel="stylesheet" href="assets/css/modals.css">
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+
+    <div class="logo">
+        <h2><span data-establishment-name>Nom de l’établissement</span></h2>
+        <p>Gestion du dépôt pharmaceutique</p>
+    </div>
+
+    <nav class="menu">
+
+        <a href="index.html">
+            <span class="menu-icon">▣</span>
+            Tableau de bord
+        </a>
+
+        <a href="vente.html">
+            <span class="menu-icon">🛒</span>
+            Vente / Caisse
+        </a>
+
+        <a href="produits.html">
+            <span class="menu-icon">▤</span>
+            Produits
+        </a>
+
+        <a href="stocks.html">
+            <span class="menu-icon">▥</span>
+            Stocks
+        </a>
+
+        <a href="receptions.html">
+            <span class="menu-icon">⇩</span>
+            Réceptions
+        </a>
+
+        <a href="fournisseurs.html">
+            <span class="menu-icon">♜</span>
+            Fournisseurs
+        </a>
+
+        <a href="lots.html">
+            <span class="menu-icon">◫</span>
+            Lots & péremptions
+        </a>
+
+        <a href="rapports.html">
+            <span class="menu-icon">▦</span>
+            Rapports
+        </a>
+
+        <a href="utilisateurs.html">
+            <span class="menu-icon">♙</span>
+            Utilisateurs
+        </a>
+
+        <a href="audit.html" class="active">
+            <span class="menu-icon">◉</span>
+            Journal d’audit
+        </a>
+
+        <a href="vente_partenaire.html"><span class="menu-icon">⇄</span>Vente partenaire</a>
+        <a href="parametres.html">
+            <span class="menu-icon">⚙</span>
+            Paramètres
+        </a>
+
+    </nav>
+</aside>
+
+
+<!-- MAIN -->
+<main class="main">
+
+    <header class="topbar">
+
+        <div class="topbar-left">
+
+            <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+
+            <div class="status">
+                <span class="status-dot"></span>
+                Système opérationnel
+            </div>
+
+        </div>
+
+        <div class="admin-user">
+
+            <div class="avatar" id="currentAvatar">AD</div>
+
+            <div>
+                <strong id="currentUserName">Administrateur</strong>
+                <small id="currentUserRole">Accès complet</small>
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <section class="content">
+
+        <div class="page-header">
+
+            <div>
+                <h1>Journal d’audit</h1>
+                <p>
+                    Historique des opérations réalisées dans le système.
+                </p>
+            </div>
+
+            <button class="btn btn-primary" onclick="exportAudit()">
+                ↓ Exporter le journal
+            </button>
+
+        </div>
+
+
+        <!-- STATS -->
+
+        <div class="stats">
+
+            <div class="card stat-card">
+
+                <div class="stat-info">
+                    <p>Opérations aujourd’hui</p>
+                    <h2 id="todayCount">0</h2>
+                </div>
+
+                <div class="stat-icon">◉</div>
+
+            </div>
+
+
+            <div class="card stat-card">
+
+                <div class="stat-info">
+                    <p>Connexions</p>
+                    <h2 id="loginCount">0</h2>
+                </div>
+
+                <div class="stat-icon">🔐</div>
+
+            </div>
+
+
+            <div class="card stat-card">
+
+                <div class="stat-info">
+                    <p>Ventes enregistrées</p>
+                    <h2 id="saleCount">0</h2>
+                </div>
+
+                <div class="stat-icon">🛒</div>
+
+            </div>
+
+
+            <div class="card stat-card">
+
+                <div class="stat-info">
+                    <p>Alertes de sécurité</p>
+                    <h2 id="securityCount">0</h2>
+                </div>
+
+                <div class="stat-icon">⚠</div>
+
+            </div>
+
+        </div>
+
+
+        <!-- FILTRES -->
+
+        <div class="toolbar">
+
+            <div class="search">
+
+                <span>⌕</span>
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Rechercher une opération, un utilisateur..."
+                    oninput="filterAudit()"
+                >
+
+            </div>
+
+
+            <select id="typeFilter" onchange="filterAudit()">
+
+                <option value="all">
+                    Tous les types
+                </option>
+
+            </select>
+
+
+            <select id="userFilter" onchange="filterAudit()">
+
+                <option value="all">
+                    Tous les utilisateurs
+                </option>
+
+            </select>
+
+
+            <input
+                type="date"
+                id="dateFilter"
+                onchange="filterAudit()"
+            >
+
+            <button
+                class="btn btn-secondary"
+                type="button"
+                onclick="resetFilters()"
+            >
+                Réinitialiser
+            </button>
+
+        </div>
+
+
+        <!-- TABLE -->
+
+        <div class="card table-card">
+
+            <div class="table-header">
+
+                <div>
+                    <h3>Activité récente</h3>
+                </div>
+
+                <span id="resultCount">
+                    0 opération
+                </span>
+
+            </div>
+
+
+            <div class="error-box" id="errorBox"></div>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Date / Heure</th>
+                            <th>Utilisateur</th>
+                            <th>Type</th>
+                            <th>Action</th>
+                            <th>Détails</th>
+                            <th>Adresse IP</th>
+                            <th>Résultat</th>
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="auditTable">
+
+                        <tr id="loadingRow">
+
+                            <td colspan="7">
+
+                                <div class="loading">
+                                    Chargement du journal d’audit...
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+
+                <div class="empty" id="emptyMessage">
+                    Aucune opération ne correspond aux critères.
+                </div>
+
+            </div>
+
+
+            <div class="pagination">
+
+                <span id="paginationInfo">
+                    Affichage des opérations récentes
+                </span>
+
+                <div class="pagination-buttons">
+
+                    <button
+                        class="page-btn"
+                        id="prevPage"
+                        onclick="changePage(-1)"
+                    >
+                        ←
+                    </button>
+
+                    <span
+                        class="page-btn active"
+                        id="pageNumber"
+                    >
+                        1
+                    </span>
+
+                    <button
+                        class="page-btn"
+                        id="nextPage"
+                        onclick="changePage(1)"
+                    >
+                        →
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="info-box">
+
+            <strong>Traçabilité :</strong>
+            chaque opération importante enregistrée par le système
+            apparaît ici avec son utilisateur, sa date, son action,
+            l’objet concerné et les détails disponibles.
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<script src="assets/js/local-api.js"></script>
+<script src="assets/js/branding.js"></script>
+<script src="assets/js/mobile-role.js"></script><script src="assets/js/mobile-shell.js"></script><script src="assets/js/modals.js"></script>
+<script>
+
+const API_BASE = "/api";
+
+let auditData = [];
+let filteredAuditData = [];
+
+let currentPage = 1;
+const pageSize = 10;
+
+
+/* =========================================================
+   AUTHENTIFICATION
+========================================================= */
+
+function getToken(){
+
+    return localStorage.getItem("dpa_token");
+
+}
+
+
+/* =========================================================
+   API
+========================================================= */
+
+async function apiFetch(url, options = {}){
+
+    const token = getToken();
+
+    const headers = {
+        "Content-Type":"application/json",
+        ...(options.headers || {})
+    };
+
+    if(token){
+
+        headers.Authorization =
+            `Bearer ${token}`;
+
+    }
+
+    const response =
+        await fetch(
+            `${API_BASE}${url}`,
+            {
+                ...options,
+                headers
+            }
+        );
+
+    if(response.status === 401){
+
+        localStorage.removeItem("dpa_token");
+
+        window.location.href = "login.html";
+
+        throw new Error(
+            "Session expirée. Veuillez vous reconnecter."
+        );
+
+    }
+
+    if(!response.ok){
+
+        let message =
+            `Erreur HTTP ${response.status}`;
+
+        try{
+
+            const data =
+                await response.json();
+
+            if(data?.error){
+
+                message = data.error;
+
+            }
+
+            if(data?.message){
+
+                message = data.message;
+
+            }
+
+        }catch(e){}
+
+        throw new Error(message);
+
+    }
+
+    return response.json();
+
+}
+
+
+/* =========================================================
+   UTILITAIRES
+========================================================= */
+
+function escapeHtml(value){
+
+    if(value === null || value === undefined){
+
+        return "";
+
+    }
+
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+function initials(name){
+
+    const value =
+        String(name || "Système")
+        .trim();
+
+    if(!value){
+
+        return "SY";
+
+    }
+
+    const parts =
+        value
+        .split(/\s+/)
+        .filter(Boolean);
+
+    if(parts.length === 1){
+
+        return parts[0]
+            .substring(0,2)
+            .toUpperCase();
+
+    }
+
+    return (
+        parts[0][0] +
+        parts[parts.length - 1][0]
+    ).toUpperCase();
+
+}
+
+
+function normalizeText(value){
+
+    return String(value || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g,"")
+        .toLowerCase();
+
+}
+
+
+function formatDateTime(value){
+
+    if(!value){
+
+        return {
+            date:"—",
+            time:"—",
+            isoDate:""
+        };
+
+    }
+
+    const date =
+        new Date(value);
+
+    if(Number.isNaN(date.getTime())){
+
+        return {
+            date:String(value),
+            time:"",
+            isoDate:""
+        };
+
+    }
+
+    const day =
+        String(date.getDate())
+        .padStart(2,"0");
+
+    const month =
+        String(date.getMonth() + 1)
+        .padStart(2,"0");
+
+    const year =
+        date.getFullYear();
+
+    const hours =
+        String(date.getHours())
+        .padStart(2,"0");
+
+    const minutes =
+        String(date.getMinutes())
+        .padStart(2,"0");
+
+    const seconds =
+        String(date.getSeconds())
+        .padStart(2,"0");
+
+    return {
+
+        date:`${day}/${month}/${year}`,
+
+        time:`${hours}:${minutes}:${seconds}`,
+
+        isoDate:
+            `${year}-${month}-${day}`
+
+    };
+
+}
+
+
+/* =========================================================
+   NORMALISATION DES JOURNAUX
+========================================================= */
+
+function normalizeAuditRow(row){
+
+    const details =
+        row.details ?? {};
+
+    let detailsText = "";
+
+    if(typeof details === "string"){
+
+        detailsText = details;
+
+    }else if(details && typeof details === "object"){
+
+        const entries =
+            Object.entries(details);
+
+        detailsText =
+            entries
+            .map(([key,value]) => {
+
+                let displayValue = value;
+
+                if(
+                    value &&
+                    typeof value === "object"
+                ){
+
+                    try{
+
+                        displayValue =
+                            JSON.stringify(value);
+
+                    }catch(e){
+
+                        displayValue = String(value);
+
+                    }
+
+                }
+
+                return `${key}: ${displayValue}`;
+
+            })
+            .join(" • ");
+
+    }
+
+    const user =
+        row.user ||
+        row.username ||
+        row.user_name ||
+        row.name ||
+        null;
+
+    const username =
+        row.username ||
+        row.user_username ||
+        row.user_login ||
+        "";
+
+    const action =
+        row.action ||
+        row.operation ||
+        row.event ||
+        "Opération";
+
+    const entity =
+        row.entity ||
+        row.type ||
+        "Système";
+
+    const entityId =
+        row.entity_id ??
+        row.entityId ??
+        "";
+
+    const createdAt =
+        row.created_at ||
+        row.createdAt ||
+        row.date ||
+        row.timestamp;
+
+    const formatted =
+        formatDateTime(createdAt);
+
+    const result =
+        row.result ||
+        row.status ||
+        details?.result ||
+        "Réussie";
+
+    const ip =
+        row.ip_address ||
+        row.ip ||
+        details?.ip ||
+        details?.ip_address ||
+        "—";
+
+    const userName =
+        typeof user === "object"
+            ? (
+                user.name ||
+                user.username ||
+                "Système"
+            )
+            : (
+                user ||
+                username ||
+                "Système"
+            );
+
+    const userLogin =
+        typeof user === "object"
+            ? (
+                user.username ||
+                ""
+            )
+            : username;
+
+    return {
+
+        id:
+            row.id ??
+            `${createdAt || ""}-${action}-${entity}-${entityId}`,
+
+        userName:userName,
+
+        userLogin:userLogin,
+
+        type:entity,
+
+        action:action,
+
+        entity:entity,
+
+        entityId:entityId,
+
+        detailsText:
+            detailsText ||
+            "Aucun détail disponible.",
+
+        ip:ip,
+
+        result:result,
+
+        createdAt:createdAt,
+
+        date:formatted.date,
+
+        time:formatted.time,
+
+        isoDate:formatted.isoDate,
+
+        searchText:
+            normalizeText(
+                [
+                    userName,
+                    userLogin,
+                    entity,
+                    action,
+                    detailsText,
+                    entityId
+                ].join(" ")
+            )
+
+    };
+
+}
+
+
+/* =========================================================
+   CHARGEMENT DU JOURNAL
+========================================================= */
+
+async function loadAudit(){
+
+    const table =
+        document.getElementById("auditTable");
+
+    const errorBox =
+        document.getElementById("errorBox");
+
+    errorBox.style.display = "none";
+
+    table.innerHTML = `
+
+        <tr id="loadingRow">
+
+            <td colspan="7">
+
+                <div class="loading">
+                    Chargement du journal d’audit...
+                </div>
+
+            </td>
+
+        </tr>
+
+    `;
+
+    try{
+
+        const data =
+            await apiFetch("/audit");
+
+        let rows = [];
+
+        if(Array.isArray(data)){
+
+            rows = data;
+
+        }else if(Array.isArray(data.audit)){
+
+            rows = data.audit;
+
+        }else if(Array.isArray(data.logs)){
+
+            rows = data.logs;
+
+        }else if(Array.isArray(data.rows)){
+
+            rows = data.rows;
+
+        }else if(Array.isArray(data.data)){
+
+            rows = data.data;
+
+        }
+
+        auditData =
+            rows.map(normalizeAuditRow);
+
+        auditData.sort((a,b) => {
+
+            const da =
+                new Date(a.createdAt || 0)
+                .getTime();
+
+            const db =
+                new Date(b.createdAt || 0)
+                .getTime();
+
+            return db - da;
+
+        });
+
+        populateTypeFilter();
+
+        populateUserFilter();
+
+        await updateStats();
+
+        currentPage = 1;
+
+        filterAudit();
+
+    }catch(error){
+
+        console.error(
+            "Erreur chargement audit:",
+            error
+        );
+
+        auditData = [];
+
+        filteredAuditData = [];
+
+        table.innerHTML = "";
+
+        errorBox.textContent =
+            "Impossible de charger le journal d’audit : " +
+            error.message;
+
+        errorBox.style.display = "block";
+
+        document
+            .getElementById("resultCount")
+            .textContent =
+            "0 opération";
+
+        document
+            .getElementById("emptyMessage")
+            .style.display = "block";
+
+    }
+
+}
+
+
+/* =========================================================
+   FILTRE TYPES
+========================================================= */
+
+function populateTypeFilter(){
+
+    const select =
+        document.getElementById("typeFilter");
+
+    const current =
+        select.value;
+
+    const types =
+        [...new Set(
+            auditData
+            .map(row => row.type)
+            .filter(Boolean)
+        )]
+        .sort((a,b) =>
+            String(a).localeCompare(
+                String(b),
+                "fr"
+            )
+        );
+
+    select.innerHTML = `
+
+        <option value="all">
+            Tous les types
+        </option>
+
+    `;
+
+    types.forEach(type => {
+
+        const option =
+            document.createElement("option");
+
+        option.value = type;
+
+        option.textContent = type;
+
+        select.appendChild(option);
+
+    });
+
+    if(
+        types.includes(current)
+    ){
+
+        select.value = current;
+
+    }
+
+}
+
+
+/* =========================================================
+   FILTRE UTILISATEURS
+========================================================= */
+
+function populateUserFilter(){
+
+    const select =
+        document.getElementById("userFilter");
+
+    const current =
+        select.value;
+
+    const users =
+        [...new Set(
+            auditData
+            .map(row => row.userName)
+            .filter(Boolean)
+        )]
+        .sort((a,b) =>
+            String(a).localeCompare(
+                String(b),
+                "fr"
+            )
+        );
+
+    select.innerHTML = `
+
+        <option value="all">
+            Tous les utilisateurs
+        </option>
+
+    `;
+
+    users.forEach(user => {
+
+        const option =
+            document.createElement("option");
+
+        option.value = user;
+
+        option.textContent = user;
+
+        select.appendChild(option);
+
+    });
+
+    if(
+        users.includes(current)
+    ){
+
+        select.value = current;
+
+    }
+
+}
+
+
+/* =========================================================
+   STATISTIQUES
+========================================================= */
+
+async function updateStats(){
+
+    const today =
+        new Date();
+
+    const todayIso =
+        today.getFullYear() +
+        "-" +
+        String(
+            today.getMonth() + 1
+        ).padStart(2,"0") +
+        "-" +
+        String(
+            today.getDate()
+        ).padStart(2,"0");
+
+    const todayCount =
+        auditData.filter(
+            row =>
+                row.isoDate === todayIso
+        ).length;
+
+    const loginCount =
+        auditData.filter(row => {
+
+            const text =
+                normalizeText(
+                    `${row.type} ${row.action}`
+                );
+
+            return (
+                text.includes("connexion") ||
+                text.includes("login")
+            );
+
+        }).length;
+
+    const saleCount =
+        auditData.filter(row => {
+
+            const text =
+                normalizeText(
+                    `${row.type} ${row.action}`
+                );
+
+            return (
+                text.includes("vente") ||
+                text.includes("sale")
+            );
+
+        }).length;
+
+    const securityEventCount =
+        auditData.filter(row => {
+            const text = normalizeText(`${row.type} ${row.action}`);
+            return (
+                text.includes("securite") ||
+                text.includes("mot de passe") ||
+                text.includes("password") ||
+                text.includes("refus") ||
+                text.includes("echec") ||
+                text.includes("alerte")
+            );
+        }).length;
+
+    // Les alertes de sécurité incluent également les risques stock actifs :
+    // lots expirés ou arrivant à échéance dans les 30 jours.
+    let activeStockAlerts = 0;
+    try {
+        const alertsData = await apiFetch("/alerts");
+        if (Array.isArray(alertsData)) activeStockAlerts = alertsData.length;
+        else if (Array.isArray(alertsData?.alerts)) activeStockAlerts = alertsData.alerts.length;
+    } catch (e) {
+        console.warn("Impossible de charger les alertes de sécurité stock", e);
+    }
+
+    // /audit inclut déjà les alertes de stock actives sous forme d'événements.
+    // Ne pas rajouter une deuxième fois le nombre renvoyé par /alerts : cela
+    // faisait afficher 2 dans le compteur pour une seule alerte visible.
+    const securityCount = securityEventCount;
+
+    document
+        .getElementById("todayCount")
+        .textContent =
+        todayCount;
+
+    document
+        .getElementById("loginCount")
+        .textContent =
+        loginCount;
+
+    document
+        .getElementById("saleCount")
+        .textContent =
+        saleCount;
+
+    document
+        .getElementById("securityCount")
+        .textContent =
+        securityCount;
+
+}
+
+
+/* =========================================================
+   FILTRAGE
+========================================================= */
+
+function filterAudit(){
+
+    const search =
+        normalizeText(
+            document
+                .getElementById("searchInput")
+                .value
+        );
+
+    const type =
+        document
+            .getElementById("typeFilter")
+            .value;
+
+    const user =
+        document
+            .getElementById("userFilter")
+            .value;
+
+    const date =
+        document
+            .getElementById("dateFilter")
+            .value;
+
+    filteredAuditData =
+        auditData.filter(row => {
+
+            const matchSearch =
+                !search ||
+                row.searchText.includes(search);
+
+            const matchType =
+                type === "all" ||
+                row.type === type;
+
+            const matchUser =
+                user === "all" ||
+                row.userName === user;
+
+            const matchDate =
+                !date ||
+                row.isoDate === date;
+
+            return (
+                matchSearch &&
+                matchType &&
+                matchUser &&
+                matchDate
+            );
+
+        });
+
+    currentPage = 1;
+
+    renderAudit();
+
+}
+
+
+/* =========================================================
+   AFFICHAGE DU TABLEAU
+========================================================= */
+
+function renderAudit(){
+
+    const table =
+        document.getElementById("auditTable");
+
+    const empty =
+        document.getElementById("emptyMessage");
+
+    const resultCount =
+        document.getElementById("resultCount");
+
+    const total =
+        filteredAuditData.length;
+
+    resultCount.textContent =
+        `${total} opération${total > 1 ? "s" : ""}`;
+
+    if(total === 0){
+
+        table.innerHTML = "";
+
+        empty.style.display = "block";
+
+        updatePagination();
+
+        return;
+
+    }
+
+    empty.style.display = "none";
+
+    const start =
+        (currentPage - 1) * pageSize;
+
+    const end =
+        start + pageSize;
+
+    const rows =
+        filteredAuditData.slice(
+            start,
+            end
+        );
+
+    table.innerHTML =
+        rows
+        .map(row => renderAuditRow(row))
+        .join("");
+
+    updatePagination();
+
+}
+
+
+/* =========================================================
+   LIGNE AUDIT
+========================================================= */
+
+function renderAuditRow(row){
+
+    const typeClass =
+        getTypeClass(row.type);
+
+    const resultClass =
+        getResultClass(row.result);
+
+    const safeName =
+        escapeHtml(
+            row.userName || "Système"
+        );
+
+    const safeLogin =
+        escapeHtml(
+            row.userLogin
+                ? "@" + row.userLogin.replace(/^@/,"")
+                : ""
+        );
+
+    return `
+
+        <tr>
+
+            <td>
+
+                ${escapeHtml(row.date)}
+
+                <br>
+
+                <strong>
+                    ${escapeHtml(row.time)}
+                </strong>
+
+            </td>
+
+
+            <td>
+
+                <div class="user-cell">
+
+                    <div class="user-avatar">
+                        ${escapeHtml(
+                            initials(row.userName)
+                        )}
+                    </div>
+
+                    <div>
+
+                        <div class="user-name">
+                            ${safeName}
+                        </div>
+
+                        ${
+                            safeLogin
+                                ? `
+                                    <div class="user-login">
+                                        ${safeLogin}
+                                    </div>
+                                  `
+                                : ""
+                        }
+
+                    </div>
+
+                </div>
+
+            </td>
+
+
+            <td>
+
+                <span class="badge ${typeClass}">
+                    ${escapeHtml(row.type)}
+                </span>
+
+            </td>
+
+
+            <td>
+                ${escapeHtml(row.action)}
+            </td>
+
+
+            <td class="details">
+
+                ${escapeHtml(
+                    row.detailsText
+                )}
+
+            </td>
+
+
+            <td class="ip">
+
+                ${escapeHtml(row.ip)}
+
+            </td>
+
+
+            <td>
+
+                <span class="badge ${resultClass}">
+                    ${escapeHtml(row.result)}
+                </span>
+
+            </td>
+
+        </tr>
+
+    `;
+
+}
+
+
+/* =========================================================
+   COULEUR DU TYPE
+========================================================= */
+
+function getTypeClass(type){
+
+    const value =
+        normalizeText(type);
+
+    if(
+        value.includes("vente") ||
+        value.includes("sale")
+    ){
+
+        return "badge-sale";
+
+    }
+
+    if(
+        value.includes("stock") ||
+        value.includes("reception")
+    ){
+
+        return "badge-stock";
+
+    }
+
+    if(
+        value.includes("connexion") ||
+        value.includes("securite") ||
+        value.includes("password")
+    ){
+
+        return "badge-security";
+
+    }
+
+    if(
+        value.includes("utilisateur") ||
+        value.includes("produit")
+    ){
+
+        return "badge-info";
+
+    }
+
+    return "badge-warning";
+
+}
+
+
+/* =========================================================
+   COULEUR DU RESULTAT
+========================================================= */
+
+function getResultClass(result){
+
+    const value =
+        normalizeText(result);
+
+    if(
+        value.includes("refus") ||
+        value.includes("echec") ||
+        value.includes("erreur") ||
+        value.includes("fail")
+    ){
+
+        return "badge-danger";
+
+    }
+
+    if(
+        value.includes("avert") ||
+        value.includes("warning")
+    ){
+
+        return "badge-warning";
+
+    }
+
+    return "badge-success";
+
+}
+
+
+/* =========================================================
+   PAGINATION
+========================================================= */
+
+function updatePagination(){
+
+    const total =
+        filteredAuditData.length;
+
+    const totalPages =
+        Math.max(
+            1,
+            Math.ceil(total / pageSize)
+        );
+
+    if(currentPage > totalPages){
+
+        currentPage = totalPages;
+
+    }
+
+    const start =
+        total === 0
+            ? 0
+            : ((currentPage - 1) * pageSize) + 1;
+
+    const end =
+        Math.min(
+            currentPage * pageSize,
+            total
+        );
+
+    document
+        .getElementById("paginationInfo")
+        .textContent =
+        total === 0
+            ? "Aucune opération"
+            : `Affichage de ${start} à ${end} sur ${total} opération${total > 1 ? "s" : ""}`;
+
+    document
+        .getElementById("pageNumber")
+        .textContent =
+        `${currentPage} / ${totalPages}`;
+
+    document
+        .getElementById("prevPage")
+        .disabled =
+        currentPage <= 1;
+
+    document
+        .getElementById("nextPage")
+        .disabled =
+        currentPage >= totalPages;
+
+}
+
+
+function changePage(direction){
+
+    const totalPages =
+        Math.max(
+            1,
+            Math.ceil(
+                filteredAuditData.length /
+                pageSize
+            )
+        );
+
+    const next =
+        currentPage + direction;
+
+    if(
+        next < 1 ||
+        next > totalPages
+    ){
+
+        return;
+
+    }
+
+    currentPage = next;
+
+    renderAudit();
+
+}
+
+
+/* =========================================================
+   RESET FILTRES
+========================================================= */
+
+function resetFilters(){
+
+    document
+        .getElementById("searchInput")
+        .value = "";
+
+    document
+        .getElementById("typeFilter")
+        .value = "all";
+
+    document
+        .getElementById("userFilter")
+        .value = "all";
+
+    document
+        .getElementById("dateFilter")
+        .value = "";
+
+    currentPage = 1;
+
+    filterAudit();
+
+}
+
+
+/* =========================================================
+   EXPORT
+========================================================= */
+
+function exportAudit(){
+
+    if(!filteredAuditData.length){
+
+        alert(
+            "Aucune opération à exporter."
+        );
+
+        return;
+
+    }
+
+    const headers = [
+        "Date",
+        "Heure",
+        "Utilisateur",
+        "Identifiant",
+        "Type",
+        "Action",
+        "Détails",
+        "Adresse IP",
+        "Résultat"
+    ];
+
+    const lines = [
+        headers
+    ];
+
+    filteredAuditData.forEach(row => {
+
+        lines.push([
+
+            row.date,
+
+            row.time,
+
+            row.userName,
+
+            row.userLogin,
+
+            row.type,
+
+            row.action,
+
+            row.detailsText,
+
+            row.ip,
+
+            row.result
+
+        ]);
+
+    });
+
+    const csv =
+        lines
+        .map(line =>
+            line
+            .map(value =>
+                `"${String(value ?? "")
+                    .replace(/"/g,'""')}"`
+            )
+            .join(";")
+        )
+        .join("\n");
+
+    const blob =
+        new Blob(
+            ["\ufeff" + csv],
+            {
+                type:
+                    "text/csv;charset=utf-8;"
+            }
+        );
+
+    const url =
+        URL.createObjectURL(blob);
+
+    const link =
+        document.createElement("a");
+
+    link.href = url;
+
+    link.download =
+        `journal-audit-${getTodayFileName()}.csv`;
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    link.remove();
+
+    URL.revokeObjectURL(url);
+
+}
+
+
+function getTodayFileName(){
+
+    const now =
+        new Date();
+
+    return (
+        now.getFullYear() +
+        "-" +
+        String(
+            now.getMonth() + 1
+        ).padStart(2,"0") +
+        "-" +
+        String(
+            now.getDate()
+        ).padStart(2,"0")
+    );
+
+}
+
+
+/* =========================================================
+   MENU
+========================================================= */
+
+function toggleMenu(){
+
+    document
+        .getElementById("sidebar")
+        .classList
+        .toggle("open");
+
+}
+
+
+/* =========================================================
+   UTILISATEUR CONNECTE
+========================================================= */
+
+async function loadCurrentUser(){
+
+    try{
+
+        const data =
+            await apiFetch("/me");
+
+        const user =
+            data.user || data;
+
+        if(!user){
+
+            return;
+
+        }
+
+        const name =
+            user.name ||
+            user.username ||
+            "Utilisateur";
+
+        document
+            .getElementById("currentUserName")
+            .textContent =
+            name;
+
+        document
+            .getElementById("currentAvatar")
+            .textContent =
+            initials(name);
+
+        document
+            .getElementById("currentUserRole")
+            .textContent =
+            user.role === "admin"
+                ? "Accès complet"
+                : "Utilisateur";
+
+    }catch(error){
+
+        console.warn(
+            "Impossible de récupérer l'utilisateur connecté:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   INITIALISATION
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    async function(){
+
+        await loadCurrentUser();
+
+        await loadAudit();
+
+    }
+);
+
+</script>
+
+</body>
+</html>

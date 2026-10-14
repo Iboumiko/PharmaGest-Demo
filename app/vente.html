@@ -1,0 +1,3484 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><script src="assets/js/demo-guard.js"></script><style id="pg-boot-css">html.pg-boot body{opacity:0!important}</style><script>(function(){var h=document.documentElement;h.classList.add("pg-boot");window.__pgShow=function(){h.classList.remove("pg-boot")};setTimeout(window.__pgShow,800);window.addEventListener("load",function(){setTimeout(window.__pgShow,50)});})();</script><link rel="stylesheet" href="assets/css/app.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Vente / Caisse — PharmaGest</title>
+
+  <style>
+    :root {
+      --navy: #0b1f3a;
+      --blue: #155eef;
+      --turquoise: #12b8a6;
+      --white: #ffffff;
+      --bg: #f4f7fb;
+      --border: #dfe5ee;
+      --text: #172033;
+      --muted: #687386;
+      --danger: #d92d20;
+      --success: #079455;
+      --warning: #b54708;
+      --shadow: 0 8px 24px rgba(15, 35, 65, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* =========================================================
+       SIDEBAR
+       ========================================================= */
+
+    .sidebar {
+      width: 245px;
+      background: var(--navy);
+      color: white;
+      padding: 22px 14px;
+      flex-shrink: 0;
+    }
+
+    .brand {
+      padding: 4px 12px 22px;
+      border-bottom: 1px solid rgba(255,255,255,.12);
+      margin-bottom: 16px;
+    }
+
+    .brand-title {
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.25;
+    }
+
+    .brand-subtitle {
+      margin-top: 5px;
+      font-size: 12px;
+      color: #aebbd0;
+    }
+
+    .nav {
+      display: grid;
+      gap: 5px;
+    }
+
+    .nav a {
+      color: #dbe5f4;
+      text-decoration: none;
+      padding: 11px 12px;
+      border-radius: 9px;
+      font-size: 14px;
+    }
+
+    .nav a:hover,
+    .nav a.active {
+      background: rgba(255,255,255,.10);
+      color: white;
+    }
+
+    /* =========================================================
+       MAIN
+       ========================================================= */
+
+    .main {
+      flex: 1;
+      min-width: 0;
+      padding: 24px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 22px;
+    }
+
+    .page-title {
+      margin: 0;
+      color: var(--navy);
+      font-size: 27px;
+    }
+
+    .page-subtitle {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .user-box {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      box-shadow: var(--shadow);
+      font-size: 13px;
+    }
+
+    .user-box strong {
+      color: var(--navy);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 420px;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card-header h2 {
+      margin: 0;
+      font-size: 17px;
+      color: var(--navy);
+    }
+
+    .card-header p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .card-body {
+      padding: 20px;
+    }
+
+    /* =========================================================
+       PRODUITS
+       ========================================================= */
+
+    .search {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      outline: none;
+      margin-bottom: 14px;
+    }
+
+    .search:focus {
+      border-color: var(--blue);
+    }
+
+    .products {
+      display: grid;
+      gap: 10px;
+      max-height: 650px;
+      overflow-y: auto;
+    }
+
+    .product {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 13px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      background: #fff;
+    }
+
+    .product-name {
+      font-weight: 700;
+      color: var(--navy);
+      font-size: 14px;
+    }
+
+    .product-code {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .product-price {
+      margin-top: 5px;
+      font-size: 13px;
+    }
+
+    .stock-info {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    /* =========================================================
+       BOUTONS
+       ========================================================= */
+
+    .btn {
+      border: 0;
+      border-radius: 9px;
+      padding: 10px 14px;
+      font-weight: 700;
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: white;
+    }
+
+    .btn-success {
+      background: var(--turquoise);
+      color: white;
+    }
+
+    .btn-secondary {
+      background: #edf2f7;
+      color: var(--navy);
+    }
+
+    .btn-danger {
+      background: #fee4e2;
+      color: var(--danger);
+    }
+
+    .btn-scanner {
+      background: #12b8a6 !important;
+      color: white !important;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .btn-scanner:hover {
+      background: #0e9d8f !important;
+    }
+
+    .btn:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    /* =========================================================
+       PANIER
+       ========================================================= */
+
+    .cart {
+      display: grid;
+      gap: 10px;
+    }
+
+    .empty {
+      padding: 28px 12px;
+      text-align: center;
+      color: var(--muted);
+      border: 1px dashed var(--border);
+      border-radius: 10px;
+    }
+
+    .cart-item {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+    }
+
+    .cart-item-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .cart-item-name {
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--navy);
+    }
+
+    .cart-item-price {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .cart-controls {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .qty-controls {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .qty-btn {
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: white;
+      font-weight: 700;
+    }
+
+    .qty {
+      min-width: 28px;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .line-total {
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    /* =========================================================
+       SCANNER
+       ========================================================= */
+
+    .scanner-box {
+      margin-bottom: 18px;
+      border: 1px solid #b7ebe3;
+      border-radius: 12px;
+      background: #f0fdfa;
+      overflow: hidden;
+    }
+
+    .scanner-header {
+      padding: 13px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid #b7ebe3;
+    }
+
+    .scanner-header strong {
+      color: #08766b;
+      font-size: 14px;
+    }
+
+    .scanner-header span {
+      color: #4b635f;
+      font-size: 12px;
+    }
+
+    .scanner-content {
+      padding: 14px;
+    }
+
+    .scanner-video-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      background: #07111f;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    #scannerVideo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      background: #07111f;
+    }
+
+    .scanner-frame {
+      position: absolute;
+      left: 12%;
+      right: 12%;
+      top: 20%;
+      bottom: 20%;
+      border: 3px solid #12b8a6;
+      border-radius: 12px;
+      box-shadow:
+        0 0 0 9999px rgba(0,0,0,.25);
+      pointer-events: none;
+    }
+
+    .scanner-line {
+      position: absolute;
+      left: 14%;
+      right: 14%;
+      top: 50%;
+      height: 2px;
+      background: #12b8a6;
+      box-shadow: 0 0 8px rgba(18,184,166,.8);
+      pointer-events: none;
+    }
+
+    .scanner-status {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: white;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .scanner-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .scanner-actions button {
+      flex: 1;
+    }
+
+    .scanner-manual {
+      margin-top: 12px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .scanner-manual label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .scanner-manual-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .scanner-manual input {
+      flex: 1;
+      min-width: 0;
+      padding: 10px 11px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      outline: none;
+    }
+
+    .scanner-manual input:focus {
+      border-color: var(--blue);
+    }
+
+    /* =========================================================
+       RESUME VENTE
+       ========================================================= */
+
+    .sale-summary {
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 9px;
+      font-size: 14px;
+    }
+
+    .summary-total {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+      font-size: 21px;
+      font-weight: 800;
+      color: var(--navy);
+    }
+
+    .payment {
+      width: 100%;
+      margin-top: 10px;
+      padding: 11px 12px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: white;
+    }
+
+    .fefo-note {
+      margin-top: 14px;
+      padding: 10px 12px;
+      background: #effcf9;
+      border: 1px solid #b7ebe3;
+      border-radius: 9px;
+      color: #08766b;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .sale-actions {
+      margin-top: 14px;
+      display: grid;
+      gap: 9px;
+    }
+
+    .message {
+      margin-top: 12px;
+      padding: 11px 12px;
+      border-radius: 9px;
+      display: none;
+      font-size: 13px;
+    }
+
+    .message.success {
+      display: block;
+      background: #ecfdf3;
+      color: var(--success);
+      border: 1px solid #abefc6;
+    }
+
+    .message.error {
+      display: block;
+      background: #fef3f2;
+      color: var(--danger);
+      border: 1px solid #fecdca;
+    }
+
+    /* =========================================================
+       REÇU
+       ========================================================= */
+
+    .receipt-section {
+      margin-top: 20px;
+    }
+
+    .receipt {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      padding: 24px;
+      max-width: 700px;
+      margin: auto;
+    }
+
+    .receipt-head {
+      text-align: center;
+      padding-bottom: 18px;
+      border-bottom: 1px dashed #b9c2cf;
+    }
+
+    .receipt-logo {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--navy);
+    }
+
+    .receipt-title {
+      margin-top: 4px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .receipt-number {
+      margin-top: 12px;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--blue);
+    }
+
+    .receipt-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 20px;
+      padding: 16px 0;
+      border-bottom: 1px dashed #b9c2cf;
+      font-size: 13px;
+    }
+
+    .receipt-meta div:nth-child(odd) {
+      color: var(--muted);
+    }
+
+    .receipt-meta div:nth-child(even) {
+      text-align: right;
+      font-weight: 700;
+    }
+
+    .receipt-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+      font-size: 13px;
+    }
+
+    .receipt-table th {
+      text-align: left;
+      padding: 8px 4px;
+      border-bottom: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .receipt-table {
+      table-layout: fixed;
+    }
+
+    .receipt-table th:first-child,
+    .receipt-table td:first-child { width: 34%; text-align:left; }
+    .receipt-table th:nth-child(2),
+    .receipt-table td:nth-child(2) { width: 14%; text-align:right; }
+    .receipt-table th:nth-child(3),
+    .receipt-table td:nth-child(3) { width: 26%; text-align:right; }
+    .receipt-table th:nth-child(4),
+    .receipt-table td:nth-child(4) { width: 26%; text-align:right; }
+
+    .receipt-table td {
+      padding: 9px 4px;
+      border-bottom: 1px solid #edf0f4;
+      vertical-align: top;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .receipt-table .right {
+      text-align: right;
+    }
+
+    .receipt-total {
+      margin-top: 14px;
+      padding-top: 13px;
+      border-top: 1px dashed #b9c2cf;
+      display: flex;
+      justify-content: space-between;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--navy);
+    }
+
+
+    /* CAUSE RACINE du reçu déformé : app.css impose « table{min-width:620px} », ce qui rendait
+       le tableau du reçu bien plus large que le ticket et coupait Qté / PU / Total. */
+    .receipt-table {
+      min-width: 0 !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      table-layout: fixed;
+    }
+    .receipt-table td.num,
+    .receipt-table th.right {
+      white-space: nowrap !important;
+      overflow-wrap: normal !important;
+      word-break: normal !important;
+    }
+    .receipt-table .receipt-item-name-row td { padding-bottom: 0; border-bottom: 0; font-weight: 700; }
+    .receipt-table .receipt-item-detail-row td { padding-top: 2px; }
+    .receipt-currency-note { margin-top: 6px; text-align: right; font-size: 11px; color: var(--muted); }
+
+
+    .receipt-title:empty { display: none; }
+    .receipt-software { font-size: 10px; opacity: .7; }
+
+    .receipt-payment {
+      margin-top: 8px;
+      text-align: right;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .receipt-footer {
+      margin-top: 22px;
+      padding-top: 14px;
+      border-top: 1px dashed #b9c2cf;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .receipt-actions {
+      margin-top: 16px;
+      display: flex;
+      gap: 9px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* =========================================================
+       RESPONSIVE
+       ========================================================= */
+
+    @media (max-width: 1050px) {
+
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .products {
+        max-height: none;
+      }
+    }
+
+    @media (max-width: 760px) {
+
+      .app {
+        display: block;
+      }
+
+      .sidebar {
+        width: 100%;
+        padding: 12px;
+      }
+
+      .brand {
+        margin-bottom: 10px;
+        padding-bottom: 12px;
+      }
+
+      .nav {
+        display: flex;
+        overflow-x: auto;
+        gap: 5px;
+      }
+
+      .nav a {
+        white-space: nowrap;
+      }
+
+      .main {
+        padding: 15px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .receipt-meta {
+        grid-template-columns: 1fr;
+      }
+
+      .receipt-meta div:nth-child(even) {
+        text-align: left;
+        margin-bottom: 5px;
+      }
+
+      .scanner-actions {
+        flex-direction: column;
+      }
+    }
+
+    /* =========================================================
+       IMPRESSION THERMIQUE 58 MM
+       ========================================================= */
+
+    @page {
+      size: 58mm 150mm;
+      margin: 0;
+    }
+
+    @media print {
+
+      html,
+      body {
+        width: 58mm;
+        margin: 0;
+        padding: 0;
+        background: white;
+      }
+
+      body {
+        font-family: "Courier New", Courier, monospace;
+        color: #000;
+      }
+
+      .app {
+        display: block;
+        min-height: auto;
+      }
+
+      .sidebar,
+      .topbar,
+      .layout,
+      .no-print,
+      .receipt-actions {
+        display: none !important;
+      }
+
+      html, body, .app, .main, .receipt-section, .receipt, .receipt * {
+        box-sizing: border-box !important;
+      }
+
+      .main {
+        width: 58mm;
+        min-width: 58mm;
+        max-width: 58mm;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+
+      .receipt-section {
+        display: block !important;
+        width: 58mm;
+        margin: 0;
+        padding: 0;
+      }
+
+      .receipt {
+        display: block;
+        width: 58mm;
+        max-width: 58mm;
+        min-width: 58mm;
+        margin: 0;
+        padding: 2.5mm 2mm;
+        overflow: hidden;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        background: white;
+      }
+
+      .receipt-head {
+        padding-bottom: 3mm;
+        border-bottom: 1px dashed #000;
+      }
+
+      .receipt-logo {
+        font-size: 12px;
+        line-height: 1.2;
+        color: #000;
+      }
+
+      .receipt-title {
+        margin-top: 1mm;
+        font-size: 9px;
+        color: #000;
+      }
+
+      .receipt-number {
+        margin-top: 2mm;
+        font-size: 10px;
+        color: #000;
+      }
+
+      .receipt-meta {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5mm;
+        padding: 3mm 0;
+        border-bottom: 1px dashed #000;
+        font-size: 9px;
+      }
+
+      .receipt-meta div:nth-child(odd) {
+        color: #000;
+      }
+
+      .receipt-meta div:nth-child(even) {
+        text-align: right;
+        font-weight: normal;
+      }
+
+      .receipt-table {
+        width: 100%;
+        max-width: 100%;
+        margin-top: 2.5mm;
+        border-collapse: collapse;
+        font-size: 7.5px;
+        table-layout: fixed;
+      }
+
+      .receipt-table th {
+        padding: 1mm 0.3mm;
+        border-bottom: 1px solid #000;
+        color: #000;
+        font-weight: bold;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+
+      .receipt-table td {
+        padding: 1mm 0.3mm;
+        border-bottom: 0;
+        color: #000;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        white-space: normal !important;
+        max-width: 0;
+      }
+
+      .receipt-table th:first-child,
+      .receipt-table td:first-child {
+        width: 34%;
+        text-align: left;
+      }
+
+      .receipt-table th:nth-child(2),
+      .receipt-table td:nth-child(2) {
+        width: 14%;
+        text-align: right;
+      }
+
+      .receipt-table th:nth-child(3),
+      .receipt-table td:nth-child(3) {
+        width: 26%;
+        text-align: right;
+      }
+
+      .receipt-table th:nth-child(4),
+      .receipt-table td:nth-child(4) {
+        width: 26%;
+        text-align: right;
+      }
+
+      .receipt-table {
+        min-width: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        table-layout: fixed;
+      }
+      .receipt-table td.num,
+      .receipt-table th.right {
+        white-space: nowrap !important;
+        overflow-wrap: normal !important;
+        word-break: normal !important;
+      }
+      .receipt-table .receipt-item-name-row td { padding-bottom: 0; border-bottom: 0; font-weight: bold; }
+      .receipt-table .receipt-item-detail-row td { padding-top: 0.4mm; padding-bottom: 1.6mm; }
+      .receipt-currency-note { margin-top: 1mm; text-align: right; font-size: 7.5px; color: #000; }
+
+      .receipt-table td span {
+        font-size: 6.8px !important;
+        color: #000 !important;
+        line-height: 1.15 !important;
+      }
+
+      .receipt-product-code {
+        display: block;
+        margin-top: .5mm;
+        font-size: 6.8px !important;
+        line-height: 1.15 !important;
+      }
+
+      .receipt-total {
+        display: flex;
+        gap: 2mm;
+        align-items: flex-start;
+        margin-top: 3mm;
+        padding-top: 3mm;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        border-top: 1px dashed #000;
+        font-size: 13px;
+        color: #000;
+      }
+
+      .receipt-payment {
+        margin-top: 1.5mm;
+        font-size: 8.5px;
+        color: #000;
+      }
+
+      .receipt-footer {
+        margin-top: 4mm;
+        padding-top: 3mm;
+        border-top: 1px dashed #000;
+        font-size: 8px;
+        line-height: 1.4;
+        color: #000;
+      }
+    }
+  </style>
+<link rel="stylesheet" href="assets/css/mobile-shell.css">
+<link rel="stylesheet" href="assets/css/theme.css">
+<script src="assets/js/theme.js"></script>
+<link rel="stylesheet" href="assets/css/modals.css">
+</head>
+
+<body>
+
+<div class="app">
+
+  <aside class="sidebar">
+
+    <div class="brand">
+      <div class="brand-title">
+        <span data-establishment-name>Nom de l’établissement</span>
+      </div>
+
+      <div class="brand-subtitle">
+        Gestion pharmaceutique professionnelle
+      </div>
+    </div>
+
+    <nav class="nav">
+
+      <a href="index.html">
+        Dashboard
+      </a>
+
+      <a href="vente.html" class="active">
+        Vente
+      </a>
+
+      <a href="scanner.html">
+        📷 Scanner
+      </a>
+
+      <a href="produits.html" class="admin-only">
+        Produits
+      </a>
+
+      <a href="stocks.html" class="admin-only">
+        Stocks
+      </a>
+
+      <a href="receptions.html" class="admin-only">
+        Réceptions
+      </a>
+
+      <a href="fournisseurs.html" class="admin-only">
+        Fournisseurs
+      </a>
+
+      <a href="lots.html" class="admin-only">
+        Lots
+      </a>
+
+      <a href="rapports.html" class="admin-only">
+        Rapports
+      </a>
+
+      <a href="utilisateurs.html" class="admin-only">
+        Utilisateurs
+      </a>
+
+      <a href="audit.html" class="admin-only">
+        Audit
+      </a>
+
+      <a href="vente_partenaire.html"><span class="menu-icon">⇄</span>Vente partenaire</a>
+      <a href="parametres.html" class="admin-only">
+        Paramètres
+      </a>
+
+    </nav>
+
+  </aside>
+
+  <main class="main">
+
+    <div class="topbar">
+
+      <div>
+
+        <h1 class="page-title">
+          Nouvelle vente
+        </h1>
+
+        <p class="page-subtitle">
+          Vente réelle connectée au stock et aux lots FEFO.
+        </p>
+
+      </div>
+
+      <div class="user-box">
+        Vendeur :
+        <strong id="currentUser">Chargement...</strong>
+        <div id="serverStatus" role="status" aria-live="polite" style="margin-top:7px;font-size:12px;font-weight:700;color:#b45309">Vérification du serveur Admin…</div>
+        <div id="syncStatusDetail" style="margin-top:3px;font-size:11px;color:#64748b"></div>
+      </div>
+
+    </div>
+
+    <div id="saleZone" class="layout">
+
+      <!-- =====================================================
+           PRODUITS
+           ===================================================== -->
+
+      <section class="card">
+
+        <div class="card-header">
+
+          <h2>
+            Produits disponibles
+          </h2>
+
+          <p>
+            Sélectionnez les produits à ajouter au panier.
+          </p>
+
+        </div>
+
+        <div class="card-body">
+
+          <input
+            id="searchInput"
+            class="search"
+            type="search"
+            placeholder="Rechercher par nom ou code..."
+            autocomplete="off"
+          >
+
+          <div
+            id="productsList"
+            class="products"
+          >
+
+            <div class="empty">
+              Chargement des produits...
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- =====================================================
+           PANIER
+           ===================================================== -->
+
+      <section class="card">
+
+        <div class="card-header">
+
+          <h2>
+            Panier
+          </h2>
+
+          <p id="cartCount">
+            0 article
+          </p>
+
+        </div>
+
+        <div class="card-body">
+
+          <!-- =================================================
+               SCANNER DIRECTEMENT DANS LE PANIER
+               ================================================= -->
+
+          <div
+            id="scannerBox"
+            class="scanner-box"
+            hidden
+          >
+
+            <div class="scanner-header">
+
+              <div>
+                <strong>
+                  📷 Scanner un produit
+                </strong>
+
+                <br>
+
+                <span>
+                  Placez le code-barres dans le cadre.
+                </span>
+              </div>
+
+              <button
+                id="closeScannerBtn"
+                type="button"
+                class="btn btn-secondary"
+              >
+                Fermer
+              </button>
+
+            </div>
+
+            <div class="scanner-content">
+
+              <div class="scanner-video-wrap">
+
+                <video
+                  id="scannerVideo"
+                  autoplay
+                  muted
+                  playsinline
+                ></video>
+
+                <div class="scanner-frame"></div>
+
+                <div class="scanner-line"></div>
+
+              </div>
+
+              <div
+                id="scannerStatus"
+                class="scanner-status"
+              >
+                Préparation de la caméra...
+              </div>
+
+              <div class="scanner-actions">
+
+                <button
+                  id="restartScannerBtn"
+                  type="button"
+                  class="btn btn-primary"
+                >
+                  🔄 Relancer
+                </button>
+
+                <button
+                  id="manualScannerBtn"
+                  type="button"
+                  class="btn btn-secondary"
+                >
+                  Saisie manuelle
+                </button>
+
+              </div>
+
+              <div
+                id="manualScannerBox"
+                class="scanner-manual"
+                hidden
+              >
+
+                <label for="manualBarcode">
+                  Code-barres
+                </label>
+
+                <div class="scanner-manual-row">
+
+                  <input
+                    id="manualBarcode"
+                    type="text"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    placeholder="Ex : 3760123456789"
+                  >
+
+                  <button
+                    id="manualBarcodeBtn"
+                    type="button"
+                    class="btn btn-success"
+                  >
+                    Rechercher
+                  </button>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- =================================================
+               BOUTON SCANNER
+               ================================================= -->
+
+          <button
+            id="openScannerBtn"
+            type="button"
+            class="btn btn-scanner"
+            style="width:100%; margin-bottom:16px; padding:13px;"
+          >
+            📷 Scanner un produit
+          </button>
+
+          <div
+            id="cartList"
+            class="cart"
+          >
+
+            <div class="empty">
+              Aucun produit dans le panier.
+            </div>
+
+          </div>
+
+          <!-- =================================================
+               RESUME
+               ================================================= -->
+
+          <div class="sale-summary">
+
+            <div class="summary-row">
+
+              <span>
+                Sous-total
+              </span>
+
+              <strong id="subtotal">
+                0 FCFA
+              </strong>
+
+            </div>
+
+            <div class="summary-row">
+
+              <span>
+                Nombre d'articles
+              </span>
+
+              <strong id="itemCount">
+                0
+              </strong>
+
+            </div>
+
+            <div class="summary-row summary-total">
+
+              <span>
+                Total
+              </span>
+
+              <span id="total">
+                0 FCFA
+              </span>
+
+            </div>
+
+            <select
+              id="paymentMethod"
+              class="payment"
+            >
+
+              <option value="CASH">
+                Espèces
+              </option>
+
+              <option value="MOBILE_MONEY">
+                Mobile Money
+              </option>
+
+              <option value="CARD">
+                Carte bancaire
+              </option>
+
+            </select>
+
+            <div class="fefo-note">
+
+              <strong>
+                FEFO :
+              </strong>
+
+              lors de la validation, le backend utilise en priorité
+              le lot dont la date d'expiration est la plus proche,
+              tout en bloquant les lots expirés.
+
+            </div>
+
+            <div class="sale-actions">
+
+              <button
+                id="validateSaleBtn"
+                class="btn btn-success"
+              >
+                Valider la vente
+              </button>
+
+              <button
+                id="clearCartBtn"
+                class="btn btn-secondary"
+              >
+                Vider le panier
+              </button>
+
+            </div>
+
+            <div
+              id="message"
+              class="message"
+            ></div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </div>
+
+    <!-- =======================================================
+         REÇU
+         ======================================================= -->
+
+    <section
+      id="receiptSection"
+      class="receipt-section hidden"
+    >
+
+      <div class="receipt">
+
+        <div class="receipt-head">
+
+          <div class="receipt-logo" data-establishment-name>PharmaGest</div>
+          <div class="receipt-title receipt-address" data-establishment-address></div>
+          <div class="receipt-title receipt-phone" data-establishment-phone></div>
+          <div class="receipt-title">
+            REÇU DE VENTE
+          </div>
+
+          <div
+            id="receiptNumber"
+            class="receipt-number"
+          >
+            VNT-2026-000000
+          </div>
+
+        </div>
+
+        <div class="receipt-meta">
+
+          <div>
+            Date / heure
+          </div>
+
+          <div id="receiptDate">
+            —
+          </div>
+
+          <div>
+            Vendeur
+          </div>
+
+          <div id="receiptSeller">
+            —
+          </div>
+
+          <div>
+            Paiement
+          </div>
+
+          <div id="receiptPayment">
+            —
+          </div>
+
+        </div>
+
+        <table class="receipt-table">
+
+          <thead>
+
+            <tr>
+
+              <th>
+                Produit
+              </th>
+
+              <th class="right">
+                Qté
+              </th>
+
+              <th class="right">
+                PU
+              </th>
+
+              <th class="right">
+                Total
+              </th>
+
+            </tr>
+
+          </thead>
+
+          <tbody id="receiptItems"></tbody>
+
+        </table>
+        <div class="receipt-currency-note">Montants en FCFA</div>
+
+        <div class="receipt-total">
+
+          <span>
+            TOTAL
+          </span>
+
+          <span id="receiptTotal">
+            0 FCFA
+          </span>
+
+        </div>
+
+        <div
+          id="receiptPaymentBottom"
+          class="receipt-payment"
+        >
+          Paiement : —
+        </div>
+
+        <div class="receipt-footer">
+
+          <span data-receipt-footer>Merci pour votre confiance.</span>
+          <br>
+
+          <span class="receipt-software">Généré par PharmaGest</span>
+
+        </div>
+
+        <div class="receipt-actions no-print">
+
+          <button
+            id="printReceiptBtn"
+            class="btn btn-primary"
+          >
+            Imprimer le reçu
+          </button>
+
+          <button
+            id="newSaleBtn"
+            class="btn btn-secondary"
+          >
+            Nouvelle vente
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+<script src="assets/js/local-api.js"></script>
+<script src="assets/js/branding.js"></script>
+<script src="assets/js/mobile-role.js"></script><script src="assets/js/mobile-shell.js"></script><script src="assets/js/modals.js"></script>
+<script>
+  /* ============================================================
+     CONFIGURATION
+     ============================================================ */
+
+  const API_BASE = "/api";
+
+  let token =
+    localStorage.getItem("dpa_token");
+
+  let currentUser = null;
+
+  let products = [];
+
+  let cart = [];
+
+  /* ============================================================
+     ELEMENTS
+     ============================================================ */
+
+  const productsList =
+    document.getElementById(
+      "productsList"
+    );
+
+  const cartList =
+    document.getElementById(
+      "cartList"
+    );
+
+  const searchInput =
+    document.getElementById(
+      "searchInput"
+    );
+
+  const paymentMethod =
+    document.getElementById(
+      "paymentMethod"
+    );
+
+  const subtotalEl =
+    document.getElementById(
+      "subtotal"
+    );
+
+  const totalEl =
+    document.getElementById(
+      "total"
+    );
+
+  const itemCountEl =
+    document.getElementById(
+      "itemCount"
+    );
+
+  const cartCountEl =
+    document.getElementById(
+      "cartCount"
+    );
+
+  const validateSaleBtn =
+    document.getElementById(
+      "validateSaleBtn"
+    );
+
+  const clearCartBtn =
+    document.getElementById(
+      "clearCartBtn"
+    );
+
+  const messageEl =
+    document.getElementById(
+      "message"
+    );
+
+  const saleZone =
+    document.getElementById(
+      "saleZone"
+    );
+
+  const receiptSection =
+    document.getElementById(
+      "receiptSection"
+    );
+
+  const currentUserEl =
+    document.getElementById(
+      "currentUser"
+    );
+
+  const receiptNumberEl =
+    document.getElementById(
+      "receiptNumber"
+    );
+
+  const receiptDateEl =
+    document.getElementById(
+      "receiptDate"
+    );
+
+  const receiptSellerEl =
+    document.getElementById(
+      "receiptSeller"
+    );
+
+  const receiptPaymentEl =
+    document.getElementById(
+      "receiptPayment"
+    );
+
+  const receiptPaymentBottomEl =
+    document.getElementById(
+      "receiptPaymentBottom"
+    );
+
+  const receiptItemsEl =
+    document.getElementById(
+      "receiptItems"
+    );
+
+  const receiptTotalEl =
+    document.getElementById(
+      "receiptTotal"
+    );
+
+  const printReceiptBtn =
+    document.getElementById(
+      "printReceiptBtn"
+    );
+
+  const newSaleBtn =
+    document.getElementById(
+      "newSaleBtn"
+    );
+
+  /* ============================================================
+     ELEMENTS SCANNER
+     ============================================================ */
+
+  const openScannerBtn =
+    document.getElementById(
+      "openScannerBtn"
+    );
+
+  const closeScannerBtn =
+    document.getElementById(
+      "closeScannerBtn"
+    );
+
+  const restartScannerBtn =
+    document.getElementById(
+      "restartScannerBtn"
+    );
+
+  const manualScannerBtn =
+    document.getElementById(
+      "manualScannerBtn"
+    );
+
+  const scannerBox =
+    document.getElementById(
+      "scannerBox"
+    );
+
+  const scannerVideo =
+    document.getElementById(
+      "scannerVideo"
+    );
+
+  const scannerStatus =
+    document.getElementById(
+      "scannerStatus"
+    );
+
+  const manualScannerBox =
+    document.getElementById(
+      "manualScannerBox"
+    );
+
+  const manualBarcode =
+    document.getElementById(
+      "manualBarcode"
+    );
+
+  const manualBarcodeBtn =
+    document.getElementById(
+      "manualBarcodeBtn"
+    );
+
+  let scannerStream = null;
+
+  let scannerRunning = false;
+
+  let scannerBusy = false;
+
+  let barcodeDetector = null;
+
+  /* ============================================================
+     OUTILS
+     ============================================================ */
+
+  // Format reçu : espaces normaux (pas d'espace insécable fine mal rendue par l'imprimante), sans devise par ligne.
+  function receiptNumber(value) {
+    return String(Math.round(Number(value || 0))).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+  }
+
+  function formatMoney(value) {
+
+    const number =
+      Number(value || 0);
+
+    return new Intl.NumberFormat(
+      "fr-FR",
+      {
+        maximumFractionDigits: 0
+      }
+    ).format(number) + " FCFA";
+  }
+
+  function paymentLabel(method) {
+
+    const labels = {
+      CASH: "Espèces",
+      MOBILE_MONEY: "Mobile Money",
+      CARD: "Carte bancaire"
+    };
+
+    return (
+      labels[method] ||
+      method ||
+      "—"
+    );
+  }
+
+  function escapeHtml(value) {
+
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  function showMessage(
+    text,
+    type
+  ) {
+
+    messageEl.textContent =
+      text;
+
+    messageEl.className =
+      "message " + type;
+  }
+
+  function clearMessage() {
+
+    messageEl.textContent =
+      "";
+
+    messageEl.className =
+      "message";
+  }
+
+  /* ============================================================
+     API
+     ============================================================ */
+
+  async function api(
+    path,
+    options = {}
+  ) {
+
+    const headers = {
+      "Content-Type":
+        "application/json",
+      ...(options.headers || {})
+    };
+
+    if (token) {
+
+      headers.Authorization =
+        "Bearer " + token;
+    }
+
+    const response =
+      await fetch(
+        API_BASE + path,
+        {
+          ...options,
+          headers
+        }
+      );
+
+    let data = null;
+
+    try {
+
+      data =
+        await response.json();
+
+    } catch {
+
+      data = null;
+    }
+
+    if (!response.ok) {
+
+      throw new Error(
+        data?.message ||
+        data?.error ||
+        "Une erreur est survenue."
+      );
+    }
+
+    return data;
+  }
+
+  /* ============================================================
+     UTILISATEUR
+     ============================================================ */
+
+  async function loadCurrentUser() {
+
+    const data =
+      await api("/me");
+
+    currentUser =
+      data?.user ||
+      data;
+
+    const displayName =
+      currentUser?.name ||
+      currentUser?.full_name ||
+      currentUser?.username ||
+      currentUser?.email ||
+      "Utilisateur";
+
+    currentUserEl.textContent =
+      displayName;
+  }
+
+  /* ============================================================
+     PRODUITS
+     ============================================================ */
+
+  async function loadProducts() {
+
+    const data =
+      await api(
+        "/products"
+      );
+
+    products =
+      Array.isArray(data)
+        ? data
+        : (
+            data?.products ||
+            data?.items ||
+            []
+          );
+
+    renderProducts();
+  }
+
+  function getProductStock(
+    product
+  ) {
+
+    return Number(
+      product.stock_quantity ??
+      product.stock ??
+      product.quantity ??
+      0
+    );
+  }
+
+  function renderProducts() {
+
+    const query =
+      searchInput.value
+        .trim()
+        .toLowerCase();
+
+    const filtered =
+      products.filter(
+        product => {
+
+          const name =
+            String(
+              product.name || ""
+            ).toLowerCase();
+
+          const code =
+            String(
+              product.code || ""
+            ).toLowerCase();
+
+          return (
+            !query ||
+            name.includes(query) ||
+            code.includes(query)
+          );
+        }
+      );
+
+    if (!filtered.length) {
+
+      productsList.innerHTML = `
+        <div class="empty">
+          Aucun produit trouvé.
+        </div>
+      `;
+
+      return;
+    }
+
+    productsList.innerHTML =
+      filtered
+        .map(product => {
+
+          const stock =
+            getProductStock(
+              product
+            );
+
+          return `
+            <div class="product">
+
+              <div>
+
+                <div class="product-name">
+                  ${escapeHtml(
+                    product.name
+                  )}
+                </div>
+
+                <div class="product-code">
+                  Code :
+                  ${escapeHtml(
+                    product.code
+                  )}
+                </div>
+
+                <div class="product-price">
+                  ${formatMoney(
+                    product.sale_price
+                  )}
+                </div>
+
+                <div class="stock-info">
+                  Stock disponible :
+                  ${stock}
+                </div>
+
+              </div>
+
+              <button
+                class="btn btn-primary"
+                type="button"
+                data-add-product="${escapeHtml(
+                  product.id
+                )}"
+                ${stock <= 0
+                  ? "disabled"
+                  : ""}
+              >
+                Ajouter
+              </button>
+
+            </div>
+          `;
+        })
+        .join("");
+  }
+
+  /* ============================================================
+     PANIER
+     ============================================================ */
+
+  function addProduct(
+    productId
+  ) {
+
+    const product =
+      products.find(
+        item =>
+          String(item.id) ===
+          String(productId)
+      );
+
+    if (!product) {
+
+      showMessage(
+        "Produit introuvable.",
+        "error"
+      );
+
+      return;
+    }
+
+    const stock =
+      getProductStock(
+        product
+      );
+
+    if (stock <= 0) {
+
+      showMessage(
+        "Stock insuffisant pour ce produit.",
+        "error"
+      );
+
+      return;
+    }
+
+    const existing =
+      cart.find(
+        item =>
+          String(
+            item.product.id
+          ) ===
+          String(product.id)
+      );
+
+    if (existing) {
+
+      if (
+        existing.quantity >=
+        stock
+      ) {
+
+        showMessage(
+          "La quantité demandée dépasse le stock disponible.",
+          "error"
+        );
+
+        return;
+      }
+
+      existing.quantity += 1;
+
+    } else {
+
+      cart.push({
+        product,
+        quantity: 1
+      });
+    }
+
+    clearMessage();
+
+    renderCart();
+  }
+
+  function changeQuantity(
+    productId,
+    delta
+  ) {
+
+    const item =
+      cart.find(
+        cartItem =>
+          String(
+            cartItem.product.id
+          ) ===
+          String(productId)
+      );
+
+    if (!item) {
+      return;
+    }
+
+    const stock =
+      getProductStock(
+        item.product
+      );
+
+    item.quantity += delta;
+
+    if (
+      item.quantity <= 0
+    ) {
+
+      cart =
+        cart.filter(
+          cartItem =>
+            String(
+              cartItem.product.id
+            ) !==
+            String(productId)
+        );
+
+    } else if (
+      item.quantity > stock
+    ) {
+
+      item.quantity = stock;
+
+      showMessage(
+        "La quantité ne peut pas dépasser le stock disponible.",
+        "error"
+      );
+    }
+
+    renderCart();
+  }
+
+  function removeProduct(
+    productId
+  ) {
+
+    cart =
+      cart.filter(
+        item =>
+          String(
+            item.product.id
+          ) !==
+          String(productId)
+      );
+
+    renderCart();
+  }
+
+  function renderCart() {
+
+    if (!cart.length) {
+
+      cartList.innerHTML = `
+        <div class="empty">
+          Aucun produit dans le panier.
+        </div>
+      `;
+
+      subtotalEl.textContent =
+        "0 FCFA";
+
+      totalEl.textContent =
+        "0 FCFA";
+
+      itemCountEl.textContent =
+        "0";
+
+      cartCountEl.textContent =
+        "0 article";
+
+      validateSaleBtn.disabled =
+        true;
+
+      return;
+    }
+
+    let total = 0;
+
+    let itemCount = 0;
+
+    cartList.innerHTML =
+      cart
+        .map(item => {
+
+          const price =
+            Number(
+              item.product.sale_price ||
+              0
+            );
+
+          const lineTotal =
+            price *
+            item.quantity;
+
+          total += lineTotal;
+
+          itemCount +=
+            item.quantity;
+
+          return `
+            <div class="cart-item">
+
+              <div class="cart-item-top">
+
+                <div>
+
+                  <div class="cart-item-name">
+                    ${escapeHtml(
+                      item.product.name
+                    )}
+                  </div>
+
+                  <div class="cart-item-price">
+                    ${formatMoney(
+                      price
+                    )}
+                    / unité
+                  </div>
+
+                </div>
+
+                <button
+                  class="btn btn-danger"
+                  type="button"
+                  data-remove-product="${escapeHtml(
+                    item.product.id
+                  )}"
+                >
+                  Supprimer
+                </button>
+
+              </div>
+
+              <div class="cart-controls">
+
+                <div class="qty-controls">
+
+                  <button
+                    class="qty-btn"
+                    type="button"
+                    data-minus-product="${escapeHtml(
+                      item.product.id
+                    )}"
+                  >
+                    −
+                  </button>
+
+                  <span class="qty">
+                    ${item.quantity}
+                  </span>
+
+                  <button
+                    class="qty-btn"
+                    type="button"
+                    data-plus-product="${escapeHtml(
+                      item.product.id
+                    )}"
+                  >
+                    +
+                  </button>
+
+                </div>
+
+                <div class="line-total">
+                  ${formatMoney(
+                    lineTotal
+                  )}
+                </div>
+
+              </div>
+
+            </div>
+          `;
+        })
+        .join("");
+
+    subtotalEl.textContent =
+      formatMoney(total);
+
+    totalEl.textContent =
+      formatMoney(total);
+
+    itemCountEl.textContent =
+      String(itemCount);
+
+    cartCountEl.textContent =
+      itemCount +
+      (
+        itemCount > 1
+          ? " articles"
+          : " article"
+      );
+
+    validateSaleBtn.disabled =
+      false;
+  }
+
+  /* ============================================================
+     SCANNER — OUVERTURE
+     ============================================================ */
+
+  async function openScanner() {
+
+    scannerBox.hidden = false;
+
+    openScannerBtn.hidden = true;
+
+    scannerStatus.textContent =
+      "Demande d’accès à la caméra...";
+
+    manualScannerBox.hidden =
+      true;
+
+    await startCameraScanner();
+
+    scannerBox.scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+  }
+
+  /* ============================================================
+     SCANNER — FERMETURE
+     ============================================================ */
+
+  function closeScanner() {
+
+    stopCameraScanner();
+
+    scannerBox.hidden = true;
+
+    openScannerBtn.hidden = false;
+  }
+
+  /* ============================================================
+     SCANNER — ARRÊT CAMÉRA
+     ============================================================ */
+
+  function stopCameraScanner() {
+
+    scannerRunning = false;
+
+    scannerBusy = false;
+
+    if (scannerStream) {
+
+      scannerStream
+        .getTracks()
+        .forEach(
+          track => {
+            track.stop();
+          }
+        );
+
+      scannerStream = null;
+    }
+
+    scannerVideo.srcObject =
+      null;
+
+    if (
+      barcodeDetector
+    ) {
+
+      barcodeDetector =
+        null;
+    }
+  }
+
+  /* ============================================================
+     SCANNER — DÉMARRAGE CAMÉRA
+     ============================================================ */
+
+  async function startCameraScanner() {
+
+    stopCameraScanner();
+
+    scannerStatus.textContent =
+      "Préparation de la caméra...";
+
+    if (
+      !navigator.mediaDevices ||
+      !navigator.mediaDevices.getUserMedia
+    ) {
+
+      scannerStatus.textContent =
+        "La caméra n’est pas disponible dans ce navigateur. Utilisez la saisie manuelle.";
+
+      manualScannerBox.hidden =
+        false;
+
+      return;
+    }
+
+    if (
+      !window.isSecureContext &&
+      location.hostname !== "localhost" &&
+      location.hostname !== "127.0.0.1"
+    ) {
+
+      scannerStatus.textContent =
+        "La caméra nécessite une connexion sécurisée (HTTPS) ou localhost.";
+
+      manualScannerBox.hidden =
+        false;
+
+      return;
+    }
+
+    if (
+      !("BarcodeDetector" in window)
+    ) {
+
+      scannerStatus.textContent =
+        "La détection automatique des codes-barres n’est pas disponible dans ce navigateur. Utilisez la saisie manuelle.";
+
+      manualScannerBox.hidden =
+        false;
+
+      return;
+    }
+
+    try {
+
+      barcodeDetector =
+        new BarcodeDetector({
+          formats: [
+            "ean_13",
+            "ean_8",
+            "upc_a",
+            "upc_e",
+            "code_128",
+            "code_39",
+            "code_93",
+            "codabar",
+            "itf"
+          ]
+        });
+
+    } catch (error) {
+
+      console.error(
+        "BARCODE DETECTOR ERROR:",
+        error
+      );
+
+      scannerStatus.textContent =
+        "Le scanner de codes-barres n’est pas compatible avec ce navigateur.";
+
+      manualScannerBox.hidden =
+        false;
+
+      return;
+    }
+
+    try {
+
+      scannerStream =
+        await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: {
+              ideal: "environment"
+            },
+            width: {
+              ideal: 1280
+            },
+            height: {
+              ideal: 720
+            }
+          },
+          audio: false
+        });
+
+      scannerVideo.srcObject =
+        scannerStream;
+
+      await scannerVideo.play();
+
+      scannerRunning = true;
+
+      scannerStatus.textContent =
+        "Caméra active. Placez le code-barres dans le cadre.";
+
+      scanBarcodeLoop();
+
+    } catch (error) {
+
+      console.error(
+        "CAMERA ERROR:",
+        error
+      );
+
+      stopCameraScanner();
+
+      if (
+        error.name ===
+        "NotAllowedError"
+      ) {
+
+        scannerStatus.textContent =
+          "Accès à la caméra refusé par Android/WebView. Vérifiez que « Appareil photo » est autorisé pour PharmaGest, puis appuyez sur « Relancer ».";
+
+      } else if (
+        error.name ===
+        "NotFoundError"
+      ) {
+
+        scannerStatus.textContent =
+          "Aucune caméra disponible sur cet appareil.";
+
+      } else if (
+        error.name ===
+        "NotReadableError"
+      ) {
+
+        scannerStatus.textContent =
+          "La caméra est déjà utilisée par une autre application ou une autre page. Fermez cette caméra puis appuyez sur « Relancer ».";
+
+      } else if (
+        error.name ===
+        "SecurityError"
+      ) {
+
+        scannerStatus.textContent =
+          "Le navigateur bloque l’accès à la caméra pour des raisons de sécurité.";
+
+      } else {
+
+        scannerStatus.textContent =
+          "Impossible d’utiliser la caméra. Utilisez la saisie manuelle du code-barres.";
+
+      }
+
+      manualScannerBox.hidden =
+        false;
+    }
+  }
+
+  /* ============================================================
+     SCANNER — BOUCLE DE DÉTECTION
+     ============================================================ */
+
+  async function scanBarcodeLoop() {
+
+    if (
+      !scannerRunning ||
+      !barcodeDetector
+    ) {
+      return;
+    }
+
+    if (
+      scannerBusy
+    ) {
+
+      requestAnimationFrame(
+        scanBarcodeLoop
+      );
+
+      return;
+    }
+
+    if (
+      scannerVideo.readyState <
+      HTMLMediaElement.HAVE_ENOUGH_DATA
+    ) {
+
+      requestAnimationFrame(
+        scanBarcodeLoop
+      );
+
+      return;
+    }
+
+    try {
+
+      const barcodes =
+        await barcodeDetector.detect(
+          scannerVideo
+        );
+
+      if (
+        barcodes &&
+        barcodes.length > 0
+      ) {
+
+        const barcode =
+          String(
+            barcodes[0].rawValue || ""
+          ).trim();
+
+        if (barcode) {
+
+          scannerBusy = true;
+
+          await handleScannedBarcode(
+            barcode
+          );
+
+          return;
+        }
+      }
+
+    } catch (error) {
+
+      console.error(
+        "BARCODE DETECTION ERROR:",
+        error
+      );
+    }
+
+    if (scannerRunning) {
+
+      setTimeout(
+        scanBarcodeLoop,
+        150
+      );
+    }
+  }
+
+  /* ============================================================
+     SCANNER — TRAITEMENT CODE
+     ============================================================ */
+
+  async function handleScannedBarcode(
+    barcode
+  ) {
+
+    if (!barcode) {
+      return;
+    }
+
+    scannerStatus.textContent =
+      "Code détecté : " +
+      barcode +
+      ". Recherche du produit...";
+
+    try {
+
+      const product =
+        await api(
+          "/products/scan?code=" +
+          encodeURIComponent(
+            barcode
+          )
+        );
+
+      const stock =
+        Number(
+          product.stock || 0
+        );
+
+      if (stock <= 0) {
+
+        throw new Error(
+          "Ce produit est actuellement en rupture de stock."
+        );
+      }
+
+      const existingProductIndex =
+        products.findIndex(
+          item =>
+            String(item.id) ===
+            String(product.id)
+        );
+
+      if (
+        existingProductIndex >= 0
+      ) {
+
+        products[
+          existingProductIndex
+        ] = product;
+
+      } else {
+
+        products.push(
+          product
+        );
+      }
+
+      const existingCartItem =
+        cart.find(
+          item =>
+            String(
+              item.product.id
+            ) ===
+            String(product.id)
+        );
+
+      if (
+        existingCartItem
+      ) {
+
+        if (
+          existingCartItem.quantity >=
+          stock
+        ) {
+
+          throw new Error(
+            "La quantité maximale disponible est déjà dans le panier."
+          );
+        }
+
+        existingCartItem.quantity +=
+          1;
+
+      } else {
+
+        cart.push({
+          product,
+          quantity: 1
+        });
+      }
+
+      renderCart();
+
+      showMessage(
+        product.name +
+        " ajouté au panier.",
+        "success"
+      );
+
+      scannerStatus.textContent =
+        product.name +
+        " ajouté au panier. Vous pouvez scanner un autre produit.";
+
+      /*
+       * IMPORTANT :
+       * On garde la caméra ouverte.
+       * Le vendeur peut donc scanner
+       * plusieurs produits successivement.
+       */
+
+      scannerBusy = false;
+
+      if (scannerRunning) {
+
+        setTimeout(
+          scanBarcodeLoop,
+          500
+        );
+      }
+
+    } catch (error) {
+
+      console.error(
+        "SCANNED PRODUCT ERROR:",
+        error
+      );
+
+      showMessage(
+        error.message ||
+        "Impossible d'ajouter le produit scanné.",
+        "error"
+      );
+
+      scannerStatus.textContent =
+        error.message ||
+        "Produit non trouvé.";
+
+      scannerBusy = false;
+
+      if (scannerRunning) {
+
+        setTimeout(
+          scanBarcodeLoop,
+          800
+        );
+      }
+    }
+  }
+
+  /* ============================================================
+     SAISIE MANUELLE DU CODE
+     ============================================================ */
+
+  async function searchManualBarcode() {
+
+    const barcode =
+      String(
+        manualBarcode.value || ""
+      ).trim();
+
+    if (!barcode) {
+
+      showMessage(
+        "Saisissez un code-barres.",
+        "error"
+      );
+
+      manualBarcode.focus();
+
+      return;
+    }
+
+    await handleScannedBarcode(
+      barcode
+    );
+
+    manualBarcode.value =
+      "";
+  }
+
+  /* ============================================================
+     VENTE
+     ============================================================ */
+
+  function buildSalePayload() {
+
+    const operationId = (globalThis.crypto?.randomUUID ? crypto.randomUUID() : 'sale-'+Date.now()+'-'+Math.random().toString(36).slice(2));
+    return {
+
+      operation_id: operationId,
+
+      payment_method:
+        paymentMethod.value,
+
+      items:
+        cart.map(item => ({
+
+          product_id:
+            item.product.id,
+
+          quantity:
+            item.quantity
+
+        }))
+    };
+  }
+
+  function extractSaleResponse(
+    data
+  ) {
+
+    const sale =
+      data?.sale ||
+      data?.data ||
+      data;
+
+    return {
+
+      saleNumber:
+        sale?.sale_number ||
+        data?.sale_number ||
+        "—",
+
+      total:
+        Number(
+          sale?.total ??
+          data?.total ??
+          cart.reduce(
+            (sum, item) =>
+              sum +
+              Number(
+                item.product.sale_price ||
+                0
+              ) *
+              item.quantity,
+            0
+          )
+        ),
+
+      createdAt:
+        sale?.created_at ||
+        data?.created_at ||
+        new Date().toISOString(),
+
+      paymentMethod:
+        sale?.payment_method ||
+        data?.payment_method ||
+        paymentMethod.value,
+
+      seller:
+        sale?.seller ||
+        data?.seller ||
+        currentUser?.name ||
+        currentUser?.full_name ||
+        currentUser?.username ||
+        currentUser?.email ||
+        "—"
+    };
+  }
+
+  function formatDateTime(
+    value
+  ) {
+
+    const date =
+      new Date(value);
+
+    if (
+      Number.isNaN(
+        date.getTime()
+      )
+    ) {
+
+      return String(
+        value || "—"
+      );
+    }
+
+    return new Intl.DateTimeFormat(
+      "fr-FR",
+      {
+        dateStyle: "short",
+        timeStyle: "medium"
+      }
+    ).format(date);
+  }
+
+  function renderReceipt(
+    saleData,
+    saleCart
+  ) {
+
+    receiptNumberEl.textContent =
+      saleData.saleNumber;
+
+    receiptDateEl.textContent =
+      formatDateTime(
+        saleData.createdAt
+      );
+
+    receiptSellerEl.textContent =
+      saleData.seller;
+
+    receiptPaymentEl.textContent =
+      paymentLabel(
+        saleData.paymentMethod
+      );
+
+    receiptPaymentBottomEl.textContent =
+      "Paiement : " +
+      paymentLabel(
+        saleData.paymentMethod
+      );
+
+    receiptItemsEl.innerHTML =
+      saleCart
+        .map(item => {
+
+          const product =
+            item.product;
+
+          const quantity =
+            Number(
+              item.quantity || 0
+            );
+
+          const unitPrice =
+            Number(
+              product.sale_price || 0
+            );
+
+          const lineTotal =
+            quantity *
+            unitPrice;
+
+          // Ligne 1 : nom du produit sur toute la largeur. Ligne 2 : code | Qté | PU | Total.
+          return `
+            <tr class="receipt-item-name-row">
+              <td colspan="4">${escapeHtml(product.name)}</td>
+            </tr>
+            <tr class="receipt-item-detail-row">
+              <td><span class="receipt-product-code">${escapeHtml(product.code || "")}</span></td>
+              <td class="right num">${quantity}</td>
+              <td class="right num">${receiptNumber(unitPrice)}</td>
+              <td class="right num">${receiptNumber(lineTotal)}</td>
+            </tr>
+          `;
+        })
+        .join("");
+
+    receiptTotalEl.textContent =
+      receiptNumber(
+        saleData.total
+      ) + " FCFA";
+
+    saleZone.classList.add(
+      "hidden"
+    );
+
+    receiptSection.classList.remove(
+      "hidden"
+    );
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  }
+
+  async function validateSale() {
+
+    if (!cart.length) {
+
+      showMessage(
+        "Ajoutez au moins un produit.",
+        "error"
+      );
+
+      return;
+    }
+
+    clearMessage();
+
+    validateSaleBtn.disabled =
+      true;
+
+    validateSaleBtn.textContent =
+      "Validation...";
+
+    const saleCart =
+      cart.map(item => ({
+
+        product: {
+          ...item.product
+        },
+
+        quantity:
+          item.quantity
+
+      }));
+
+    try {
+
+      const payload =
+        buildSalePayload();
+
+      const data =
+        await api(
+          "/sales",
+          {
+            method: "POST",
+            body:
+              JSON.stringify(
+                payload
+              )
+          }
+        );
+
+      const saleData =
+        extractSaleResponse(
+          data
+        );
+
+      /*
+       * Fermer proprement
+       * la caméra avant le reçu.
+       */
+      closeScanner();
+
+      renderReceipt(
+        saleData,
+        saleCart
+      );
+
+      cart = [];
+
+      await loadProducts();
+
+    } catch (error) {
+
+      showMessage(
+        error.message ||
+        "Impossible de valider la vente.",
+        "error"
+      );
+
+      validateSaleBtn.disabled =
+        false;
+
+      validateSaleBtn.textContent =
+        "Valider la vente";
+    }
+  }
+
+  function startNewSale() {
+
+    cart = [];
+
+    paymentMethod.value =
+      "CASH";
+
+    receiptSection.classList.add(
+      "hidden"
+    );
+
+    saleZone.classList.remove(
+      "hidden"
+    );
+
+    clearMessage();
+
+    validateSaleBtn.disabled =
+      true;
+
+    validateSaleBtn.textContent =
+      "Valider la vente";
+
+    renderCart();
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  }
+
+  /* ============================================================
+     ROLE — MENU ADMIN
+     ============================================================ */
+
+  function applyRoleAccess() {
+
+    let user = {};
+
+    try {
+
+      user =
+        JSON.parse(
+          localStorage.getItem(
+            "dpa_user"
+          ) || "{}"
+        );
+
+    } catch {
+
+      user = {};
+    }
+
+    const role =
+      String(
+        user.role || ""
+      ).toLowerCase();
+
+    if (
+      role === "seller"
+    ) {
+
+      document
+        .querySelectorAll(
+          ".admin-only"
+        )
+        .forEach(
+          element => {
+            element.style.display =
+              "none";
+          }
+        );
+    }
+  }
+
+  /* ============================================================
+     EVENEMENTS PRODUITS
+     ============================================================ */
+
+  searchInput.addEventListener(
+    "input",
+    renderProducts
+  );
+
+  productsList.addEventListener(
+    "click",
+    event => {
+
+      const button =
+        event.target.closest(
+          "[data-add-product]"
+        );
+
+      if (!button) {
+        return;
+      }
+
+      addProduct(
+        button.dataset.addProduct
+      );
+    }
+  );
+
+  /* ============================================================
+     EVENEMENTS PANIER
+     ============================================================ */
+
+  cartList.addEventListener(
+    "click",
+    event => {
+
+      const minus =
+        event.target.closest(
+          "[data-minus-product]"
+        );
+
+      const plus =
+        event.target.closest(
+          "[data-plus-product]"
+        );
+
+      const remove =
+        event.target.closest(
+          "[data-remove-product]"
+        );
+
+      if (minus) {
+
+        changeQuantity(
+          minus.dataset.minusProduct,
+          -1
+        );
+      }
+
+      if (plus) {
+
+        changeQuantity(
+          plus.dataset.plusProduct,
+          1
+        );
+      }
+
+      if (remove) {
+
+        removeProduct(
+          remove.dataset.removeProduct
+        );
+      }
+    }
+  );
+
+  /* ============================================================
+     EVENEMENTS SCANNER
+     ============================================================ */
+
+  openScannerBtn.addEventListener(
+    "click",
+    async () => {
+
+      try {
+
+        await openScanner();
+
+      } catch (error) {
+
+        console.error(
+          "OPEN SCANNER ERROR:",
+          error
+        );
+
+        scannerStatus.textContent =
+          "Impossible d’ouvrir la caméra.";
+
+      }
+    }
+  );
+
+  closeScannerBtn.addEventListener(
+    "click",
+    () => {
+
+      closeScanner();
+
+    }
+  );
+
+  restartScannerBtn.addEventListener(
+    "click",
+    async () => {
+
+      await startCameraScanner();
+
+    }
+  );
+
+  manualScannerBtn.addEventListener(
+    "click",
+    () => {
+
+      manualScannerBox.hidden =
+        !manualScannerBox.hidden;
+
+      if (
+        !manualScannerBox.hidden
+      ) {
+
+        manualBarcode.focus();
+      }
+    }
+  );
+
+  manualBarcodeBtn.addEventListener(
+    "click",
+    searchManualBarcode
+  );
+
+  manualBarcode.addEventListener(
+    "keydown",
+    event => {
+
+      if (
+        event.key === "Enter"
+      ) {
+
+        searchManualBarcode();
+
+      }
+    }
+  );
+
+  /* ============================================================
+     EVENEMENTS VENTE
+     ============================================================ */
+
+  clearCartBtn.addEventListener(
+    "click",
+    () => {
+
+      cart = [];
+
+      clearMessage();
+
+      renderCart();
+    }
+  );
+
+  validateSaleBtn.addEventListener(
+    "click",
+    validateSale
+  );
+
+  printReceiptBtn.addEventListener(
+    "click",
+    () => {
+
+      if(window.PharmaGestNative?.printWebView){window.PharmaGestNative.printWebView()}else{window.print()}
+
+    }
+  );
+
+  newSaleBtn.addEventListener(
+    "click",
+    startNewSale
+  );
+
+  /* ============================================================
+     SECURITE :
+     FERMER LA CAMERA SI ON QUITTE LA PAGE
+     ============================================================ */
+
+  window.addEventListener(
+    "pagehide",
+    () => {
+
+      stopCameraScanner();
+
+    }
+  );
+
+  window.addEventListener(
+    "beforeunload",
+    () => {
+
+      stopCameraScanner();
+
+    }
+  );
+
+  /* ============================================================
+     INITIALISATION
+     ============================================================ */
+
+  async function refreshServerStatus(){
+    const statusEl=document.getElementById('serverStatus');
+    const detailEl=document.getElementById('syncStatusDetail');
+    if(!statusEl || !detailEl) return;
+    try{
+      if(typeof window.PharmaGestSyncStatus!=='function') throw new Error('État de synchronisation indisponible');
+      const state=await window.PharmaGestSyncStatus();
+      const connected=state.status==='connected';
+      statusEl.textContent=connected?'● Connecté au serveur Admin':'● NON connecté au serveur Admin';
+      statusEl.style.color=connected?'#15803d':'#b91c1c';
+      const last=state.last_sync?new Date(state.last_sync).toLocaleString('fr-FR'):'jamais';
+      detailEl.textContent=(state.pending?`${state.pending} vente(s) en attente de synchronisation · `:'')+`Dernière synchronisation : ${last}`+(state.error?` · ${state.error}`:'');
+    }catch(e){
+      statusEl.textContent='● État du serveur Admin inconnu';
+      statusEl.style.color='#b45309';
+      detailEl.textContent=e.message||'Vérification en cours';
+    }
+  }
+
+  async function init() {
+
+    if (!token) {
+
+      window.location.href =
+        "index.html";
+
+      return;
+    }
+
+    applyRoleAccess();
+
+    try {
+
+      await loadCurrentUser();
+
+      await loadProducts();
+
+      renderCart();
+
+      /* Arrivée depuis le scanner : scanner.html ouvre « vente.html?barcode=CODE ».
+         Ce paramètre n'était jamais lu, donc le produit scanné n'était jamais ajouté au panier. */
+      try {
+        const scanned = new URLSearchParams(window.location.search).get("barcode");
+        if (scanned) {
+          history.replaceState(null, "", window.location.pathname); // évite de réajouter au rechargement
+          await handleScannedBarcode(scanned);
+        }
+      } catch (scanError) {
+        console.error(scanError);
+      }
+
+      await refreshServerStatus();
+      setInterval(refreshServerStatus,2000);
+      window.addEventListener('online',refreshServerStatus);
+      window.addEventListener('offline',refreshServerStatus);
+
+    } catch (error) {
+
+      console.error(error);
+
+      showMessage(
+        error.message ||
+        "Impossible de charger la page de vente.",
+        "error"
+      );
+    }
+  }
+
+  init();
+</script>
+
+</body>
+</html>

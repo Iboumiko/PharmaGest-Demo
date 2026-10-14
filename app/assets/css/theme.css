@@ -1,0 +1,19 @@
+/* PharmaGest V52 — mode nuit / mode jour.
+   Mode nuit : inversion contrôlée des couleurs de toute la page (fonctionne sur toutes les pages, fenêtres et
+   contenus dynamiques compris), avec restauration des couleurs d'origine pour les images, tuiles colorées, logo,
+   avatars, caméra et reçus (le reçu reste « papier » blanc). */
+html[data-theme="dark"]{filter:invert(1) hue-rotate(180deg);background:#f2f2f2}
+html[data-theme="dark"] img,html[data-theme="dark"] video,html[data-theme="dark"] canvas,html[data-theme="dark"] picture,html[data-theme="dark"] iframe,
+html[data-theme="dark"] .pg-tile,html[data-theme="dark"] .pg-avatar,html[data-theme="dark"] .pg-logo,html[data-theme="dark"] .pg-keep-colors,
+html[data-theme="dark"] .camera-wrap,html[data-theme="dark"] #receiptSection .receipt,html[data-theme="dark"] .receipt-preview,
+html[data-theme="dark"] .pg-tab-badge,html[data-theme="dark"] .pg-d-badge,html[data-theme="dark"] .pg-badge,html[data-theme="dark"] .notif-dot,
+html[data-theme="dark"] .pg-tile-badge{filter:invert(1) hue-rotate(180deg)}
+/* Impression : toujours en mode jour */
+@media print{
+  html[data-theme="dark"]{filter:none!important;background:#fff!important}
+  html[data-theme="dark"] *{filter:none!important}
+}
+/* Bouton flottant (écran large, connexion, accueil) */
+#pgThemeFab{position:fixed;right:14px;bottom:14px;z-index:2147483000;width:46px;height:46px;border-radius:50%;border:1px solid #d3dae4;background:#fff;color:#0f2740;
+  box-shadow:0 6px 18px rgba(0,0,0,.18);font-size:22px;line-height:1;cursor:pointer;display:grid;place-items:center;padding:0}
+@media (max-width:720px){ body.pg-mobile #pgThemeFab{display:none} }

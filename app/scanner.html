@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head><script src="assets/js/demo-guard.js"></script><style id="pg-boot-css">html.pg-boot body{opacity:0!important}</style><script>(function(){var h=document.documentElement;h.classList.add("pg-boot");window.__pgShow=function(){h.classList.remove("pg-boot")};setTimeout(window.__pgShow,800);window.addEventListener("load",function(){setTimeout(window.__pgShow,50)});})();</script>
+<link rel="stylesheet" href="assets/css/app.css">
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>PharmaGest</title>
+
+  <style>
+
+    :root {
+      --navy: #082b52;
+      --blue: #155eef;
+      --turquoise: #12b8a6;
+      --bg: #f4f7fb;
+      --white: #ffffff;
+      --border: #dfe5ee;
+      --text: #172033;
+      --muted: #687386;
+      --danger: #d92d20;
+      --success: #079455;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: flex;
+    }
+
+    .sidebar {
+      width: 250px;
+      background: var(--navy);
+      color: white;
+      padding: 22px 14px;
+      flex-shrink: 0;
+    }
+
+    .brand {
+      padding:
+        4px
+        12px
+        22px;
+
+      border-bottom:
+        1px solid
+        rgba(255,255,255,.12);
+
+      margin-bottom: 16px;
+    }
+
+    .brand-title {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .brand-subtitle {
+      margin-top: 5px;
+      font-size: 12px;
+      color: #aebbd0;
+    }
+
+    .nav {
+      display: grid;
+      gap: 6px;
+    }
+
+    .nav a {
+      color: #dbe5f4;
+      text-decoration: none;
+      padding: 12px;
+      border-radius: 9px;
+      font-size: 14px;
+    }
+
+    .nav a:hover,
+    .nav a.active {
+      background:
+        rgba(255,255,255,.10);
+
+      color: white;
+    }
+
+    .main {
+      flex: 1;
+      min-width: 0;
+      padding: 24px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 22px;
+    }
+
+    .page-title {
+      margin: 0;
+      color: var(--navy);
+      font-size: 27px;
+    }
+
+    .page-subtitle {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .user-box {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 13px;
+    }
+
+    .scanner-card {
+      max-width: 850px;
+      margin: 0 auto;
+      background: white;
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .scanner-header {
+      padding: 22px;
+      border-bottom:
+        1px solid
+        var(--border);
+
+      text-align: center;
+    }
+
+    .scanner-header h2 {
+      margin: 0;
+      color: var(--navy);
+    }
+
+    .scanner-header p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .scanner-body {
+      padding: 22px;
+    }
+
+    .camera-wrap {
+      position: relative;
+      width: 100%;
+      max-width: 650px;
+      margin: 0 auto;
+      background: #000;
+      border-radius: 14px;
+      overflow: hidden;
+      aspect-ratio: 4 / 3;
+    }
+
+    #video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .scan-frame {
+      position: absolute;
+      left: 12%;
+      right: 12%;
+      top: 25%;
+      bottom: 25%;
+      border:
+        3px solid
+        #12b8a6;
+
+      border-radius: 14px;
+      pointer-events: none;
+      box-shadow:
+        0 0 0 9999px
+        rgba(0,0,0,.18);
+    }
+
+    .scan-line {
+      position: absolute;
+      left: 14%;
+      right: 14%;
+      top: 50%;
+      height: 2px;
+      background: #fff;
+      opacity: .8;
+      animation:
+        scanLine 2s infinite
+        ease-in-out;
+    }
+
+    @keyframes scanLine {
+
+      0% {
+        transform: translateY(-80px);
+      }
+
+      50% {
+        transform: translateY(80px);
+      }
+
+      100% {
+        transform: translateY(-80px);
+      }
+    }
+
+    .status {
+      margin-top: 16px;
+      padding: 13px 15px;
+      border-radius: 9px;
+      background: #eef4fa;
+      color: var(--muted);
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .status.success {
+      background: #eafaf3;
+      color: var(--success);
+    }
+
+    .status.error {
+      background: #fff1f0;
+      color: var(--danger);
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 9px;
+      padding: 12px 18px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: white;
+    }
+
+    .btn-secondary {
+      background: #edf1f6;
+      color: var(--text);
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+    }
+
+    .btn:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    .manual {
+      margin-top: 25px;
+      padding-top: 22px;
+      border-top:
+        1px solid
+        var(--border);
+    }
+
+    .manual h3 {
+      margin: 0 0 8px;
+      color: var(--navy);
+      font-size: 16px;
+    }
+
+    .manual p {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+
+    .manual-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .manual input {
+      flex: 1;
+      min-width: 0;
+      padding: 12px;
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 9px;
+      outline: none;
+    }
+
+    .manual input:focus {
+      border-color: var(--blue);
+    }
+
+    .product-result {
+      margin-top: 20px;
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 12px;
+      padding: 18px;
+      display: none;
+    }
+
+    .product-result.visible {
+      display: block;
+    }
+
+    .product-name {
+      color: var(--navy);
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .product-code {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .product-details {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns:
+        repeat(3, 1fr);
+
+      gap: 10px;
+    }
+
+    .detail {
+      background: #f7f9fc;
+      padding: 12px;
+      border-radius: 8px;
+    }
+
+    .detail-label {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .detail-value {
+      margin-top: 4px;
+      font-weight: 700;
+    }
+
+    @media (max-width: 800px) {
+
+      .sidebar {
+        display: none;
+      }
+
+      .main {
+        padding: 15px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+      }
+
+      .page-title {
+        font-size: 22px;
+      }
+
+      .product-details {
+        grid-template-columns: 1fr;
+      }
+
+      .manual-row {
+        flex-direction: column;
+      }
+
+    }
+
+  </style>
+
+<link rel="stylesheet" href="assets/css/mobile-shell.css">
+<link rel="stylesheet" href="assets/css/theme.css">
+<script src="assets/js/theme.js"></script>
+<link rel="stylesheet" href="assets/css/modals.css">
+</head>
+
+<body>
+
+<div class="app">
+
+  <aside class="sidebar">
+
+    <div class="brand">
+
+      <div class="brand-title">
+        <span data-establishment-name>Nom de l’établissement</span>
+      </div>
+
+      <div class="brand-subtitle">
+        Gestion pharmaceutique professionnelle
+      </div>
+
+    </div>
+
+    <nav class="nav">
+
+      <a href="index.html">
+        📊 Dashboard
+      </a>
+
+      <a href="vente.html">
+        🛒 Vente
+      </a>
+
+      <a
+        href="scanner.html"
+        class="active"
+      >
+        📷 Scanner
+      </a>
+
+    </nav>
+
+  </aside>
+
+  <main class="main">
+
+    <div class="topbar">
+
+      <div>
+
+        <h1 class="page-title">
+          Scanner un produit
+        </h1>
+
+        <p class="page-subtitle">
+          Scannez le code-barres pour ajouter automatiquement le produit à la vente.
+        </p>
+
+      </div>
+
+      <div class="user-box">
+        Vendeur :
+        <strong id="userName">
+          Chargement...
+        </strong>
+      </div>
+
+    </div>
+
+
+    <section class="scanner-card">
+
+      <div class="scanner-header">
+
+        <h2>
+          📷 Scanner
+        </h2>
+
+        <p>
+          Placez le code-barres dans le cadre.
+        </p>
+
+      </div>
+
+
+      <div class="scanner-body">
+
+        <div class="camera-wrap">
+
+          <video
+            id="video"
+            autoplay
+            muted
+            playsinline
+          ></video>
+
+          <div class="scan-frame"></div>
+
+          <div class="scan-line"></div>
+
+        </div>
+
+
+        <div
+          id="status"
+          class="status"
+        >
+          Appuyez sur « Démarrer la caméra ».
+        </div>
+
+
+        <div class="actions">
+
+          <button
+            id="startBtn"
+            class="btn btn-primary"
+            type="button"
+          >
+            📷 Démarrer la caméra
+          </button>
+
+          <button
+            id="stopBtn"
+            class="btn btn-danger"
+            type="button"
+            disabled
+          >
+            Arrêter
+          </button>
+
+          <button
+            id="saleBtn"
+            class="btn btn-secondary"
+            type="button"
+          >
+            🛒 Aller à la vente
+          </button>
+
+        </div>
+
+
+        <div class="manual">
+
+          <h3>
+            Saisie manuelle
+          </h3>
+
+          <p>
+            Si la caméra ne fonctionne pas, vous pouvez saisir le code-barres.
+          </p>
+
+          <div class="manual-row">
+
+            <input
+              id="manualCode"
+              type="text"
+              placeholder="Ex. 340093..."
+              autocomplete="off"
+            >
+
+            <button
+              id="manualBtn"
+              class="btn btn-primary"
+              type="button"
+            >
+              Rechercher
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <div
+          id="productResult"
+          class="product-result"
+        >
+
+          <div
+            id="productName"
+            class="product-name"
+          ></div>
+
+          <div
+            id="productCode"
+            class="product-code"
+          ></div>
+
+          <div class="product-details">
+
+            <div class="detail">
+
+              <div class="detail-label">
+                Prix de vente
+              </div>
+
+              <div
+                id="productPrice"
+                class="detail-value"
+              >
+                —
+              </div>
+
+            </div>
+
+            <div class="detail">
+
+              <div class="detail-label">
+                Stock
+              </div>
+
+              <div
+                id="productStock"
+                class="detail-value"
+              >
+                —
+              </div>
+
+            </div>
+
+            <div class="detail">
+
+              <div class="detail-label">
+                Code lu
+              </div>
+
+              <div
+                id="productScannedCode"
+                class="detail-value"
+              >
+                —
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+
+<script src="assets/js/local-api.js"></script>
+<script src="assets/js/branding.js"></script>
+<script src="assets/js/mobile-role.js"></script><script src="assets/js/mobile-shell.js"></script><script src="assets/js/modals.js"></script>
+<script>
+
+  const API = "/api";
+
+  const token =
+    localStorage.getItem(
+      "dpa_token"
+    );
+
+  const storedUser =
+    JSON.parse(
+      localStorage.getItem(
+        "dpa_user"
+      ) || "{}"
+    );
+
+
+  const video =
+    document.getElementById(
+      "video"
+    );
+
+  const statusEl =
+    document.getElementById(
+      "status"
+    );
+
+  const startBtn =
+    document.getElementById(
+      "startBtn"
+    );
+
+  const stopBtn =
+    document.getElementById(
+      "stopBtn"
+    );
+
+  const saleBtn =
+    document.getElementById(
+      "saleBtn"
+    );
+
+  const manualCode =
+    document.getElementById(
+      "manualCode"
+    );
+
+  const manualBtn =
+    document.getElementById(
+      "manualBtn"
+    );
+
+  const productResult =
+    document.getElementById(
+      "productResult"
+    );
+
+
+  let stream = null;
+
+  let detector = null;
+
+  let scanning = false;
+
+  let lastCode = "";
+
+  let lastScanTime = 0;
+
+
+  function setStatus(
+    message,
+    type = ""
+  ) {
+
+    statusEl.textContent =
+      message;
+
+    statusEl.className =
+      "status " + type;
+  }
+
+
+  function formatMoney(value) {
+
+    return (
+      Number(value || 0)
+        .toLocaleString("fr-FR") +
+      " FCFA"
+    );
+  }
+
+
+  async function api(
+    path
+  ) {
+
+    const response =
+      await fetch(
+        API + path,
+        {
+          headers: {
+            Authorization:
+              "Bearer " + token
+          }
+        }
+      );
+
+    let data = null;
+
+    try {
+      data =
+        await response.json();
+    } catch {
+      data = null;
+    }
+
+    if (!response.ok) {
+
+      throw new Error(
+        data?.error ||
+        "Erreur serveur"
+      );
+    }
+
+    return data;
+  }
+
+
+  async function lookupCode(
+    code
+  ) {
+
+    const clean =
+      String(code || "")
+        .trim();
+
+    if (!clean) {
+      return;
+    }
+
+
+    const now =
+      Date.now();
+
+    /*
+     * Évite qu'une caméra
+     * détecte le même code
+     * plusieurs fois par seconde.
+     */
+    if (
+      clean === lastCode &&
+      now - lastScanTime < 1800
+    ) {
+      return;
+    }
+
+    lastCode =
+      clean;
+
+    lastScanTime =
+      now;
+
+
+    setStatus(
+      "Recherche du produit...",
+      ""
+    );
+
+
+    try {
+
+      const product =
+        await api(
+          "/products/scan?code=" +
+          encodeURIComponent(
+            clean
+          )
+        );
+
+
+      document.getElementById(
+        "productName"
+      ).textContent =
+        product.name || "Produit";
+
+
+      document.getElementById(
+        "productCode"
+      ).textContent =
+        "Code produit : " +
+        (product.code || "—");
+
+
+      document.getElementById(
+        "productPrice"
+      ).textContent =
+        formatMoney(
+          product.sale_price
+        );
+
+
+      document.getElementById(
+        "productStock"
+      ).textContent =
+        Number(
+          product.stock || 0
+        );
+
+
+      document.getElementById(
+        "productScannedCode"
+      ).textContent =
+        clean;
+
+
+      productResult.classList.add(
+        "visible"
+      );
+
+
+      if (
+        Number(product.stock || 0) <= 0
+      ) {
+
+        setStatus(
+          "Produit trouvé, mais stock insuffisant.",
+          "error"
+        );
+
+        return;
+      }
+
+
+      setStatus(
+        "Produit trouvé. Ouverture de la vente...",
+        "success"
+      );
+
+
+      /*
+       * Le code est transmis
+       * à vente.html.
+       *
+       * vente.html va ensuite
+       * demander le produit au
+       * serveur et l'ajouter
+       * automatiquement au panier.
+       */
+
+      setTimeout(
+        () => {
+
+          window.location.href =
+            "vente.html?barcode=" +
+            encodeURIComponent(
+              clean
+            );
+
+        },
+        500
+      );
+
+
+    } catch (error) {
+
+      console.error(error);
+
+      productResult.classList.remove(
+        "visible"
+      );
+
+      setStatus(
+        error.message ||
+        "Produit introuvable.",
+        "error"
+      );
+    }
+
+  }
+
+
+  async function startCamera() {
+
+    if (!token) {
+
+      window.location.replace(
+        "login.html"
+      );
+
+      return;
+    }
+
+
+    if (
+      !navigator.mediaDevices ||
+      !navigator.mediaDevices.getUserMedia
+    ) {
+
+      setStatus(
+        "La caméra n'est pas disponible sur ce navigateur.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    if (
+      !("BarcodeDetector" in window)
+    ) {
+
+      setStatus(
+        "Le scanner caméra natif n'est pas disponible sur ce navigateur. Utilisez la saisie manuelle du code-barres.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    try {
+
+      let formats = [
+        "ean_13",
+        "ean_8",
+        "upc_a",
+        "upc_e",
+        "code_128",
+        "code_39",
+        "code_93",
+        "itf",
+        "codabar"
+      ];
+
+
+      /*
+       * Certains navigateurs
+       * acceptent seulement une
+       * partie des formats.
+       */
+      if (
+        BarcodeDetector.getSupportedFormats
+      ) {
+
+        const supported =
+          await BarcodeDetector
+            .getSupportedFormats();
+
+        formats =
+          formats.filter(
+            format =>
+              supported.includes(
+                format
+              )
+          );
+
+      }
+
+
+      if (!formats.length) {
+
+        throw new Error(
+          "Aucun format de code-barres compatible."
+        );
+      }
+
+
+      detector =
+        new BarcodeDetector({
+          formats
+        });
+
+
+      stream =
+        await navigator.mediaDevices
+          .getUserMedia({
+            video: {
+              facingMode: {
+                ideal: "environment"
+              },
+              width: {
+                ideal: 1280
+              },
+              height: {
+                ideal: 720
+              }
+            },
+            audio: false
+          });
+
+
+      video.srcObject =
+        stream;
+
+
+      scanning = true;
+
+      startBtn.disabled =
+        true;
+
+      stopBtn.disabled =
+        false;
+
+
+      setStatus(
+        "Caméra active. Présentez le code-barres.",
+        "success"
+      );
+
+
+      scanLoop();
+
+
+    } catch (error) {
+
+      console.error(error);
+
+      stopCamera();
+
+      setStatus(
+        "Impossible d'ouvrir la caméra : " +
+        error.message,
+        "error"
+      );
+    }
+
+  }
+
+
+  async function scanLoop() {
+
+    if (!scanning) {
+      return;
+    }
+
+
+    try {
+
+      const barcodes =
+        await detector.detect(
+          video
+        );
+
+
+      if (
+        barcodes &&
+        barcodes.length
+      ) {
+
+        const code =
+          barcodes[0].rawValue;
+
+
+        if (code) {
+
+          stopCamera();
+
+          await lookupCode(
+            code
+          );
+
+          return;
+        }
+
+      }
+
+    } catch (error) {
+
+      console.warn(
+        "SCAN ERROR:",
+        error
+      );
+    }
+
+
+    requestAnimationFrame(
+      scanLoop
+    );
+
+  }
+
+
+  function stopCamera() {
+
+    scanning = false;
+
+
+    if (stream) {
+
+      stream
+        .getTracks()
+        .forEach(
+          track =>
+            track.stop()
+        );
+
+      stream = null;
+    }
+
+
+    video.srcObject =
+      null;
+
+
+    startBtn.disabled =
+      false;
+
+    stopBtn.disabled =
+      true;
+
+  }
+
+
+  startBtn.addEventListener(
+    "click",
+    startCamera
+  );
+
+
+  stopBtn.addEventListener(
+    "click",
+    () => {
+
+      stopCamera();
+
+      setStatus(
+        "Caméra arrêtée."
+      );
+
+    }
+  );
+
+
+  manualBtn.addEventListener(
+    "click",
+    () => {
+
+      lookupCode(
+        manualCode.value
+      );
+
+    }
+  );
+
+
+  manualCode.addEventListener(
+    "keydown",
+    event => {
+
+      if (
+        event.key === "Enter"
+      ) {
+
+        lookupCode(
+          manualCode.value
+        );
+      }
+
+    }
+  );
+
+
+  saleBtn.addEventListener(
+    "click",
+    () => {
+
+      window.location.href =
+        "vente.html";
+
+    }
+  );
+
+
+  window.addEventListener(
+    "beforeunload",
+    stopCamera
+  );
+
+
+  /*
+   * Initialisation
+   */
+
+  if (!token) {
+
+    window.location.replace(
+      "login.html"
+    );
+
+  } else {
+
+    document.getElementById(
+      "userName"
+    ).textContent =
+      storedUser.name ||
+      storedUser.username ||
+      "Utilisateur";
+
+  }
+
+</script>
+
+</body>
+</html>

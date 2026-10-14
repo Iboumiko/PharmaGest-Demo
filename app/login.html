@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><script src="assets/js/demo-guard.js"></script><style id="pg-boot-css">html.pg-boot body{opacity:0!important}</style><script>(function(){var h=document.documentElement;h.classList.add("pg-boot");window.__pgShow=function(){h.classList.remove("pg-boot")};setTimeout(window.__pgShow,800);window.addEventListener("load",function(){setTimeout(window.__pgShow,50)});})();</script><link rel="stylesheet" href="assets/css/app.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Connexion — PharmaGest</title>
+
+  <style>
+    :root {
+      --navy: #071a2b;
+      --navy-light: #0d2c43;
+      --blue: #087ea4;
+      --cyan: #18b7b1;
+      --background: #f3f6f8;
+      --white: #ffffff;
+      --text: #15232d;
+      --muted: #71808b;
+      --danger: #c43c3c;
+      --border: #dce5ea;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(24,183,177,.16), transparent 35%),
+        linear-gradient(135deg, var(--navy), #0b344d);
+      color: var(--text);
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 430px;
+      background: var(--white);
+      border-radius: 18px;
+      padding: 34px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.22);
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .logo-main {
+      font-size: 27px;
+      font-weight: 900;
+      color: var(--navy);
+    }
+
+    .logo-main span {
+      color: var(--cyan);
+    }
+
+    .logo-sub {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 23px;
+      color: var(--navy);
+    }
+
+    .intro {
+      margin: 0 0 24px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      outline: none;
+      font-size: 15px;
+      background: #fff;
+    }
+
+    input:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 3px rgba(24,183,177,.12);
+    }
+
+    button {
+      width: 100%;
+      border: 0;
+      border-radius: 9px;
+      padding: 14px;
+      background: linear-gradient(90deg, var(--blue), var(--cyan));
+      color: white;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: .65;
+      cursor: wait;
+    }
+
+    .error {
+      display: none;
+      margin-bottom: 16px;
+      padding: 11px 13px;
+      border-radius: 8px;
+      background: #fff0f0;
+      border: 1px solid #f1c4c4;
+      color: var(--danger);
+      font-size: 13px;
+    }
+
+    .footer {
+      margin-top: 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 480px) {
+      .login-card {
+        padding: 26px 20px;
+      }
+    }
+  .logo-main span{color:#18b7b1}.secondary-button{width:100%;border:1px solid #d9e5ea;background:#eef7f8;color:#082b52;border-radius:10px;padding:11px 12px;font-weight:700;cursor:pointer}.secondary-button:hover{background:#e4f2f3}
+  </style>
+<link rel="stylesheet" href="assets/css/theme.css">
+<script src="assets/js/theme.js"></script>
+</head>
+
+<body>
+
+  <main class="login-card">
+
+    <div class="logo">
+      <div class="logo-main">
+        Pharma<span>Gest</span>
+      </div>
+
+      <div class="logo-sub">
+        Je suis un professionnel de dépôt pharmaceutique<br>
+        Gestion pharmaceutique professionnelle
+      </div>
+    </div>
+
+    <h1>Connexion</h1>
+
+    <p class="intro">
+      Connectez-vous à votre espace de gestion.
+    </p>
+
+    <div id="errorMessage" class="error"></div>
+
+    <form id="loginForm">
+
+      <div class="field">
+        <label for="username">Nom d'utilisateur</label>
+
+        <input
+          type="text"
+          id="username"
+          name="username"
+          autocomplete="username"
+          required
+          autofocus
+        >
+      </div>
+
+      <div class="field">
+        <label for="password">Mot de passe</label>
+
+        <input
+          type="password"
+          id="password"
+          name="password"
+          autocomplete="current-password"
+          required
+        >
+      </div>
+
+      <button type="submit" id="loginButton">
+        Se connecter
+      </button>
+
+    </form>
+
+    <div id="pairingBox" style="display:none;margin-top:14px">
+      <button type="button" id="scanPairingButton" class="secondary-button">Scanner le QR de connexion PharmaGest</button>
+      <div id="pairingStatus" class="muted" style="margin-top:8px;font-size:12px"></div>
+      <video id="pairingVideo" playsinline muted style="display:none;width:100%;margin-top:10px;border-radius:12px;background:#000"></video>
+      <button type="button" id="stopPairingButton" class="secondary-button" style="display:none;margin-top:8px">Arrêter le scanner</button><button type="button" id="openWifiButton" class="secondary-button" style="margin-top:8px">Ouvrir les réglages Wi‑Fi</button><button type="button" id="manualPairButton" class="secondary-button" style="margin-top:8px">Saisir le code d’appairage</button>
+    </div>
+
+    <div class="footer">
+      PharmaGest · Version 1.0 · 2026
+    </div>
+
+  </main>
+
+<script src="assets/js/local-api.js"></script>
+<script src="assets/js/qr-scan.js"></script>
+<script src="assets/js/mobile-role.js"></script>
+<script src="assets/js/branding.js"></script>
+<script>
+(function(){
+  const API_URL=`${window.location.protocol}//${window.location.host}`;
+  const form=document.getElementById('loginForm'),button=document.getElementById('loginButton'),errorMessage=document.getElementById('errorMessage');
+  const seller=(()=>{try{return window.PharmaGestNative?.getRole?.()==='seller'}catch{return false}})();
+  const pairingBox=document.getElementById('pairingBox'),scanBtn=document.getElementById('scanPairingButton'),stopBtn=document.getElementById('stopPairingButton'),openWifiBtn=document.getElementById('openWifiButton'),manualPairBtn=document.getElementById('manualPairButton'),manualPairArea=document.getElementById('manualPairArea'),pairingCodeInput=document.getElementById('pairingCodeInput'),video=document.getElementById('pairingVideo'),pairingStatus=document.getElementById('pairingStatus');
+  let pairingReady=!!localStorage.getItem('pg_pairing_ready'), pairingMode=false, stream=null, detector=null, scanning=false;
+  pairingBox.style.display='block';
+  if(seller){ if(pairingReady){pairingStatus.textContent='✓ Cet appareil est déjà appairé. Vous pouvez vous connecter normalement ou rejoindre un autre établissement.';}else{button.disabled=true;button.textContent='Appairage requis';pairingStatus.textContent='Scannez le QR de connexion généré par l’administrateur.';}}
+  else {pairingStatus.textContent='Optionnel : scannez le QR de connexion de votre établissement pour appairer cet appareil.';}
+  function showError(msg){errorMessage.textContent=msg;errorMessage.style.display='block';}
+  function stopScan(){scanning=false;try{window.PharmaQrScanner&&window.PharmaQrScanner.stop();}catch(e){}if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}video.style.display='none';stopBtn.style.display='none';scanBtn.style.display='block';}
+  async function startScan(){
+    errorMessage.style.display='none';
+    try{ await ensureWifiOn('puis scannez le QR'); }catch(e){}
+    try{
+      video.style.display='block';scanBtn.style.display='none';stopBtn.style.display='block';
+      await window.PharmaQrScanner.start(video,{onCode:onPairScan});
+      scanning=true;pairingStatus.textContent='Présentez le QR d’appairage devant la caméra.';
+    }catch(e){stopScan();showError('Impossible d’ouvrir le scanner : '+(e.message||e)+' Utilisez le code à 6 chiffres (plan de secours).');}
+  }
+  function onPairScan(raw){
+    let data=null;try{data=JSON.parse(raw)}catch{}
+    if(data?.type==='pharmagest-pair'&&data.base&&data.token){stopScan();handlePairPayload(data);return true;}
+    showError('Ce QR code n’est pas un code d’appairage PharmaGest.');return false;
+  }
+  const rescanMode=/[?&]rescan=1/.test(location.search);
+  const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+  function validBase(b){return /^http:\/\/(\d{1,3}\.){3}\d{1,3}:\d{2,5}$/.test(String(b||''));}
+  function nativeStatus(){try{return JSON.parse(window.PharmaGestNative?.getNetworkStatusJson?.()||'{}')}catch{return {}}}
+  // V69 : Wi-Fi éteint -> on ouvre la fenêtre d'activation d'Android et on attend, puis on continue (scan / connexion au réseau Admin).
+  function wifiOn(){try{const N=window.PharmaGestNative;return (N&&typeof N.isWifiEnabled==='function')?!!N.isWifiEnabled():true}catch{return true}}
+  async function ensureWifiOn(why){
+    if(wifiOn())return true;
+    pairingStatus.textContent='Le Wi‑Fi est désactivé. Activez-le dans la fenêtre Android, puis revenez ici '+(why||'')+'.';
+    try{openWifiBtn.style.display='block'}catch{}
+    let away=false, backAt=0;
+    const gone=()=>{away=true}, back=()=>{ if(away&&!backAt)backAt=Date.now(); };
+    const vis=()=>{ document.hidden?gone():back(); };
+    window.addEventListener('blur',gone);window.addEventListener('focus',back);document.addEventListener('visibilitychange',vis);
+    try{window.PharmaGestNative?.openWifiSettingsFromWeb?.()}catch{}
+    try{
+      for(let i=0;i<120;i++){
+        await sleep(500);
+        if(wifiOn()){await sleep(1200);return true;}
+        if(backAt&&Date.now()-backAt>6000)break;   // l'utilisateur est revenu sans activer le Wi‑Fi
+      }
+    }finally{window.removeEventListener('blur',gone);window.removeEventListener('focus',back);document.removeEventListener('visibilitychange',vis);}
+    return false;
+  }
+  let lastPairData=null, retryNetBtn=null;
+  function showRetryNet(){
+    if(!lastPairData||!lastPairData.ssid)return;
+    if(!retryNetBtn){
+      retryNetBtn=document.createElement('button');retryNetBtn.type='button';retryNetBtn.className='secondary-button';retryNetBtn.style.marginTop='8px';
+      retryNetBtn.textContent='Se connecter au réseau Admin';
+      retryNetBtn.addEventListener('click',async()=>{
+        retryNetBtn.disabled=true;
+        try{
+          if(!(await ensureWifiOn('pour vous connecter au réseau Admin'))){showError('Le Wi‑Fi doit être activé pour rejoindre le réseau de l’Admin.');return;}
+          const j=await joinHotspot(lastPairData);
+          if(j==='connected'){pairingStatus.textContent='✓ Connecté au réseau Admin. Saisissez maintenant vos identifiants.';retryNetBtn.style.display='none';errorMessage.style.display='none';}
+          else if(j==='failed'||j==='timeout'){showError('Connexion au réseau Admin impossible. Appuyez de nouveau sur « Se connecter au réseau Admin » et acceptez la demande d’Android.');}
+        }finally{retryNetBtn.disabled=false;}
+      });
+      pairingStatus.parentNode.insertBefore(retryNetBtn,pairingStatus.nextSibling);
+    }
+    retryNetBtn.style.display='block';
+  }
+  // Connexion automatique au hotspot Admin (Android 10+ : Android demande une confirmation). Ne plante jamais.
+  async function joinHotspot(data){
+    try{
+      if(!data.ssid||typeof window.PharmaGestNative?.connectToHotspot!=='function')return 'manual';
+      pairingStatus.textContent='Connexion au réseau « '+data.ssid+' »… Acceptez la demande d’Android.';
+      const start=String(window.PharmaGestNative.connectToHotspot(String(data.ssid),String(data.password||''))||'');
+      if(start==='MANUAL'||start.startsWith('ERROR'))return 'manual';
+      for(let i=0;i<70;i++){
+        await sleep(500);
+        const st=nativeStatus();
+        if(st.wifiResult==='connected')return 'connected';
+        if(st.wifiResult==='failed')return 'failed';
+      }
+      return 'timeout';
+    }catch(e){return 'manual';}
+  }
+  async function handlePairPayload(data){
+    errorMessage.style.display='none';
+    if(!validBase(data.base)){showError('Ce QR code contient une adresse de serveur invalide.');return;}
+    const storedAdmin=localStorage.getItem('pg_paired_admin')||'';
+    const alreadyPaired=pairingReady||rescanMode;
+    if(alreadyPaired&&storedAdmin&&data.admin_id&&String(data.admin_id)!==storedAdmin){
+      showError('Ce QR appartient à un autre établissement que celui auquel ce téléphone est appairé.');
+      pairingStatus.textContent='QR refusé : autre établissement.';
+      return;
+    }
+    try{window.PharmaGestNative?.setServerBase?.(String(data.base));}catch{}
+    lastPairData=data;
+    if(data.ssid) await ensureWifiOn('pour vous connecter au réseau Admin');
+    let joined=await joinHotspot(data);
+    if(joined==='failed') { await sleep(800); joined=await joinHotspot(data); }
+    if(joined==='connected'&&retryNetBtn) retryNetBtn.style.display='none';
+    if(alreadyPaired){
+      // Retour chez l'admin : pas d'identifiants, on vérifie l'appairage puis on synchronise.
+      if(joined==='failed'||joined==='timeout'){showError('Connexion au réseau Admin impossible. Réessayez, ou connectez-vous au Wi‑Fi de l’Admin manuellement puis rescannez.');return;}
+      pairingStatus.textContent='Vérification de l’appairage…';
+      try{
+        const did=localStorage.getItem('pharmagest_device_id')||'';
+        let ok=false,lastErr='';
+        for(let i=0;i<6&&!ok;i++){
+          try{
+            const r=await fetch('/api/pairing/status?device_id='+encodeURIComponent(did),{headers:{Authorization:'Bearer '+(localStorage.getItem('dpa_token')||'')}});
+            const j=await r.json().catch(()=>({}));
+            if(r.ok&&j.paired){ok=true;break;}
+            lastErr=(j&&j.error)||(r.ok?'appareil non appairé':'HTTP '+r.status);
+            if(r.ok&&!j.paired)break;
+          }catch(e){lastErr=e.message||String(e);}
+          await sleep(1000);
+        }
+        if(!ok){showError('Synchronisation impossible : '+lastErr+'. Si le compte a été désactivé ou l’appareil retiré, demandez un nouvel appairage à l’Admin.');return;}
+        pairingStatus.textContent='✓ Reconnecté. Synchronisation des données en cours…';
+        setTimeout(()=>{window.location.href='index.html';},900);
+      }catch(e){showError('Synchronisation impossible : '+(e.message||e));}
+      return;
+    }
+    // Premier appairage
+    localStorage.setItem('pg_pair_token',String(data.token));
+    localStorage.setItem('pg_pair_expires_at',String(data.expires_at||''));
+    localStorage.setItem('pg_pairing_ready','0');
+    if(data.admin_id)localStorage.setItem('pg_pair_admin_pending',String(data.admin_id));
+    pairingReady=false; pairingMode=true; button.disabled=false; button.textContent='Appairer et se connecter';
+    pairingStatus.textContent=(joined==='connected')
+      ?'✓ Connecté au réseau Admin. Saisissez maintenant vos identifiants.'
+      :'✓ Serveur Admin identifié. Connectez-vous au hotspot Admin, puis saisissez vos identifiants.';
+    if(joined!=='connected') showRetryNet();
+  }
+  if(rescanMode&&seller){
+    // Mode « resynchroniser » : le formulaire d'identifiants est masqué, seul le scan est proposé.
+    form.style.display='none';
+    pairingBox.style.display='block';
+    pairingStatus.textContent='Scannez le QR affiché sur le téléphone de l’Admin pour vous reconnecter et synchroniser.';
+    setTimeout(()=>{try{startScan();}catch(e){}},300);
+  }
+  /* scanLoop supprimé : la lecture est assurée par assets/js/qr-scan.js */
+  scanBtn?.addEventListener('click',startScan);stopBtn?.addEventListener('click',stopScan);openWifiBtn?.addEventListener('click',()=>{try{window.PharmaGestNative?.openWifiSettingsFromWeb?.()}catch{}});
+  async function useManualPairCode(){
+    errorMessage.style.display='none';
+    manualPairBtn.disabled=true;
+    pairingStatus.textContent='Recherche automatique du serveur Admin sur le réseau local…';
+    try{window.PharmaGestNative?.startNetworkFromWeb?.()}catch{}
+    let base='';
+    for(let i=0;i<20;i++){
+      try{base=window.PharmaGestNative?.getServerBase?.()||''}catch{}
+      if(base)break;
+      await new Promise(r=>setTimeout(r,500));
+    }
+    manualPairBtn.disabled=false;
+    if(!base){showError('Serveur Admin introuvable. Connectez ce téléphone au hotspot Admin puis appuyez de nouveau sur « Rechercher le serveur Admin ».');pairingStatus.textContent='Serveur non trouvé.';return;}
+    try{window.PharmaGestNative?.setServerBase?.(base);}catch{}
+    localStorage.setItem('pg_pair_token','');
+    localStorage.setItem('pg_pair_expires_at','');
+    pairingReady=false;
+    manualPairArea.style.display='block';
+    pairingCodeInput.value=localStorage.getItem('pg_pair_manual_code')||'';
+    pairingCodeInput.focus();
+    button.disabled=false;
+    button.textContent='Appairer le téléphone et se connecter';
+    pairingMode=true; pairingStatus.textContent='✓ Serveur Admin trouvé. Saisissez le code créé par l’Admin, puis vos identifiants.';
+  }
+  manualPairBtn?.addEventListener('click',useManualPairCode);
+  pairingCodeInput?.addEventListener('input',()=>{pairingCodeInput.value=pairingCodeInput.value.replace(/\D/g,'').slice(0,6);localStorage.setItem('pg_pair_manual_code',pairingCodeInput.value);});
+  form.addEventListener('submit',async function(event){event.preventDefault();errorMessage.style.display='none';const username=document.getElementById('username').value.trim(),password=document.getElementById('password').value;const doPair=pairingMode || (seller&&!pairingReady);button.disabled=true;button.textContent=doPair?'Appairage...':'Connexion...';try{
+    const path=doPair?'/api/pairing/verify':'/api/auth/login';
+    const body={username,password};
+    if(doPair){let did=localStorage.getItem('pharmagest_device_id');if(!did){did=crypto.randomUUID?.()||('device-'+Date.now()+'-'+Math.random().toString(36).slice(2));localStorage.setItem('pharmagest_device_id',did);}body.device_id=did;body.device_type='mobile';body.token=localStorage.getItem('pg_pair_token')||'';body.pairing_code=(pairingCodeInput?.value||localStorage.getItem('pg_pair_manual_code')||'').replace(/\D/g,'').slice(0,6);body.pair_expires_at=localStorage.getItem('pg_pair_expires_at')||'';}
+    const response=await fetch(API_URL+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const data=await response.json();if(!response.ok)throw new Error(data.error||'Connexion impossible.');
+    localStorage.setItem('dpa_token',data.token);localStorage.setItem('dpa_user',JSON.stringify(data.user));localStorage.setItem('dpa_local_user_id',data.user.id);localStorage.setItem('dpa_session_active','1');
+    if(doPair){if(seller){await fetch('/api/pairing/cache-user',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:data.user.id,name:data.user.name,username:data.user.username,password})});}localStorage.setItem('pg_pairing_ready','1');{const adm=String(data.installation_id||localStorage.getItem('pg_pair_admin_pending')||'');if(adm)localStorage.setItem('pg_paired_admin',adm);localStorage.removeItem('pg_pair_admin_pending');}localStorage.removeItem('pg_pair_token');localStorage.removeItem('pg_pair_expires_at');localStorage.removeItem('pg_pair_manual_code');pairingReady=true;pairingMode=false;}
+    window.location.href='index.html';
+  }catch(error){showError(error.message||'Erreur de connexion.');}finally{button.disabled=false;button.textContent=(seller&&!pairingReady)?'Appairer le téléphone et se connecter':'Se connecter';}});
+})();
+</script>
+</body>
+</html>

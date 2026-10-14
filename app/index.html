@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><script src="assets/js/demo-guard.js"></script><style id="pg-boot-css">html.pg-boot body{opacity:0!important}</style><script>(function(){var h=document.documentElement;h.classList.add("pg-boot");window.__pgShow=function(){h.classList.remove("pg-boot")};setTimeout(window.__pgShow,800);window.addEventListener("load",function(){setTimeout(window.__pgShow,50)});})();</script><link rel="stylesheet" href="assets/css/app.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>PharmaGest</title>
+
+  <script src="assets/js/local-api.js"></script>
+<script src="assets/js/branding.js"></script>
+<script src="assets/js/mobile-role.js"></script><script src="assets/js/mobile-shell.js"></script><script src="assets/js/modals.js"></script>
+<script>
+    (function () {
+      const token = localStorage.getItem("dpa_token");
+
+      if (!token) {
+        window.location.replace("login.html");
+      }
+    })();
+  </script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f4f7fb;
+      color: #172033;
+      min-height: 100vh;
+    }
+
+    .app {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 260px;
+      background: #082b52;
+      color: white;
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      overflow-y: auto;
+      z-index: 1000;
+      transition: transform .25s ease;
+    }
+
+    .brand {
+      padding: 24px 20px;
+      border-bottom: 1px solid rgba(255,255,255,.12);
+    }
+
+    .brand-title {
+      color: #ffffff !important;
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.25;
+    }
+
+    .brand-title span {
+      color: #12b8a6 !important;
+    }
+
+    .brand-subtitle {
+      margin-top: 7px;
+      color: #8fe7e2;
+      font-size: 12px;
+    }
+
+    .menu {
+      padding: 15px 10px;
+    }
+
+    .menu-section {
+      color: #82a4c8;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 14px 12px 7px;
+    }
+
+    .menu a {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      color: #eaf3fc;
+      text-decoration: none;
+      padding: 11px 12px;
+      border-radius: 8px;
+      margin-bottom: 3px;
+      font-size: 14px;
+      transition: background .2s;
+    }
+
+    .menu a:hover,
+    .menu a.active {
+      background: #0e477f;
+    }
+
+    .menu-icon {
+      width: 23px;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    /* MAIN */
+    .main {
+      margin-left: 260px;
+      width: calc(100% - 260px);
+      min-height: 100vh;
+    }
+
+    .topbar {
+      height: 72px;
+      background: white;
+      border-bottom: 1px solid #e1e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .menu-button {
+      display: none;
+      border: 0;
+      background: #082b52;
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .page-title {
+      font-size: 21px;
+      font-weight: 700;
+    }
+
+    .user-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .user-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #0e7890;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    .user-info {
+      line-height: 1.25;
+    }
+
+    .user-name {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .user-role {
+      font-size: 11px;
+      color: #708096;
+    }
+
+    .logout {
+      border: 0;
+      background: #f1f5f9;
+      color: #24364d;
+      padding: 9px 13px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .logout:hover {
+      background: #e3eaf2;
+    }
+
+    /* CONTENT */
+    .content {
+      padding: 28px;
+    }
+
+    .welcome {
+      margin-bottom: 25px;
+    }
+
+    .welcome h1 {
+      font-size: 26px;
+      margin-bottom: 6px;
+    }
+
+    .welcome p {
+      color: #66758a;
+      font-size: 14px;
+    }
+
+    /* STATUS */
+    .status {
+      display: none;
+      padding: 12px 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    .status.error {
+      display: block;
+      background: #fff0f0;
+      color: #a51d2d;
+      border: 1px solid #f3c5ca;
+    }
+
+    .status.loading {
+      display: block;
+      background: #edf7ff;
+      color: #14527d;
+      border: 1px solid #c6e2f5;
+    }
+
+    /* STATS */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 25px;
+    }
+
+    .stat-card {
+      background: white;
+      border: 1px solid #e3eaf2;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(21,45,72,.04);
+    }
+
+    .stat-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .stat-label {
+      color: #718096;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .stat-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 9px;
+      background: #e9f7f7;
+      color: #0d7182;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .stat-value {
+      font-size: 26px;
+      font-weight: 800;
+      color: #132238;
+    }
+
+    .stat-unit {
+      font-size: 13px;
+      font-weight: 600;
+      color: #65758a;
+      margin-left: 4px;
+    }
+
+    /* GRID */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+    }
+
+    .panel {
+      background: white;
+      border: 1px solid #e3eaf2;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(21,45,72,.04);
+      overflow: hidden;
+    }
+
+    .panel-header {
+      padding: 18px 20px;
+      border-bottom: 1px solid #e7edf4;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .panel-title {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .panel-body {
+      padding: 20px;
+    }
+
+    /* ALERTS */
+    .alert-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .alert-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 13px;
+      border-radius: 8px;
+      background: #f8fafc;
+    }
+
+    .alert-left {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+
+    .alert-icon {
+      width: 35px;
+      height: 35px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    .alert-danger {
+      background: #ffe8e8;
+      color: #b42318;
+    }
+
+    .alert-warning {
+      background: #fff3d8;
+      color: #9a6700;
+    }
+
+    .alert-info {
+      background: #e7f5ff;
+      color: #12618b;
+    }
+
+    .alert-name {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .alert-description {
+      font-size: 11px;
+      color: #718096;
+      margin-top: 3px;
+    }
+
+    .alert-number {
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    /* QUICK ACTIONS */
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 11px;
+    }
+
+    .action {
+      text-decoration: none;
+      border: 1px solid #dfe7ef;
+      border-radius: 9px;
+      padding: 15px 12px;
+      color: #18324d;
+      background: #fbfdff;
+      transition: .2s;
+    }
+
+    .action:hover {
+      border-color: #0c7890;
+      background: #f1fbfc;
+      transform: translateY(-1px);
+    }
+
+    .action-icon {
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+
+    .action-title {
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .action-text {
+      font-size: 11px;
+      color: #718096;
+      margin-top: 3px;
+    }
+
+    /* SYSTEM */
+    .system-info {
+      display: grid;
+      gap: 12px;
+    }
+
+    .system-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      font-size: 13px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #edf1f5;
+    }
+
+    .system-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .system-label {
+      color: #718096;
+    }
+
+    .system-value {
+      font-weight: 700;
+      text-align: right;
+    }
+
+    .online {
+      color: #16803c;
+    }
+
+    /* MOBILE OVERLAY */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.35);
+      z-index: 900;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1100px) {
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 800px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .overlay.open {
+        display: block;
+      }
+
+      .main {
+        margin-left: 0;
+        width: 100%;
+      }
+
+      .menu-button {
+        display: block;
+      }
+
+      .topbar {
+        padding: 0 15px;
+      }
+
+      .user-info {
+        display: none;
+      }
+
+      .content {
+        padding: 20px 15px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .welcome h1 {
+        font-size: 22px;
+      }
+
+      .logout {
+        padding: 8px 10px;
+        font-size: 12px;
+      }
+
+      .actions {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+<link rel="stylesheet" href="assets/css/mobile-shell.css">
+<link rel="stylesheet" href="assets/css/theme.css">
+<script src="assets/js/theme.js"></script>
+<link rel="stylesheet" href="assets/css/modals.css">
+</head>
+
+<body>
+
+<div class="app">
+
+  <aside class="sidebar" id="sidebar">
+
+    <div class="brand">
+      <div class="brand-title">Pharma<span>Gest</span></div>
+      <div class="brand-subtitle">Gestion pharmaceutique professionnelle</div>
+    </div>
+
+    <nav class="menu">
+
+      <div class="menu-section">Principal</div>
+
+      <a href="index.html" class="active">
+        <span class="menu-icon">⌂</span>
+        <span>Tableau de bord</span>
+      </a>
+
+      <a href="vente.html">
+        <span class="menu-icon">🛒</span>
+        <span>Ventes</span>
+      </a>
+      <a href="scanner.html" id="scannerMenu">
+  <span class="menu-icon">📷</span>
+  <span>Scanner</span>
+</a>
+      <div class="menu-section">Gestion</div>
+
+      <a href="produits.html">
+        <span class="menu-icon">📦</span>
+        <span>Produits</span>
+      </a>
+
+      <a href="stocks.html">
+        <span class="menu-icon">▣</span>
+        <span>Stocks</span>
+      </a>
+
+      <a href="lots.html">
+        <span class="menu-icon">◫</span>
+        <span>Lots & péremptions</span>
+      </a>
+
+      <a href="receptions.html">
+        <span class="menu-icon">↓</span>
+        <span>Réceptions</span>
+      </a>
+
+      <a href="fournisseurs.html">
+        <span class="menu-icon">🚚</span>
+        <span>Fournisseurs</span>
+      </a>
+
+      <div class="menu-section">Analyse</div>
+
+      <a href="rapports.html">
+        <span class="menu-icon">▥</span>
+        <span>Rapports</span>
+      </a>
+
+      <a href="audit.html">
+        <span class="menu-icon">◉</span>
+        <span>Journal d'audit</span>
+      </a>
+
+      <div class="menu-section">Administration</div>
+
+      <a href="utilisateurs.html">
+        <span class="menu-icon">♙</span>
+        <span>Utilisateurs</span>
+      </a>
+
+      <a href="vente_partenaire.html"><span class="menu-icon">⇄</span>Vente partenaire</a>
+      <a href="parametres.html">
+        <span class="menu-icon">⚙</span>
+        <span>Paramètres</span>
+      </a>
+
+    </nav>
+  </aside>
+
+  <div class="overlay" id="overlay"></div>
+
+  <main class="main">
+
+    <header class="topbar">
+
+      <div class="topbar-left">
+        <button class="menu-button" id="menuButton">☰</button>
+        <div class="page-title">Tableau de bord</div>
+      </div>
+
+      <div class="user-box">
+
+        <div class="user-avatar" id="userAvatar">A</div>
+
+        <div class="user-info">
+          <div class="user-name" id="userName">Administrateur</div>
+          <div class="user-role" id="userRole">Administrateur</div>
+        </div>
+
+        <button class="logout" id="logoutButton">
+          Déconnexion
+        </button>
+
+      </div>
+
+    </header>
+
+    <section class="content">
+
+      <div class="welcome">
+        <h1 id="welcomeTitle">Bienvenue</h1>
+        <p>Voici l'état actuel du dépôt pharmaceutique.</p>
+      </div>
+
+      <div class="status" id="statusMessage"></div>
+
+      <section class="stats">
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="stat-label">Chiffre d'affaires du jour</div>
+            <div class="stat-icon">₣</div>
+          </div>
+          <div class="stat-value">
+            <span id="revenue">0</span>
+            <span class="stat-unit">FCFA</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="stat-label">Ventes aujourd'hui</div>
+            <div class="stat-icon">🛒</div>
+          </div>
+          <div class="stat-value" id="sales">0</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="stat-label">Produits actifs</div>
+            <div class="stat-icon">📦</div>
+          </div>
+          <div class="stat-value" id="products">0</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="stat-label">Vendeurs actifs</div>
+            <div class="stat-icon">♙</div>
+          </div>
+          <div class="stat-value" id="sellers">0</div>
+        </div>
+
+      </section>
+
+      <section class="dashboard-grid">
+
+        <div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title">Alertes de stock</div>
+              <a href="lots.html" style="font-size:12px;color:#0e7890;text-decoration:none;">
+                Voir les lots
+              </a>
+            </div>
+
+            <div class="panel-body">
+
+              <div class="alert-list">
+
+                <div class="alert-item">
+                  <div class="alert-left">
+                    <div class="alert-icon alert-danger">!</div>
+                    <div>
+                      <div class="alert-name">Produits expirés</div>
+                      <div class="alert-description">
+                        Lots encore présents en stock mais dont la date est dépassée.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="alert-number" id="expired">0</div>
+                </div>
+
+                <div class="alert-item">
+                  <div class="alert-left">
+                    <div class="alert-icon alert-warning">!</div>
+                    <div>
+                      <div class="alert-name">Expiration prochaine</div>
+                      <div class="alert-description">
+                        Produits arrivant à expiration dans les 30 jours.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="alert-number" id="soon">0</div>
+                </div>
+
+                <div class="alert-item">
+                  <div class="alert-left">
+                    <div class="alert-icon alert-info">↓</div>
+                    <div>
+                      <div class="alert-name">Stock faible</div>
+                      <div class="alert-description">
+                        Produits au niveau ou sous leur seuil d'alerte.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="alert-number" id="low">0</div>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+        <div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title">Accès rapide</div>
+            </div>
+
+            <div class="panel-body">
+
+              <div class="actions">
+
+                <a class="action" href="vente.html">
+                  <div class="action-icon">🛒</div>
+                  <div class="action-title">Nouvelle vente</div>
+                  <div class="action-text">Ouvrir la caisse</div>
+                </a>
+
+                <a class="action" href="produits.html">
+                  <div class="action-icon">📦</div>
+                  <div class="action-title">Produits</div>
+                  <div class="action-text">Gérer les produits</div>
+                </a>
+
+                <a class="action" href="receptions.html">
+                  <div class="action-icon">↓</div>
+                  <div class="action-title">Réception</div>
+                  <div class="action-text">Entrer du stock</div>
+                </a>
+
+                <a class="action" href="rapports.html">
+                  <div class="action-icon">▥</div>
+                  <div class="action-title">Rapports</div>
+                  <div class="action-text">Consulter les données</div>
+                </a>
+
+              </div>
+
+            </div>
+          </div>
+
+          <div class="panel" style="margin-top:20px;">
+
+            <div class="panel-header">
+              <div class="panel-title">État du système</div>
+            </div>
+
+            <div class="panel-body">
+
+              <div class="system-info">
+
+                <div class="system-row">
+                  <span class="system-label">API</span>
+                  <span class="system-value online" id="apiStatus">
+                    Vérification...
+                  </span>
+                </div>
+
+                <div class="system-row">
+                  <span class="system-label">Base de données</span>
+                  <span class="system-value online">
+                    Base locale IndexedDB
+                  </span>
+                </div>
+
+                <div class="system-row">
+                  <span class="system-label">Version</span>
+                  <span class="system-value">
+                    1.0 — 2026
+                  </span>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </section>
+
+  </main>
+
+</div>
+
+<script>
+  const API_URL =
+  `${window.location.protocol}//${window.location.host}`;
+
+  const token = localStorage.getItem('dpa_token');
+
+  const userData = JSON.parse(
+    localStorage.getItem('dpa_user') || '{}'
+  );
+
+  const statusMessage = document.getElementById('statusMessage');
+
+  function showStatus(message, type) {
+    statusMessage.textContent = message;
+    statusMessage.className = 'status ' + type;
+  }
+
+  function hideStatus() {
+    statusMessage.textContent = '';
+    statusMessage.className = 'status';
+  }
+
+  function formatNumber(value) {
+    return Number(value || 0).toLocaleString('fr-FR');
+  }
+
+  function formatMoney(value) {
+    return Number(value || 0).toLocaleString('fr-FR', {
+      maximumFractionDigits: 0
+    });
+  }
+
+  function setupUser() {
+
+    const name = userData.name || 'Utilisateur';
+
+    document.getElementById('userName').textContent = name;
+
+    document.getElementById('welcomeTitle').textContent =
+      'Bienvenue, ' + name;
+
+    const role = userData.role === 'admin'
+      ? 'Administrateur'
+      : 'Vendeur';
+
+    document.getElementById('userRole').textContent = role;
+
+    const initials = name
+      .split(' ')
+      .filter(Boolean)
+      .map(part => part.charAt(0))
+      .join('')
+      .substring(0, 2)
+      .toUpperCase();
+
+    document.getElementById('userAvatar').textContent =
+      initials || 'U';
+  }
+
+  async function loadDashboard() {
+
+    if (!token) {
+      window.location.replace('login.html');
+      return;
+    }
+
+    showStatus('Chargement des données du tableau de bord...', 'loading');
+
+    try {
+
+      const response = await fetch(
+        API_URL + '/api/dashboard',
+        {
+          method: 'GET',
+          headers: {
+            'Authorization': 'Bearer ' + token
+          }
+        }
+      );
+
+      if (response.status === 401 || response.status === 403) {
+
+        localStorage.removeItem('dpa_token');
+        localStorage.removeItem('dpa_user');
+
+        window.location.replace('login.html');
+
+        return;
+      }
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.error || 'Impossible de charger le tableau de bord.'
+        );
+      }
+
+      document.getElementById('revenue').textContent =
+        formatMoney(data.revenue);
+
+      document.getElementById('sales').textContent =
+        formatNumber(data.sales);
+
+      document.getElementById('products').textContent =
+        formatNumber(data.products);
+
+      document.getElementById('sellers').textContent =
+        formatNumber(data.sellers);
+
+      document.getElementById('expired').textContent =
+        formatNumber(data.expired);
+
+      document.getElementById('soon').textContent =
+        formatNumber(data.soon);
+
+      document.getElementById('low').textContent =
+        formatNumber(data.low);
+
+      document.getElementById('apiStatus').textContent =
+        'Connectée';
+
+      hideStatus();
+
+    } catch (error) {
+
+      console.error(error);
+
+      document.getElementById('apiStatus').textContent =
+        'Erreur';
+
+      showStatus(
+        'Impossible de récupérer les données du serveur. Vérifie que le backend DPA est démarré.',
+        'error'
+      );
+    }
+  }
+
+  async function checkApi() {
+
+    try {
+
+      const response = await fetch(
+        API_URL + '/api/health'
+      );
+
+      if (response.ok) {
+        document.getElementById('apiStatus').textContent =
+          'Connectée';
+      } else {
+        document.getElementById('apiStatus').textContent =
+          'Erreur';
+      }
+
+    } catch (error) {
+
+      document.getElementById('apiStatus').textContent =
+        'Hors ligne';
+    }
+  }
+
+  document
+    .getElementById('logoutButton')
+    .addEventListener('click', function () {
+
+      localStorage.removeItem('dpa_token');
+      localStorage.removeItem('dpa_user');
+
+      window.location.replace('login.html');
+    });
+
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+  const menuButton = document.getElementById('menuButton');
+
+  function closeMobileMenu() {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('open');
+  }
+
+  menuButton.addEventListener('click', function () {
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('open');
+  });
+
+  overlay.addEventListener('click', closeMobileMenu);
+
+  document.querySelectorAll('.menu a').forEach(function (link) {
+    link.addEventListener('click', function () {
+      closeMobileMenu();
+    });
+  });
+  function applyRoleAccess() {
+
+  const role =
+    String(userData.role || '').toLowerCase();
+
+  if (role === 'seller') {
+
+    document
+      .querySelectorAll('.admin-only')
+      .forEach(function (element) {
+
+        element.style.display = 'none';
+
+      });
+  }
+}
+
+  setupUser();
+applyRoleAccess();
+checkApi();
+loadDashboard();
+
+  setInterval(loadDashboard, 60000);
+</script>
+
+</body>
+</html>

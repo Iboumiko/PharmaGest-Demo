@@ -1,0 +1,3896 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head><script src="assets/js/demo-guard.js"></script><style id="pg-boot-css">html.pg-boot body{opacity:0!important}</style><script>(function(){var h=document.documentElement;h.classList.add("pg-boot");window.__pgShow=function(){h.classList.remove("pg-boot")};setTimeout(window.__pgShow,800);window.addEventListener("load",function(){setTimeout(window.__pgShow,50)});})();</script><link rel="stylesheet" href="assets/css/app.css">
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>PharmaGest</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    background:#f4f7fb;
+    color:#172033;
+    min-height:100vh;
+}
+
+header{
+    background:#0f766e;
+    color:white;
+    padding:18px 24px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    box-shadow:0 2px 8px rgba(0,0,0,.12);
+}
+
+.header-left h1{
+    font-size:22px;
+    margin-bottom:5px;
+}
+
+.header-left p{
+    font-size:13px;
+    opacity:.9;
+}
+
+.header-actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.btn{
+    border:none;
+    border-radius:8px;
+    padding:10px 15px;
+    cursor:pointer;
+    font-weight:600;
+    transition:.2s;
+}
+
+.btn:hover{
+    transform:translateY(-1px);
+    opacity:.92;
+}
+
+.btn:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+    transform:none;
+}
+
+.btn-primary{
+    background:#0f766e;
+    color:white;
+}
+
+.btn-secondary{
+    background:#e5e7eb;
+    color:#172033;
+}
+
+.btn-danger{
+    background:#dc2626;
+    color:white;
+}
+
+.btn-success{
+    background:#16a34a;
+    color:white;
+}
+
+.container{
+    width:min(1200px,calc(100% - 30px));
+    margin:25px auto 50px;
+}
+
+.notice{
+    display:none;
+    padding:13px 16px;
+    border-radius:8px;
+    margin-bottom:18px;
+    font-size:14px;
+    line-height:1.5;
+}
+
+.notice.success{
+    display:block;
+    background:#dcfce7;
+    color:#166534;
+    border:1px solid #86efac;
+}
+
+.notice.error{
+    display:block;
+    background:#fee2e2;
+    color:#991b1b;
+    border:1px solid #fca5a5;
+}
+
+.notice.info{
+    display:block;
+    background:#eff6ff;
+    color:#1e40af;
+    border:1px solid #bfdbfe;
+}
+
+.loading{
+    background:white;
+    border-radius:12px;
+    padding:25px;
+    text-align:center;
+    box-shadow:0 2px 10px rgba(0,0,0,.06);
+    margin-bottom:20px;
+}
+
+.settings-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:20px;
+}
+
+.card{
+    background:white;
+    border-radius:12px;
+    padding:22px;
+    box-shadow:0 2px 10px rgba(0,0,0,.06);
+    border:1px solid #e5e7eb;
+}
+
+.card.full{
+    grid-column:1 / -1;
+}
+
+.card-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:15px;
+    margin-bottom:20px;
+    padding-bottom:15px;
+    border-bottom:1px solid #e5e7eb;
+}
+
+.card-header h2{
+    font-size:18px;
+    color:#0f766e;
+    margin-bottom:5px;
+}
+
+.card-header p{
+    color:#64748b;
+    font-size:13px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:16px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+}
+
+.form-group.full{
+    grid-column:1 / -1;
+}
+
+label{
+    font-size:13px;
+    font-weight:700;
+    color:#334155;
+}
+
+input,
+select,
+textarea{
+    width:100%;
+    border:1px solid #cbd5e1;
+    border-radius:8px;
+    padding:11px 12px;
+    font-size:14px;
+    color:#172033;
+    background:#fff;
+    outline:none;
+    transition:.2s;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+    border-color:#0f766e;
+    box-shadow:0 0 0 3px rgba(15,118,110,.1);
+}
+
+textarea{
+    min-height:90px;
+    resize:vertical;
+}
+
+input:disabled,
+select:disabled,
+textarea:disabled{
+    background:#f1f5f9;
+    cursor:not-allowed;
+}
+
+.switch-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+    padding:13px 0;
+    border-bottom:1px solid #f1f5f9;
+}
+
+.switch-row:last-child{
+    border-bottom:none;
+}
+
+.switch-info{
+    flex:1;
+}
+
+.switch-title{
+    font-size:14px;
+    font-weight:700;
+    color:#334155;
+    margin-bottom:4px;
+}
+
+.switch-description{
+    font-size:12px;
+    color:#64748b;
+    line-height:1.4;
+}
+
+.switch{
+    position:relative;
+    width:48px;
+    height:26px;
+    flex:none;
+}
+
+.switch input{
+    opacity:0;
+    width:0;
+    height:0;
+}
+
+.slider{
+    position:absolute;
+    inset:0;
+    background:#cbd5e1;
+    border-radius:30px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.slider:before{
+    content:"";
+    position:absolute;
+    width:20px;
+    height:20px;
+    left:3px;
+    top:3px;
+    background:white;
+    border-radius:50%;
+    transition:.2s;
+    box-shadow:0 1px 3px rgba(0,0,0,.2);
+}
+
+.switch input:checked + .slider{
+    background:#0f766e;
+}
+
+.switch input:checked + .slider:before{
+    transform:translateX(22px);
+}
+
+.switch input:disabled + .slider{
+    opacity:.6;
+    cursor:not-allowed;
+}
+
+.card-footer{
+    margin-top:20px;
+    padding-top:15px;
+    border-top:1px solid #e5e7eb;
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+}
+
+.user-info{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    background:#f8fafc;
+    border-radius:8px;
+    padding:12px;
+    margin-bottom:20px;
+}
+
+.user-avatar{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    background:#0f766e;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+}
+
+.user-name{
+    font-weight:700;
+    font-size:14px;
+}
+
+.user-role{
+    font-size:12px;
+    color:#64748b;
+    margin-top:3px;
+}
+
+.backup-actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.info-box{
+    background:#eff6ff;
+    border:1px solid #bfdbfe;
+    color:#1e40af;
+    border-radius:8px;
+    padding:13px;
+    font-size:13px;
+    line-height:1.5;
+    margin-top:15px;
+}
+
+.warning-box{
+    background:#fffbeb;
+    border:1px solid #fde68a;
+    color:#92400e;
+    border-radius:8px;
+    padding:13px;
+    font-size:13px;
+    line-height:1.5;
+    margin-top:15px;
+}
+
+.preview-overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(15,23,42,.65);
+    z-index:1000;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.preview-overlay.active{
+    display:flex;
+}
+
+.preview-modal{
+    background:white;
+    border-radius:12px;
+    width:min(500px,100%);
+    max-height:90vh;
+    overflow:auto;
+    padding:20px;
+}
+
+.preview-modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:15px;
+}
+
+.preview-modal-header h3{
+    color:#0f766e;
+}
+
+.close-btn{
+    border:none;
+    background:#e5e7eb;
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    cursor:pointer;
+    font-size:18px;
+}
+
+.receipt-preview{
+    background:#fff;
+    border:1px dashed #94a3b8;
+    padding:15px;
+    font-family:monospace;
+    font-size:12px;
+    color:#111827;
+}
+
+.receipt-center{
+    text-align:center;
+}
+
+.receipt-line{
+    border-top:1px dashed #64748b;
+    margin:10px 0;
+}
+
+.receipt-row{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+}
+
+.status{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:12px;
+    color:#16a34a;
+}
+
+.status-dot{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:#16a34a;
+}
+
+@media(max-width:800px){
+
+    .settings-grid{
+        grid-template-columns:1fr;
+    }
+
+    .card.full{
+        grid-column:auto;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .form-group.full{
+        grid-column:auto;
+    }
+
+    header{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .header-actions{
+        width:100%;
+    }
+
+    .header-actions .btn{
+        flex:1;
+    }
+
+}
+
+@media(max-width:500px){
+
+    .container{
+        width:min(100% - 18px,1200px);
+        margin-top:15px;
+    }
+
+    .card{
+        padding:16px;
+    }
+
+    .header-left h1{
+        font-size:19px;
+    }
+
+    .backup-actions{
+        flex-direction:column;
+    }
+
+    .backup-actions .btn{
+        width:100%;
+    }
+
+}
+
+</style>
+
+<link rel="stylesheet" href="assets/css/mobile-shell.css">
+<link rel="stylesheet" href="assets/css/theme.css">
+<script src="assets/js/theme.js"></script>
+<link rel="stylesheet" href="assets/css/modals.css">
+</head>
+
+<body>
+
+<header>
+
+    <div class="header-left">
+
+        <h1>Paramètres</h1>
+
+        <p>
+            <span data-establishment-name>Nom de l’établissement</span>
+        </p>
+
+    </div>
+
+    <div class="header-actions">
+
+        <button
+            class="btn btn-secondary"
+            type="button"
+            id="resetButton"
+            onclick="resetForm()">
+
+            Réinitialiser
+
+        </button>
+
+        <button
+            class="btn btn-primary"
+            type="button"
+            id="saveAllButton"
+            onclick="saveAllSettings()">
+
+            Enregistrer tout
+
+        </button>
+
+    </div>
+
+</header>
+
+
+<div class="container">
+
+    <div id="notice" class="notice"></div>
+
+    <div id="loading" class="loading">
+        Chargement des paramètres...
+    </div>
+
+
+    <div id="content" style="display:none;">
+
+        <div class="user-info">
+
+            <div
+                class="user-avatar"
+                id="userAvatar">
+
+                U
+
+            </div>
+
+            <div>
+
+                <div
+                    class="user-name"
+                    id="userName">
+
+                    Utilisateur
+
+                </div>
+
+                <div
+                    class="user-role"
+                    id="userRole">
+
+                    Chargement...
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="settings-grid">
+
+
+            <!-- GENERAL -->
+
+            <section class="card full">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h2>
+                            Paramètres généraux
+                        </h2>
+
+                        <p>
+                            Informations générales de votre dépôt pharmaceutique.
+                        </p>
+
+                    </div>
+
+                    <span class="status">
+
+                        <span class="status-dot"></span>
+
+                        Configuration
+
+                    </span>
+
+                </div>
+
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label for="companyName">
+                            Nom de l'établissement
+                        </label>
+
+                        <input
+                            id="companyName"
+                            type="text"
+                            placeholder="Nom de l'établissement">
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="companyCode">
+                            Code de l'établissement
+                        </label>
+
+                        <input
+                            id="companyCode"
+                            type="text"
+                            placeholder="Code">
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="managementYear">
+                            Année de gestion
+                        </label>
+
+                        <input
+                            id="managementYear"
+                            type="number"
+                            min="2000"
+                            max="2100">
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="companyPhone">
+                            Téléphone
+                        </label>
+
+                        <input
+                            id="companyPhone"
+                            type="tel"
+                            placeholder="Téléphone">
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="currency">
+                            Devise
+                        </label>
+
+                        <select id="currency">
+
+                            <option value="FCFA">
+                                FCFA
+                            </option>
+
+                            <option value="EUR">
+                                EUR
+                            </option>
+
+                            <option value="USD">
+                                USD
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="companyAddress">
+                            Adresse
+                        </label>
+
+                        <input
+                            id="companyAddress"
+                            type="text"
+                            placeholder="Adresse du dépôt">
+
+                    </div>
+
+                </div>
+
+
+                <div style="margin-top:20px;">
+
+                    <div class="switch-row">
+
+                        <div class="switch-info">
+
+                            <div class="switch-title">
+                                Interface responsive
+                            </div>
+
+                            <div class="switch-description">
+                                Adapter automatiquement l'interface aux téléphones et tablettes.
+                            </div>
+
+                        </div>
+
+                        <label class="switch">
+
+                            <input
+                                type="checkbox"
+                                id="responsive">
+
+                            <span class="slider"></span>
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="switch-row">
+
+                        <div class="switch-info">
+
+                            <div class="switch-title">
+                                Notifications
+                            </div>
+
+                            <div class="switch-description">
+                                Activer les notifications de l'application.
+                            </div>
+
+                        </div>
+
+                        <label class="switch">
+
+                            <input
+                                type="checkbox"
+                                id="notifications">
+
+                            <span class="slider"></span>
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <div class="card-footer">
+
+                    <button
+                        class="btn btn-primary section-save-button"
+                        type="button"
+                        data-section="general"
+                        onclick="saveSection('general')">
+
+                        Enregistrer les paramètres généraux
+
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- VENTE -->
+
+            <section class="card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h2>
+                            Vente & caisse
+                        </h2>
+
+                        <p>
+                            Configuration du fonctionnement des ventes.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="switch-row">
+
+                    <div class="switch-info">
+
+                        <div class="switch-title">
+                            Vendeur obligatoire
+                        </div>
+
+                        <div class="switch-description">
+                            Associer chaque vente à un vendeur.
+                        </div>
+
+                    </div>
+
+                    <label class="switch">
+
+                        <input
+                            type="checkbox"
+                            id="requireSeller"
+                            disabled>
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+
+                <div class="switch-row">
+
+                    <div class="switch-info">
+
+                        <div class="switch-title">
+                            Numérotation automatique
+                        </div>
+
+                        <div class="switch-description">
+                            Générer automatiquement les numéros de vente.
+                        </div>
+
+                    </div>
+
+                    <label class="switch">
+
+                        <input
+                            type="checkbox"
+                            id="autoNumber">
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+
+                <div class="switch-row">
+
+                    <div class="switch-info">
+
+                        <div class="switch-title">
+                            Bloquer les produits expirés
+                        </div>
+
+                        <div class="switch-description">
+                            Empêcher la vente de produits expirés.
+                        </div>
+
+                    </div>
+
+                    <label class="switch">
+
+                        <input
+                            type="checkbox"
+                            id="blockExpired"
+                            disabled>
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+
+                <div class="switch-row">
+
+                    <div class="switch-info">
+
+                        <div class="switch-title">
+                            Autoriser l'annulation
+                        </div>
+
+                        <div class="switch-description">
+                            Autoriser l'annulation des ventes.
+                        </div>
+
+                    </div>
+
+                    <label class="switch">
+
+                        <input
+                            type="checkbox"
+                            id="allowCancellation">
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+
+                <div
+                    class="form-grid"
+                    style="margin-top:18px;">
+
+                    <div class="form-group">
+
+                        <label for="salesPrefix">
+                            Préfixe des ventes
+                        </label>
+
+                        <input
+                            id="salesPrefix"
+                            type="text"
+                            placeholder="VNT">
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="nextNumber">
+                            Prochain numéro
+                        </label>
+
+                        <input
+                            id="nextNumber"
+                            type="number"
+                            min="1">
+
+                    </div>
+
+                </div>
+
+
+                <div class="card-footer">
+
+                    <button
+                        class="btn btn-primary section-save-button"
+                        type="button"
+                        data-section="vente"
+                        onclick="saveSection('vente')">
+
+                        Enregistrer
+
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- STOCK -->
+
+            <section class="card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h2>
+                            Stock & FEFO
+                        </h2>
+
+                        <p>
+                            Gestion des lots, dates d'expiration et seuils.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="switch-row">
+
+                    <div class="switch-info">
+
+                        <div class="switch-title">
+                            Gestion FEFO
+                        </div>
+
+                        <div class="switch-description">
+                            Sortir en priorité les lots dont la date d'expiration est la plus proche.
+                        </div>
+
+                    </div>
+
+                    <label class="switch">
+
+                        <input
+                            type="checkbox"
+                            id="fefo"
+                            disabled>
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+
+                <div class="switch-row">
+
+                    <div class="switch-info">
+
+                        <div class="switch-title">
+                            Bloquer les lots expirés
+                        </div>
+
+                        <div class="switch-description">
+                            Empêcher l'utilisation des lots expirés.
+                        </div>
+
+                    </div>
+
+                    <label class="switch">
+
+                        <input
+                            type="checkbox"
+                            id="blockExpiredLots"
+                            disabled>
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+
+                <div class="switch-row">
+
+                    <div class="switch-info">
+
+                        <div class="switch-title">
+                            Alerte d'expiration
+                        </div>
+
+                        <div class="switch-description">
+                            Afficher les alertes concernant les produits proches de l'expiration.
+                        </div>
+
+                    </div>
+
+                    <label class="switch">
+
+                        <input
+                            type="checkbox"
+                            id="expiryAlert">
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+
+                <div
+                    class="form-grid"
+                    style="margin-top:18px;">
+
+                    <div class="form-group">
+
+                        <label for="expiryDays">
+                            Alerte avant expiration (jours)
+                        </label>
+
+                        <input
+                            id="expiryDays"
+                            type="number"
+                            min="1">
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="criticalThreshold">
+                            Seuil critique de stock
+                        </label>
+
+                        <input
+                            id="criticalThreshold"
+                            type="number"
+                            min="0">
+
+                    </div>
+
+                </div>
+
+
+                <div class="card-footer">
+
+                    <button
+                        class="btn btn-primary section-save-button"
+                        type="button"
+                        data-section="stock"
+                        onclick="saveSection('stock')">
+
+                        Enregistrer
+
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- RECUS -->
+
+            <section class="card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h2>
+                            Reçus
+                        </h2>
+
+                        <p>
+                            Personnalisation et impression des reçus.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label for="receiptFormat">
+                            Format du reçu
+                        </label>
+
+                        <select id="receiptFormat">
+
+                            <option value="80mm">
+                                80 mm
+                            </option>
+
+                            <option value="58mm">
+                                58 mm
+                            </option>
+
+                            <option value="A4">
+                                A4
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="receiptCopies">
+                            Nombre de copies
+                        </label>
+
+                        <input
+                            id="receiptCopies"
+                            type="number"
+                            min="1"
+                            max="3">
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="receiptPrefix">
+                            Préfixe du reçu
+                        </label>
+
+                        <input
+                            id="receiptPrefix"
+                            type="text"
+                            placeholder="VNT">
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="receiptMessage">
+                            Message d'en-tête
+                        </label>
+
+                        <input
+                            id="receiptMessage"
+                            type="text"
+                            placeholder="Nom du dépôt">
+
+                    </div>
+
+
+                    <div class="form-group full">
+
+                        <label for="receiptFooter">
+                            Pied de reçu
+                        </label>
+
+                        <textarea
+                            id="receiptFooter"
+                            placeholder="Merci pour votre confiance."></textarea>
+
+                    </div>
+
+                </div>
+
+
+                <div style="margin-top:15px;">
+
+                    <div class="switch-row">
+
+                        <div class="switch-info">
+
+                            <div class="switch-title">
+                                Impression automatique
+                            </div>
+
+                            <div class="switch-description">
+                                Proposer automatiquement l'impression après une vente.
+                            </div>
+
+                        </div>
+
+                        <label class="switch">
+
+                            <input
+                                type="checkbox"
+                                id="autoPrint">
+
+                            <span class="slider"></span>
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="switch-row">
+
+                        <div class="switch-info">
+
+                            <div class="switch-title">
+                                Enregistrement PDF
+                            </div>
+
+                            <div class="switch-description">
+                                Autoriser l'enregistrement du reçu en PDF.
+                            </div>
+
+                        </div>
+
+                        <label class="switch">
+
+                            <input
+                                type="checkbox"
+                                id="savePdf">
+
+                            <span class="slider"></span>
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <div class="card-footer">
+
+                    <button
+                        class="btn btn-secondary"
+                        type="button"
+                        onclick="previewReceipt()">
+
+                        Prévisualiser
+
+                    </button>
+
+                    <button
+                        class="btn btn-primary section-save-button"
+                        type="button"
+                        data-section="recu"
+                        onclick="saveSection('recu')">
+
+                        Enregistrer
+
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- SECURITE -->
+
+            <section class="card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h2>
+                            Sécurité
+                        </h2>
+
+                        <p>
+                            Gestion de la déconnexion automatique.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="switch-row">
+
+                    <div class="switch-info">
+
+                        <div class="switch-title">
+                            Déconnexion automatique
+                        </div>
+
+                        <div class="switch-description">
+                            Déconnecter automatiquement l'utilisateur après une période d'inactivité.
+                        </div>
+
+                    </div>
+
+                    <label class="switch">
+
+                        <input
+                            type="checkbox"
+                            id="autoLogout">
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+
+                <div
+                    class="form-group"
+                    style="margin-top:20px;">
+
+                    <label for="inactivityMinutes">
+                        Délai d'inactivité (minutes)
+                    </label>
+
+                    <input
+                        id="inactivityMinutes"
+                        type="number"
+                        min="1">
+
+                </div>
+
+
+                <div class="warning-box">
+
+                    Pour des raisons de sécurité, évitez de laisser votre session ouverte
+                    sans surveillance.
+
+                </div>
+
+
+                <div class="card-footer">
+
+                    <button
+                        class="btn btn-primary section-save-button"
+                        type="button"
+                        data-section="securite"
+                        onclick="saveSection('securite')">
+
+                        Enregistrer
+
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- SAUVEGARDE -->
+
+            <section class="card full">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h2>
+                            Sauvegarde
+                        </h2>
+
+                        <p>
+                            Configuration des sauvegardes et création d'une sauvegarde manuelle.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="switch-row">
+
+                    <div class="switch-info">
+
+                        <div class="switch-title">
+                            Sauvegarde automatique
+                        </div>
+
+                        <div class="switch-description">
+                            Activer la configuration des sauvegardes automatiques.
+                        </div>
+
+                    </div>
+
+                    <label class="switch">
+
+                        <input
+                            type="checkbox"
+                            id="automaticBackup">
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+
+                <div
+                    class="form-grid"
+                    style="margin-top:18px;">
+
+                    <div class="form-group">
+
+                        <label for="backupFrequency">
+                            Fréquence
+                        </label>
+
+                        <select id="backupFrequency">
+
+                            <option value="daily">
+                                Tous les jours
+                            </option>
+
+                            <option value="weekly">
+                                Toutes les semaines
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="backupTime">
+                            Heure de sauvegarde
+                        </label>
+
+                        <input
+                            id="backupTime"
+                            type="time">
+
+                    </div>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    La sauvegarde manuelle crée une copie JSON des données accessibles
+                    de l'application et de sa configuration.
+
+                </div>
+
+
+                <div
+                    class="backup-actions"
+                    style="margin-top:18px;">
+
+                    <button
+                        class="btn btn-success"
+                        type="button"
+                        id="backupButton"
+                        onclick="createBackup()">
+
+                        Créer une sauvegarde maintenant
+
+                    </button>
+
+                    <button
+                        class="btn btn-primary"
+                        type="button"
+                        id="restoreButton"
+                        onclick="document.getElementById('restoreFile').click()">
+
+                        Restaurer une sauvegarde
+
+                    </button>
+
+                    <input
+                        id="restoreFile"
+                        type="file"
+                        accept=".json,application/json"
+                        style="display:none"
+                        onchange="restoreBackupFromFile(this)">
+
+                    <button
+                        class="btn btn-primary section-save-button"
+                        type="button"
+                        data-section="sauvegarde"
+                        onclick="saveSection('sauvegarde')">
+
+                        Enregistrer la configuration
+
+                    </button>
+
+                </div>
+
+            </section>
+
+            <!-- SAUVEGARDE GOOGLE DRIVE -->
+
+            <section class="card full" id="driveCard">
+
+                <div class="card-header">
+                    <div>
+                        <h2>Sauvegarde Google Drive</h2>
+                        <p>Connectez le compte Google de l'établissement. Dès qu'Internet est détecté et que des données ont changé,
+                           PharmaGest met à jour <strong>une seule sauvegarde</strong> sur votre Drive : la précédente est remplacée,
+                           pour ne pas consommer d'espace.</p>
+                    </div>
+                </div>
+
+                <div id="driveStatus" class="info-box" style="margin-bottom:14px;">Vérification…</div>
+
+                <div id="driveCfgBox" style="display:none;margin-bottom:14px;">
+                    <div class="form-group" style="margin-bottom:10px;">
+                        <label for="driveClientId">ID client Google</label>
+                        <input type="text" id="driveClientId" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="123456789-abc….apps.googleusercontent.com">
+                    </div>
+                    <div class="form-group" style="margin-bottom:10px;">
+                        <label for="driveClientSecret">Code secret du client</label>
+                        <input type="password" id="driveClientSecret" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="GOCSPX-…">
+                    </div>
+                    <div class="backup-actions">
+                        <button class="btn btn-primary" type="button" id="driveCfgSave">Enregistrer les identifiants</button>
+                        <button class="btn btn-secondary" type="button" id="driveCfgCancel" style="display:none;">Annuler</button>
+                    </div>
+                    <p style="font-size:12px;margin-top:8px;opacity:.8;">Ces deux valeurs se créent une seule fois dans Google Cloud Console (type « Application de bureau ») : voir <code>README_GOOGLE_DRIVE.md</code>.</p>
+                </div>
+
+                <div class="switch-row" id="driveAutoRow" style="display:none;">
+                    <div class="switch-info">
+                        <div class="switch-title">Sauvegarde automatique sur Drive</div>
+                        <div class="switch-description">Envoie la sauvegarde dès que Internet est disponible et que les données ont changé.</div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="driveAuto" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="backup-actions" style="margin-top:18px;">
+                    <button class="btn btn-primary" type="button" id="driveSignIn">Se connecter au compte Google</button>
+                    <button class="btn btn-success" type="button" id="driveSyncNow" style="display:none;">Sauvegarder maintenant</button>
+                    <button class="btn btn-secondary" type="button" id="driveRestore" style="display:none;">Restaurer depuis Google Drive</button>
+                    <button class="btn btn-secondary" type="button" id="driveSignOut" style="display:none;">Se déconnecter</button>
+                    <button class="btn btn-secondary" type="button" id="driveCfgEdit" style="display:none;">Options développeur (identifiants Google)</button>
+                </div>
+
+            </section>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- PREVISUALISATION -->
+
+<div
+    class="preview-overlay"
+    id="previewOverlay">
+
+    <div class="preview-modal">
+
+        <div class="preview-modal-header">
+
+            <h3>
+                Prévisualisation du reçu
+            </h3>
+
+            <button
+                class="close-btn"
+                type="button"
+                onclick="closePreview()">
+
+                ×
+
+            </button>
+
+        </div>
+
+        <div
+            id="receiptPreview"
+            class="receipt-preview">
+        </div>
+
+    </div>
+
+</div>
+
+
+<script src="assets/js/local-api.js"></script>
+<script src="assets/js/branding.js"></script>
+<script src="assets/js/mobile-role.js"></script><script src="assets/js/drive-backup.js"></script><script src="assets/js/mobile-shell.js"></script><script src="assets/js/modals.js"></script>
+<script>
+
+'use strict';
+
+
+const API_BASE = '/api';
+
+const TOKEN_KEY = 'dpa_token';
+
+let currentSettings = {};
+
+let currentUser = null;
+
+
+/* =========================================================
+   TOKEN
+========================================================= */
+
+function getToken(){
+
+    return localStorage.getItem(
+        TOKEN_KEY
+    );
+
+}
+
+
+/* =========================================================
+   NOTIFICATION
+========================================================= */
+
+function showNotice(
+    message,
+    type='success'
+){
+
+    const notice =
+        document.getElementById(
+            'notice'
+        );
+
+    notice.className =
+        `notice ${type}`;
+
+    notice.textContent =
+        message;
+
+    notice.style.display =
+        'block';
+
+    window.scrollTo({
+        top:0,
+        behavior:'smooth'
+    });
+
+    clearTimeout(
+        window.noticeTimer
+    );
+
+    window.noticeTimer =
+        setTimeout(
+            () => {
+
+                notice.style.display =
+                    'none';
+
+            },
+            7000
+        );
+
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+function setLoading(
+    visible
+){
+
+    document.getElementById(
+        'loading'
+    ).style.display =
+        visible
+            ? 'block'
+            : 'none';
+
+    document.getElementById(
+        'content'
+    ).style.display =
+        visible
+            ? 'none'
+            : 'block';
+
+}
+
+
+/* =========================================================
+   ECHAPPEMENT HTML
+========================================================= */
+
+function escapeHtml(
+    value
+){
+
+    return String(
+        value ?? ''
+    )
+    .replaceAll(
+        '&',
+        '&amp;'
+    )
+    .replaceAll(
+        '<',
+        '&lt;'
+    )
+    .replaceAll(
+        '>',
+        '&gt;'
+    )
+    .replaceAll(
+        '"',
+        '&quot;'
+    )
+    .replaceAll(
+        "'",
+        '&#039;'
+    );
+
+}
+
+
+/* =========================================================
+   API
+========================================================= */
+
+async function apiRequest(
+    endpoint,
+    options={}
+){
+
+    const token =
+        getToken();
+
+    const headers = {
+        ...(options.headers || {})
+    };
+
+
+    if(
+        !(options.body instanceof FormData)
+    ){
+
+        headers['Content-Type'] =
+            headers['Content-Type'] ||
+            'application/json';
+
+    }
+
+
+    if(token){
+
+        headers.Authorization =
+            `Bearer ${token}`;
+
+    }
+
+
+    let response;
+
+    try{
+
+        response =
+            await fetch(
+                `${API_BASE}${endpoint}`,
+                {
+                    ...options,
+                    headers
+                }
+            );
+
+    }catch(error){
+
+        throw new Error(
+            'Impossible de contacter le serveur. Vérifie que le backend et Base locale IndexedDB sont démarrés.'
+        );
+
+    }
+
+
+    let data = {};
+
+    const contentType =
+        response.headers.get(
+            'content-type'
+        ) || '';
+
+
+    try{
+
+        if(
+            contentType.includes(
+                'application/json'
+            )
+        ){
+
+            data =
+                await response.json();
+
+        }else{
+
+            const text =
+                await response.text();
+
+            data =
+                text
+                    ? {message:text}
+                    : {};
+
+        }
+
+    }catch(error){
+
+        data = {};
+
+    }
+
+
+    /*
+     * IMPORTANT :
+     * On ne masque plus l'erreur réelle du serveur.
+     */
+
+    if(
+        response.status === 401
+    ){
+
+        localStorage.removeItem(
+            TOKEN_KEY
+        );
+
+        throw new Error(
+            data?.error ||
+            data?.message ||
+            'Session expirée. Veuillez vous reconnecter.'
+        );
+
+    }
+
+
+    if(
+        response.status === 403
+    ){
+
+        throw new Error(
+            data?.error ||
+            data?.message ||
+            'Accès refusé. Votre compte n’a pas les droits nécessaires pour modifier les paramètres.'
+        );
+
+    }
+
+
+    if(
+        response.status === 404
+    ){
+
+        throw new Error(
+            data?.error ||
+            data?.message ||
+            `Route API introuvable : ${endpoint}`
+        );
+
+    }
+
+
+    if(
+        response.status === 405
+    ){
+
+        throw new Error(
+            data?.error ||
+            data?.message ||
+            `Méthode HTTP non autorisée pour ${endpoint}`
+        );
+
+    }
+
+
+    if(!response.ok){
+
+        throw new Error(
+            data?.error ||
+            data?.message ||
+            data?.details ||
+            `Erreur HTTP ${response.status}`
+        );
+
+    }
+
+
+    return data;
+
+}
+
+
+/* =========================================================
+   UTILISATEUR
+========================================================= */
+
+async function loadCurrentUser(){
+
+    const data =
+        await apiRequest(
+            '/me'
+        );
+
+
+    currentUser =
+        data.user ||
+        data;
+
+
+    const name =
+        currentUser?.name ||
+        currentUser?.username ||
+        'Utilisateur';
+
+
+    const role =
+        currentUser?.role ||
+        'Utilisateur';
+
+
+    document.getElementById(
+        'userName'
+    ).textContent =
+        name;
+
+
+    document.getElementById(
+        'userRole'
+    ).textContent =
+        role;
+
+
+    document.getElementById(
+        'userAvatar'
+    ).textContent =
+        name
+            .trim()
+            .charAt(0)
+            .toUpperCase() ||
+        'U';
+
+}
+
+
+/* =========================================================
+   CHARGEMENT PARAMETRES
+========================================================= */
+
+async function loadSettings(){
+
+    const data =
+        await apiRequest(
+            '/settings'
+        );
+
+
+    // L'API locale GET /settings renvoie directement l'objet des sections,
+    // alors que certaines versions serveur renvoient { settings: ... }.
+    const savedSettings = data?.settings && typeof data.settings === 'object'
+        ? data.settings
+        : (data && typeof data === 'object' ? data : {});
+    currentSettings = normalizeSettings(savedSettings);
+
+
+    fillForm(
+        currentSettings
+    );
+
+}
+
+
+/* =========================================================
+   NORMALISATION
+========================================================= */
+
+function normalizeSettings(
+    settings
+){
+
+    return {
+
+        general:{
+
+            companyName:
+                settings.general?.companyName ??
+                '',
+
+            code:
+                settings.general?.code ??
+                settings.general?.companyCode ??
+                '',
+
+            year:
+                Number(
+                    settings.general?.year ??
+                    settings.general?.managementYear ??
+                    2026
+                ),
+
+            phone:
+                settings.general?.phone ??
+                settings.general?.companyPhone ??
+                '',
+
+            currency:
+                settings.general?.currency ??
+                'FCFA',
+
+            address:
+                settings.general?.address ??
+                settings.general?.companyAddress ??
+                '',
+
+            responsive:
+                settings.general?.responsive ??
+                true,
+
+            notifications:
+                settings.general?.notifications ??
+                true
+
+        },
+
+
+        vente:{
+
+            requireSeller:
+                settings.vente?.requireSeller ??
+                true,
+
+            autoNumber:
+                settings.vente?.autoNumber ??
+                true,
+
+            blockExpired:
+                settings.vente?.blockExpired ??
+                true,
+
+            allowCancellation:
+                settings.vente?.allowCancellation ??
+                true,
+
+            salesPrefix:
+                settings.vente?.salesPrefix ??
+                'VNT',
+
+            nextNumber:
+                Number(
+                    settings.vente?.nextNumber ??
+                    1
+                )
+
+        },
+
+
+        stock:{
+
+            fefo:
+                settings.stock?.fefo ??
+                true,
+
+            blockExpiredLots:
+                settings.stock?.blockExpiredLots ??
+                true,
+
+            expiryAlert:
+                settings.stock?.expiryAlert ??
+                true,
+
+            expiryDays:
+                Number(
+                    settings.stock?.expiryDays ??
+                    30
+                ),
+
+            criticalThreshold:
+                Number(
+                    settings.stock?.criticalThreshold ??
+                    5
+                )
+
+        },
+
+
+        recu:{
+
+            format:
+                settings.recu?.format ??
+                settings.recu?.receiptFormat ??
+                '80mm',
+
+            copies:
+                Number(
+                    settings.recu?.copies ??
+                    settings.recu?.receiptCopies ??
+                    1
+                ),
+
+            footer:
+                settings.recu?.footer ??
+                settings.recu?.receiptFooter ??
+                'Merci pour votre confiance.',
+
+            prefix:
+                settings.recu?.prefix ??
+                settings.recu?.receiptPrefix ??
+                'VNT',
+
+            message:
+                settings.recu?.message ??
+                settings.recu?.receiptMessage ??
+                'Nom de l’établissement',
+
+            autoPrint:
+                settings.recu?.autoPrint ??
+                true,
+
+            savePdf:
+                settings.recu?.savePdf ??
+                true
+
+        },
+
+
+        securite:{
+
+            autoLogout:
+                settings.securite?.autoLogout ??
+                true,
+
+            inactivityMinutes:
+                Number(
+                    settings.securite?.inactivityMinutes ??
+                    30
+                )
+
+        },
+
+
+        sauvegarde:{
+
+            automatic:
+                settings.sauvegarde?.automatic ??
+                settings.sauvegarde?.automaticBackup ??
+                true,
+
+            frequency:
+                settings.sauvegarde?.frequency ??
+                settings.sauvegarde?.backupFrequency ??
+                'daily',
+
+            time:
+                settings.sauvegarde?.time ??
+                settings.sauvegarde?.backupTime ??
+                '23:00'
+
+        }
+
+    };
+
+}
+
+
+/* =========================================================
+   REMPLIR FORMULAIRE
+========================================================= */
+
+function fillForm(
+    settings
+){
+
+    const g =
+        settings.general;
+
+    const v =
+        settings.vente;
+
+    const s =
+        settings.stock;
+
+    const r =
+        settings.recu;
+
+    const sec =
+        settings.securite;
+
+    const b =
+        settings.sauvegarde;
+
+
+    document.getElementById(
+        'companyName'
+    ).value =
+        g.companyName;
+
+
+    document.getElementById(
+        'companyCode'
+    ).value =
+        g.code;
+
+
+    document.getElementById(
+        'managementYear'
+    ).value =
+        g.year;
+
+
+    document.getElementById(
+        'companyPhone'
+    ).value =
+        g.phone;
+
+
+    document.getElementById(
+        'currency'
+    ).value =
+        g.currency;
+
+
+    document.getElementById(
+        'companyAddress'
+    ).value =
+        g.address;
+
+
+    document.getElementById(
+        'responsive'
+    ).checked =
+        Boolean(g.responsive);
+
+
+    document.getElementById(
+        'notifications'
+    ).checked =
+        Boolean(g.notifications);
+
+
+    document.getElementById(
+        'requireSeller'
+    ).checked =
+        Boolean(v.requireSeller);
+
+
+    document.getElementById(
+        'autoNumber'
+    ).checked =
+        Boolean(v.autoNumber);
+
+
+    document.getElementById(
+        'blockExpired'
+    ).checked =
+        Boolean(v.blockExpired);
+
+
+    document.getElementById(
+        'allowCancellation'
+    ).checked =
+        Boolean(v.allowCancellation);
+
+
+    document.getElementById(
+        'salesPrefix'
+    ).value =
+        v.salesPrefix;
+
+
+    document.getElementById(
+        'nextNumber'
+    ).value =
+        v.nextNumber;
+
+
+    document.getElementById(
+        'fefo'
+    ).checked =
+        Boolean(s.fefo);
+
+
+    document.getElementById(
+        'blockExpiredLots'
+    ).checked =
+        Boolean(s.blockExpiredLots);
+
+
+    document.getElementById(
+        'expiryAlert'
+    ).checked =
+        Boolean(s.expiryAlert);
+
+
+    document.getElementById(
+        'expiryDays'
+    ).value =
+        s.expiryDays;
+
+
+    document.getElementById(
+        'criticalThreshold'
+    ).value =
+        s.criticalThreshold;
+
+
+    document.getElementById(
+        'receiptFormat'
+    ).value =
+        r.format;
+
+
+    document.getElementById(
+        'receiptCopies'
+    ).value =
+        r.copies;
+
+
+    document.getElementById(
+        'receiptPrefix'
+    ).value =
+        r.prefix;
+
+
+    document.getElementById(
+        'receiptMessage'
+    ).value =
+        r.message;
+
+
+    document.getElementById(
+        'receiptFooter'
+    ).value =
+        r.footer;
+
+
+    document.getElementById(
+        'autoPrint'
+    ).checked =
+        Boolean(r.autoPrint);
+
+
+    document.getElementById(
+        'savePdf'
+    ).checked =
+        Boolean(r.savePdf);
+
+
+    document.getElementById(
+        'autoLogout'
+    ).checked =
+        Boolean(sec.autoLogout);
+
+
+    document.getElementById(
+        'inactivityMinutes'
+    ).value =
+        sec.inactivityMinutes;
+
+
+    document.getElementById(
+        'automaticBackup'
+    ).checked =
+        Boolean(b.automatic);
+
+
+    document.getElementById(
+        'backupFrequency'
+    ).value =
+        b.frequency;
+
+
+    document.getElementById(
+        'backupTime'
+    ).value =
+        b.time;
+
+}
+
+
+/* =========================================================
+   RECUPERER SECTION
+========================================================= */
+
+function getSectionSettings(
+    section
+){
+
+    switch(section){
+
+        case 'general':
+
+            return {
+
+                companyName:
+                    document.getElementById(
+                        'companyName'
+                    ).value.trim(),
+
+                code:
+                    document.getElementById(
+                        'companyCode'
+                    ).value.trim(),
+
+                year:
+                    Number(
+                        document.getElementById(
+                            'managementYear'
+                        ).value
+                    ),
+
+                phone:
+                    document.getElementById(
+                        'companyPhone'
+                    ).value.trim(),
+
+                currency:
+                    document.getElementById(
+                        'currency'
+                    ).value,
+
+                address:
+                    document.getElementById(
+                        'companyAddress'
+                    ).value.trim(),
+
+                responsive:
+                    document.getElementById(
+                        'responsive'
+                    ).checked,
+
+                notifications:
+                    document.getElementById(
+                        'notifications'
+                    ).checked
+
+            };
+
+
+        case 'vente':
+
+            return {
+
+                requireSeller:
+                    document.getElementById(
+                        'requireSeller'
+                    ).checked,
+
+                autoNumber:
+                    document.getElementById(
+                        'autoNumber'
+                    ).checked,
+
+                blockExpired:
+                    document.getElementById(
+                        'blockExpired'
+                    ).checked,
+
+                allowCancellation:
+                    document.getElementById(
+                        'allowCancellation'
+                    ).checked,
+
+                salesPrefix:
+                    document.getElementById(
+                        'salesPrefix'
+                    ).value.trim(),
+
+                nextNumber:
+                    Number(
+                        document.getElementById(
+                            'nextNumber'
+                        ).value
+                    )
+
+            };
+
+
+        case 'stock':
+
+            return {
+
+                fefo:
+                    document.getElementById(
+                        'fefo'
+                    ).checked,
+
+                blockExpiredLots:
+                    document.getElementById(
+                        'blockExpiredLots'
+                    ).checked,
+
+                expiryAlert:
+                    document.getElementById(
+                        'expiryAlert'
+                    ).checked,
+
+                expiryDays:
+                    Number(
+                        document.getElementById(
+                            'expiryDays'
+                        ).value
+                    ),
+
+                criticalThreshold:
+                    Number(
+                        document.getElementById(
+                            'criticalThreshold'
+                        ).value
+                    )
+
+            };
+
+
+        case 'recu':
+
+            return {
+
+                format:
+                    document.getElementById(
+                        'receiptFormat'
+                    ).value,
+
+                copies:
+                    Number(
+                        document.getElementById(
+                            'receiptCopies'
+                        ).value
+                    ),
+
+                footer:
+                    document.getElementById(
+                        'receiptFooter'
+                    ).value.trim(),
+
+                prefix:
+                    document.getElementById(
+                        'receiptPrefix'
+                    ).value.trim(),
+
+                message:
+                    document.getElementById(
+                        'receiptMessage'
+                    ).value.trim(),
+
+                autoPrint:
+                    document.getElementById(
+                        'autoPrint'
+                    ).checked,
+
+                savePdf:
+                    document.getElementById(
+                        'savePdf'
+                    ).checked
+
+            };
+
+
+        case 'securite':
+
+            return {
+
+                autoLogout:
+                    document.getElementById(
+                        'autoLogout'
+                    ).checked,
+
+                inactivityMinutes:
+                    Number(
+                        document.getElementById(
+                            'inactivityMinutes'
+                        ).value
+                    )
+
+            };
+
+
+        case 'sauvegarde':
+
+            return {
+
+                automatic:
+                    document.getElementById(
+                        'automaticBackup'
+                    ).checked,
+
+                frequency:
+                    document.getElementById(
+                        'backupFrequency'
+                    ).value,
+
+                time:
+                    document.getElementById(
+                        'backupTime'
+                    ).value
+
+            };
+
+
+        default:
+
+            throw new Error(
+                `Section inconnue : ${section}`
+            );
+
+    }
+
+}
+
+
+/* =========================================================
+   VALIDATION
+========================================================= */
+
+function validateSection(
+    section,
+    data
+){
+
+    if(section === 'general'){
+
+        if(!data.companyName){
+
+            throw new Error(
+                'Le nom de l’établissement est obligatoire.'
+            );
+
+        }
+
+        if(
+            !Number.isInteger(data.year) ||
+            data.year < 2000 ||
+            data.year > 2100
+        ){
+
+            throw new Error(
+                'L’année de gestion doit être comprise entre 2000 et 2100.'
+            );
+
+        }
+
+        if(
+            ![
+                'FCFA',
+                'EUR',
+                'USD'
+            ].includes(
+                data.currency
+            )
+        ){
+
+            throw new Error(
+                'La devise sélectionnée est invalide.'
+            );
+
+        }
+
+    }
+
+
+    if(section === 'vente'){
+
+        if(!data.salesPrefix){
+
+            throw new Error(
+                'Le préfixe des ventes est obligatoire.'
+            );
+
+        }
+
+        if(
+            !Number.isInteger(
+                data.nextNumber
+            ) ||
+            data.nextNumber < 1
+        ){
+
+            throw new Error(
+                'Le prochain numéro de vente doit être supérieur à 0.'
+            );
+
+        }
+
+    }
+
+
+    if(section === 'stock'){
+
+        if(
+            !Number.isInteger(
+                data.expiryDays
+            ) ||
+            data.expiryDays < 1
+        ){
+
+            throw new Error(
+                'Le nombre de jours avant expiration doit être supérieur à 0.'
+            );
+
+        }
+
+        if(
+            !Number.isInteger(
+                data.criticalThreshold
+            ) ||
+            data.criticalThreshold < 0
+        ){
+
+            throw new Error(
+                'Le seuil critique ne peut pas être négatif.'
+            );
+
+        }
+
+    }
+
+
+    if(section === 'recu'){
+
+        if(
+            ![
+                '80mm',
+                '58mm',
+                'A4'
+            ].includes(
+                data.format
+            )
+        ){
+
+            throw new Error(
+                'Le format du reçu est invalide.'
+            );
+
+        }
+
+        if(
+            !Number.isInteger(
+                data.copies
+            ) ||
+            data.copies < 1 ||
+            data.copies > 3
+        ){
+
+            throw new Error(
+                'Le nombre de copies doit être compris entre 1 et 3.'
+            );
+
+        }
+
+        if(!data.prefix){
+
+            throw new Error(
+                'Le préfixe du reçu est obligatoire.'
+            );
+
+        }
+
+    }
+
+
+    if(section === 'securite'){
+
+        if(
+            !Number.isInteger(
+                data.inactivityMinutes
+            ) ||
+            data.inactivityMinutes < 1
+        ){
+
+            throw new Error(
+                'Le délai d’inactivité doit être supérieur à 0 minute.'
+            );
+
+        }
+
+    }
+
+
+    if(section === 'sauvegarde'){
+
+        if(
+            ![
+                'daily',
+                'weekly'
+            ].includes(
+                data.frequency
+            )
+        ){
+
+            throw new Error(
+                'La fréquence de sauvegarde est invalide.'
+            );
+
+        }
+
+        if(
+            !/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(
+                data.time
+            )
+        ){
+
+            throw new Error(
+                'L’heure de sauvegarde est invalide.'
+            );
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   TROUVER BOUTON SECTION
+========================================================= */
+
+function getSectionButton(
+    section
+){
+
+    return document.querySelector(
+        `.section-save-button[data-section="${section}"]`
+    );
+
+}
+
+
+/* =========================================================
+   ENREGISTRER SECTION
+========================================================= */
+
+async function saveSection(
+    section
+){
+
+    const button =
+        getSectionButton(
+            section
+        );
+
+    const originalText =
+        button
+            ? button.textContent
+            : 'Enregistrer';
+
+
+    try{
+
+        const sectionData =
+            getSectionSettings(
+                section
+            );
+
+
+        validateSection(
+            section,
+            sectionData
+        );
+
+
+        if(button){
+
+            button.disabled =
+                true;
+
+            button.textContent =
+                'Enregistrement...';
+
+        }
+
+
+        const data =
+            await apiRequest(
+                '/settings',
+                {
+                    method:'PUT',
+
+                    body:JSON.stringify({
+
+                        settings:{
+                            [section]:
+                                sectionData
+                        }
+
+                    })
+
+                }
+            );
+
+
+        currentSettings =
+            normalizeSettings(
+                data.settings ||
+                {
+                    ...currentSettings,
+
+                    [section]:
+                        sectionData
+                }
+            );
+
+
+        fillForm(
+            currentSettings
+        );
+
+
+        showNotice(
+            `Les paramètres « ${section} » ont été enregistrés avec succès.`,
+            'success'
+        );
+
+
+    }catch(error){
+
+        console.error(
+            'SAVE SECTION ERROR:',
+            error
+        );
+
+
+        /*
+         * Ici on affiche l'erreur EXACTE.
+         */
+
+        showNotice(
+            error.message ||
+            'Impossible d’enregistrer les paramètres.',
+            'error'
+        );
+
+
+    }finally{
+
+        if(button){
+
+            button.disabled =
+                false;
+
+            button.textContent =
+                originalText;
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   ENREGISTRER TOUT
+========================================================= */
+
+async function saveAllSettings(){
+
+    const button =
+        document.getElementById(
+            'saveAllButton'
+        );
+
+    const originalText =
+        button.textContent;
+
+
+    try{
+
+        button.disabled =
+            true;
+
+        button.textContent =
+            'Enregistrement...';
+
+
+        const general =
+            getSectionSettings(
+                'general'
+            );
+
+        const vente =
+            getSectionSettings(
+                'vente'
+            );
+
+        const stock =
+            getSectionSettings(
+                'stock'
+            );
+
+        const recu =
+            getSectionSettings(
+                'recu'
+            );
+
+        const securite =
+            getSectionSettings(
+                'securite'
+            );
+
+        const sauvegarde =
+            getSectionSettings(
+                'sauvegarde'
+            );
+
+
+        validateSection(
+            'general',
+            general
+        );
+
+        validateSection(
+            'vente',
+            vente
+        );
+
+        validateSection(
+            'stock',
+            stock
+        );
+
+        validateSection(
+            'recu',
+            recu
+        );
+
+        validateSection(
+            'securite',
+            securite
+        );
+
+        validateSection(
+            'sauvegarde',
+            sauvegarde
+        );
+
+
+        const data =
+            await apiRequest(
+                '/settings',
+                {
+                    method:'PUT',
+
+                    body:JSON.stringify({
+
+                        settings:{
+                            general,
+                            vente,
+                            stock,
+                            recu,
+                            securite,
+                            sauvegarde
+                        }
+
+                    })
+
+                }
+            );
+
+
+        currentSettings =
+            normalizeSettings(
+                data.settings ||
+                {
+                    general,
+                    vente,
+                    stock,
+                    recu,
+                    securite,
+                    sauvegarde
+                }
+            );
+
+
+        fillForm(
+            currentSettings
+        );
+
+
+        showNotice(
+            'Tous les paramètres ont été enregistrés avec succès.',
+            'success'
+        );
+
+
+    }catch(error){
+
+        console.error(
+            'SAVE ALL SETTINGS ERROR:',
+            error
+        );
+
+
+        showNotice(
+            error.message ||
+            'Impossible d’enregistrer les paramètres.',
+            'error'
+        );
+
+
+    }finally{
+
+        button.disabled =
+            false;
+
+        button.textContent =
+            originalText;
+
+    }
+
+}
+
+
+/* =========================================================
+   REINITIALISER
+========================================================= */
+
+function resetForm(){
+
+    if(
+        !currentSettings ||
+        !Object.keys(
+            currentSettings
+        ).length
+    ){
+
+        return;
+
+    }
+
+
+    const confirmed =
+        confirm(
+            'Voulez-vous annuler les modifications non enregistrées ?'
+        );
+
+
+    if(!confirmed){
+
+        return;
+
+    }
+
+
+    fillForm(
+        currentSettings
+    );
+
+
+    showNotice(
+        'Les modifications non enregistrées ont été annulées.',
+        'success'
+    );
+
+}
+
+
+/* =========================================================
+   SAUVEGARDE MANUELLE
+========================================================= */
+
+async function createBackup(){
+
+    const button =
+        document.getElementById(
+            'backupButton'
+        );
+
+    const originalText =
+        button.textContent;
+
+    try{
+
+        button.disabled = true;
+        button.textContent =
+            'Création de la sauvegarde...';
+
+        /*
+         * GET = export.
+         * L'ancienne version appelait POST ici, ce qui correspondait
+         * à une restauration et non à une création de sauvegarde.
+         */
+        const data =
+            await apiRequest(
+                '/settings/backup',
+                {
+                    method:'GET'
+                }
+            );
+
+        const filename =
+            `pharmagest-backup-${formatBackupDate()}.json`;
+
+        const json =
+            JSON.stringify(
+                data,
+                null,
+                2
+            );
+
+        // Android WebView ne déclenche pas toujours les téléchargements Blob.
+        // Sur l'application native, enregistrer directement dans Téléchargements/PharmaGest.
+        let savedNatively = false;
+        try {
+            if (window.PharmaGestNative?.saveBackupFile) {
+                savedNatively = Boolean(window.PharmaGestNative.saveBackupFile(filename, json));
+            }
+        } catch (nativeError) {
+            console.warn('Enregistrement natif indisponible, téléchargement web utilisé.', nativeError);
+        }
+        if (!savedNatively) {
+            const blob = new Blob([json], { type: 'application/json;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }
+
+        showNotice(
+            'Sauvegarde créée et téléchargée avec succès.',
+            'success'
+        );
+
+    }catch(error){
+
+        console.error(
+            'BACKUP ERROR:',
+            error
+        );
+
+        showNotice(
+            error.message ||
+            'Impossible de créer la sauvegarde.',
+            'error'
+        );
+
+    }finally{
+
+        button.disabled = false;
+        button.textContent = originalText;
+
+    }
+
+}
+
+
+/* =========================================================
+   RESTAURATION SAUVEGARDE
+========================================================= */
+
+async function restoreBackupFromFile(
+    input
+){
+
+    const file =
+        input?.files?.[0];
+
+    if(!file){
+        return;
+    }
+
+    try{
+
+        if(
+            file.size <= 0 ||
+            file.size > 50 * 1024 * 1024
+        ){
+
+            throw new Error(
+                'Le fichier de sauvegarde est vide ou dépasse 50 Mo.'
+            );
+
+        }
+
+        const text =
+            await file.text();
+
+        let backup;
+
+        try{
+
+            backup =
+                JSON.parse(text);
+
+        }catch{
+
+            throw new Error(
+                'Le fichier sélectionné n’est pas un JSON valide.'
+            );
+
+        }
+
+        if(
+            backup?.format !== 'PHARMAGEST_BACKUP' ||
+            Number(backup?.version) !== 1
+        ){
+
+            throw new Error(
+                'Ce fichier n’est pas une sauvegarde PharmaGest compatible.'
+            );
+
+        }
+
+        const confirmed =
+            confirm(
+                'ATTENTION : la restauration va remplacer les données locales actuelles (produits, stocks, ventes, utilisateurs, fournisseurs, lots, reçus, audit et paramètres) par celles de cette sauvegarde.\\n\\nLes informations techniques de l’appareil et l’appairage réseau ne seront pas remplacés.\\n\\nVoulez-vous continuer ?'
+            );
+
+        if(!confirmed){
+            input.value = '';
+            return;
+        }
+
+        const button =
+            document.getElementById(
+                'restoreButton'
+            );
+
+        const originalText =
+            button.textContent;
+
+        button.disabled = true;
+        button.textContent =
+            'Restauration...';
+
+        await apiRequest(
+            '/settings/backup',
+            {
+                method:'POST',
+                body:JSON.stringify(
+                    backup
+                )
+            }
+        );
+
+        /*
+         * Recharge les paramètres immédiatement après restauration.
+         */
+        await loadSettings();
+
+        showNotice(
+            'Sauvegarde restaurée avec succès. Les paramètres et les données ont été rechargés.',
+            'success'
+        );
+
+        button.disabled = false;
+        button.textContent = originalText;
+
+    }catch(error){
+
+        console.error(
+            'RESTORE ERROR:',
+            error
+        );
+
+        showNotice(
+            error.message ||
+            'Impossible de restaurer la sauvegarde.',
+            'error'
+        );
+
+    }finally{
+
+        input.value = '';
+
+        const button =
+            document.getElementById(
+                'restoreButton'
+            );
+
+        if(button){
+
+            button.disabled = false;
+
+            if(
+                button.textContent ===
+                'Restauration...'
+            ){
+
+                button.textContent =
+                    'Restaurer une sauvegarde';
+
+            }
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   DATE SAUVEGARDE
+========================================================= */
+
+function formatBackupDate(){
+
+    const date =
+        new Date();
+
+
+    const pad =
+        value =>
+            String(
+                value
+            ).padStart(
+                2,
+                '0'
+            );
+
+
+    return [
+
+        date.getFullYear(),
+
+        pad(
+            date.getMonth()+1
+        ),
+
+        pad(
+            date.getDate()
+        )
+
+    ].join('-')
+
+    +
+
+    '_'
+
+    +
+
+    [
+
+        pad(
+            date.getHours()
+        ),
+
+        pad(
+            date.getMinutes()
+        ),
+
+        pad(
+            date.getSeconds()
+        )
+
+    ].join('-');
+
+}
+
+
+/* =========================================================
+   PREVISUALISATION
+========================================================= */
+
+function previewReceipt(){
+
+    const companyName =
+        document.getElementById(
+            'companyName'
+        ).value.trim()
+        ||
+        'Nom de l’établissement';
+
+
+    const message =
+        document.getElementById(
+            'receiptMessage'
+        ).value.trim()
+        ||
+        companyName;
+
+
+    const footer =
+        document.getElementById(
+            'receiptFooter'
+        ).value.trim()
+        ||
+        'Merci pour votre confiance.';
+
+
+    const prefix =
+        document.getElementById(
+            'receiptPrefix'
+        ).value.trim()
+        ||
+        'VNT';
+
+
+    const currency =
+        document.getElementById(
+            'currency'
+        ).value
+        ||
+        'FCFA';
+
+
+    document.getElementById(
+        'receiptPreview'
+    ).innerHTML = `
+
+        <div class="receipt-center">
+
+            <strong>
+                ${escapeHtml(companyName)}
+            </strong>
+
+            <br>
+
+            ${escapeHtml(message)}
+
+            <br><br>
+
+            REÇU DE VENTE
+
+        </div>
+
+        <div class="receipt-line"></div>
+
+        <div class="receipt-row">
+
+            <span>N°</span>
+
+            <span>
+                ${escapeHtml(prefix)}-000001
+            </span>
+
+        </div>
+
+        <div class="receipt-row">
+
+            <span>Date</span>
+
+            <span>
+                ${new Date().toLocaleDateString('fr-FR')}
+            </span>
+
+        </div>
+
+        <div class="receipt-line"></div>
+
+        <div>
+
+            Paracétamol 500 mg
+
+            <div class="receipt-row">
+
+                <span>
+                    1 × 750
+                </span>
+
+                <span>
+                    750 ${escapeHtml(currency)}
+                </span>
+
+            </div>
+
+        </div>
+
+        <div class="receipt-line"></div>
+
+        <div class="receipt-row">
+
+            <strong>
+                TOTAL
+            </strong>
+
+            <strong>
+                750 ${escapeHtml(currency)}
+            </strong>
+
+        </div>
+
+        <div class="receipt-line"></div>
+
+        <div class="receipt-center">
+
+            ${escapeHtml(footer)}
+
+        </div>
+
+    `;
+
+
+    document.getElementById(
+        'previewOverlay'
+    ).classList.add(
+        'active'
+    );
+
+}
+
+
+/* =========================================================
+   FERMER PREVISUALISATION
+========================================================= */
+
+function closePreview(){
+
+    document.getElementById(
+        'previewOverlay'
+    ).classList.remove(
+        'active'
+    );
+
+}
+
+
+/* =========================================================
+   EVENEMENTS
+========================================================= */
+
+const notificationsToggle = document.getElementById('notifications');
+if (notificationsToggle) {
+    notificationsToggle.addEventListener('change', function () {
+        if (this.checked) {
+            try {
+                if (window.PharmaGestNative?.requestNotificationsPermissionFromWeb) {
+                    window.PharmaGestNative.requestNotificationsPermissionFromWeb();
+                } else if ('Notification' in window && Notification.permission === 'default') {
+                    Notification.requestPermission().catch(() => {});
+                }
+            } catch (e) {
+                console.warn('Autorisation notifications non disponible:', e);
+            }
+        }
+    });
+}
+
+document.getElementById(
+    'previewOverlay'
+).addEventListener(
+    'click',
+    function(event){
+
+        if(
+            event.target === this
+        ){
+
+            closePreview();
+
+        }
+
+    }
+);
+
+
+document.addEventListener(
+    'keydown',
+    function(event){
+
+        if(
+            event.key === 'Escape'
+        ){
+
+            closePreview();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   INITIALISATION
+========================================================= */
+
+document.addEventListener(
+    'DOMContentLoaded',
+    async function(){
+
+        try{
+
+            const token =
+                getToken();
+
+
+            if(!token){
+
+                window.location.href =
+                    'index.html';
+
+                return;
+
+            }
+
+
+            setLoading(true);
+
+
+            await loadCurrentUser();
+
+            await loadSettings();
+
+
+            setLoading(false);
+
+
+        }catch(error){
+
+            console.error(
+                'PARAMETRES INIT ERROR:',
+                error
+            );
+
+
+            setLoading(false);
+
+
+            showNotice(
+                error.message ||
+                'Impossible de charger les paramètres.',
+                'error'
+            );
+
+        }
+
+    }
+);
+
+</script>
+
+<script>
+/* ===== Sauvegarde Google Drive : interface (la logique est dans assets/js/drive-backup.js) ===== */
+(function(){
+  const $ = id => document.getElementById(id);
+  const D = () => window.PharmaDrive;
+  function ago(ts){
+    if(!ts) return 'jamais';
+    const d=new Date(ts), t=new Date(), same=d.toDateString()===t.toDateString();
+    const hm=d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+    return same ? 'aujourd’hui à '+hm : d.toLocaleDateString('fr-FR')+' à '+hm;
+  }
+  function size(n){ return n>1048576 ? (n/1048576).toFixed(1)+' Mo' : Math.max(1,Math.round(n/1024))+' Ko'; }
+  let cfgOpen=false;
+  function render(){
+    const d=D(); if(!d){ $('driveStatus').textContent='Sauvegarde Google Drive indisponible sur cet appareil.'; ['driveSignIn'].forEach(i=>$(i).style.display='none'); return; }
+    const st=d.status(), box=$('driveStatus');
+    $('driveSignIn').style.display=st.signedIn?'none':'';
+    ['driveSyncNow','driveRestore','driveSignOut'].forEach(i=>$(i).style.display=st.signedIn?'':'none');
+    $('driveAutoRow').style.display=st.signedIn?'':'none';
+    $('driveAuto').checked=st.enabled;
+    const showCfg = !st.signedIn && cfgOpen;
+    $('driveCfgBox').style.display=showCfg?'':'none';
+    $('driveCfgCancel').style.display=st.configured?'':'none';
+    $('driveCfgEdit').style.display=(!st.signedIn && !cfgOpen)?'':'none';
+    $('driveSignIn').style.display=(st.signedIn||showCfg)?'none':'';
+    $('driveSyncNow').disabled=st.busy; $('driveSyncNow').textContent=st.busy?'Sauvegarde en cours…':'Sauvegarder maintenant';
+    let html='';
+    if(!st.configured){
+      html='<strong>Sauvegarde Google Drive non activée dans cette version de l’application.</strong> Le développeur doit intégrer les identifiants Google de PharmaGest (voir <code>README_GOOGLE_DRIVE.md</code>) ; ensuite, chaque pharmacie se connecte simplement avec son compte Google.';
+      $('driveSignIn').disabled=true;
+    } else if(!st.signedIn){
+      html='Non connecté. Touchez « Se connecter au compte Google » : Google s’ouvre, vous choisissez votre compte, puis vous revenez ici. Le compte reste enregistré dans l’application.';
+      if(st.signInError) html+='<br><span style="color:#b3262d"><strong>Dernière tentative :</strong> '+st.signInError+'</span>';
+      $('driveSignIn').disabled=false;
+    } else {
+      html='<strong>Connecté :</strong> '+(st.email||'compte Google')+'<br>';
+      if(st.needsReauth) html+='<span style="color:#b3262d">Reconnexion nécessaire : touchez « Se déconnecter » puis reconnectez-vous.</span><br>';
+      html+='Ventes des vendeurs reçues via Drive : <strong>'+(st.sellerImported||0)+'</strong>'+(st.sellerLastAt?' (vérifié '+ago(st.sellerLastAt)+')':'')+(st.sellerError?' <span style="color:#b3262d">— '+st.sellerError+'</span>':'')+'<br>';
+      html+='Dernière sauvegarde : <strong>'+ago(st.lastAt)+'</strong>'+(st.lastSize?' ('+size(st.lastSize)+')':'')+'<br>';
+      if(st.busy) html+='Envoi en cours…';
+      else if(st.lastError) html+='<span style="color:#b3262d">'+st.lastError+'</span> Nouvelle tentative automatique.';
+      else if(!st.enabled) html+='Sauvegarde automatique désactivée.';
+      else if(!st.online) html+='En attente d’Internet'+(st.pending?' : des modifications seront sauvegardées dès la connexion.':'.');
+      else if(st.pending) html+='Des modifications vont être sauvegardées.';
+      else html+='✓ À jour : aucune modification depuis la dernière sauvegarde.';
+    }
+    box.innerHTML=html;
+  }
+  async function run(btn,fn){
+    const label=btn.textContent; btn.disabled=true;
+    try{ await fn(); }catch(e){ showNotice(e&&e.message?e.message:'Erreur Google Drive','error'); }
+    finally{ btn.disabled=false; btn.textContent=label; render(); }
+  }
+  $('driveCfgSave').addEventListener('click',function(){ run(this,async()=>{
+    D().saveConfig($('driveClientId').value,$('driveClientSecret').value);
+    $('driveClientSecret').value=''; cfgOpen=false;
+    showNotice('Identifiants enregistrés. Touchez maintenant « Se connecter au compte Google ».','success');
+  }); });
+  $('driveCfgEdit').addEventListener('click',function(){ cfgOpen=true; $('driveClientId').value=D().clientId(); $('driveClientSecret').value=''; render(); });
+  $('driveCfgCancel').addEventListener('click',function(){ cfgOpen=false; render(); });
+  $('driveSignIn').addEventListener('click',function(){ run(this,async()=>{ this.textContent='Connexion en cours… (terminez dans le navigateur)'; const r=await D().signIn(); showNotice('Connecté à Google'+(r.email?' : '+r.email:'')+'. La première sauvegarde va partir.','success'); }); });
+  $('driveSignOut').addEventListener('click',function(){ if(!confirm('Se déconnecter du compte Google ? La sauvegarde déjà présente sur Drive est conservée, mais les nouvelles ne partiront plus.')) return; run(this,async()=>{ await D().signOut(); showNotice('Compte Google déconnecté.','success'); }); });
+  $('driveSyncNow').addEventListener('click',function(){ run(this,async()=>{ const r=await D().syncNow({manual:true}); if(r.error) throw new Error(r.error); showNotice(r.uploaded?'Sauvegarde envoyée sur Google Drive.':(r.skipped==='same-content'?'Rien à sauvegarder : les données n’ont pas changé.':(r.skipped==='offline'?'Pas d’Internet pour le moment : la sauvegarde partira dès la connexion.':'Sauvegarde non envoyée.')),r.uploaded||r.skipped==='same-content'?'success':'error'); }); });
+  $('driveAuto').addEventListener('change',function(){ D().setEnabled(this.checked); render(); });
+  $('driveRestore').addEventListener('click',function(){ run(this,async()=>{
+    this.textContent='Recherche de la sauvegarde…';
+    const info=await D().fetchLatest();
+    const when=new Date(info.modifiedTime).toLocaleString('fr-FR');
+    if(!confirm('Restaurer la sauvegarde Google Drive du '+when+' ?\n\nLes données actuelles de ce téléphone seront REMPLACÉES par celles de cette sauvegarde.')) return;
+    this.textContent='Restauration…';
+    await apiRequest('/settings/backup',{method:'POST',body:JSON.stringify(info.data)});
+    try{ await loadSettings(); }catch(e){}
+    showNotice('Sauvegarde Google Drive restaurée. Les données ont été rechargées.','success');
+  }); });
+  window.addEventListener('pg-drive-changed',render);
+  setInterval(render,5000);
+  render();
+})();
+</script>
+</body>
+
+</html>
